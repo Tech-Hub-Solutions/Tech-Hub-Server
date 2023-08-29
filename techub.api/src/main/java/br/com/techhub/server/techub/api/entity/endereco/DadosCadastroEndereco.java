@@ -1,4 +1,4 @@
-package br.com.techhub.server.techub.api.domain.endereco;
+package br.com.techhub.server.techub.api.entity.endereco;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;

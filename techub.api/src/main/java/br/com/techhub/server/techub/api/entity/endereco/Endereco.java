@@ -1,13 +1,14 @@
-package br.com.techhub.server.techub.api.domain.endereco;
+package br.com.techhub.server.techub.api.entity.endereco;
 
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@Setter
 public class Endereco {
 
     private String cep;
