@@ -23,7 +23,7 @@ public class EmpresaController {
 
     @GetMapping
     public ResponseEntity<List<DadosDetalhamentoEmpresaDto>> listar(){
-        return ResponseEntity.status(200).body(empresas.stream().map(x -> empresaMapper.empresaToDetalhamentoDto(x))
+        return ResponseEntity.status(200).body(empresas.stream().map(x -> empresaMapper.empresaToDadosDetalhamentoEmpresaDto(x))
                 .toList());
     }
 
@@ -34,20 +34,20 @@ public class EmpresaController {
 
     @PostMapping
     public ResponseEntity<DadosDetalhamentoEmpresaDto> cadastrar (@RequestBody @Valid DadosCadastroEmpresaDto dados){
-        Empresa emp = empresaMapper.cadastroEmpresaDtoToEmpresa(dados);
-        empresas.add(emp);
+        Empresa empresa = empresaMapper.DadoscadastroEmpresaDtoToEmpresa(dados);
+        empresas.add(empresa);
 
-        return ResponseEntity.status(201).body(empresaMapper.empresaToDetalhamentoDto(emp));
+        return ResponseEntity.status(201).body(empresaMapper.empresaToDadosDetalhamentoEmpresaDto(empresa));
     }
 
     @PutMapping("/{indice}")
     public ResponseEntity<DadosDetalhamentoEmpresaDto> atualizarDadosDeEmpresa(@PathVariable int indice,
                                                                               @RequestBody DadosAtualizacaoEmpresaDto dados){
 
-        Empresa emp = empresaMapper.atualizacaoEmpresaDtoToEmpresa(empresas.get(indice),dados);
-        empresas.set(indice,emp);
+        Empresa empresa = empresaMapper.DadosatualizacaoEmpresaDtoToEmpresa(empresas.get(indice),dados);
+        empresas.set(indice, empresa);
 
-        return ResponseEntity.status(200).body(empresaMapper.empresaToDetalhamentoDto(emp));
+        return ResponseEntity.status(200).body(empresaMapper.empresaToDadosDetalhamentoEmpresaDto(empresa));
     }
 
     @DeleteMapping("/{indice}")

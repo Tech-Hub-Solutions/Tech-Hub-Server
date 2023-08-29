@@ -13,6 +13,8 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Empresa {
 
+    private String emailLogin;
+    private String senha;
     private String nomeEmpresa;
     private String razaoSocial;
     private String cnpj;
@@ -20,6 +22,5 @@ public class Empresa {
     private String emailContato;
     private String representante;
     private Endereco endereco;
-
 
 }

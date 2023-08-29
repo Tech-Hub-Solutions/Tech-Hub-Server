@@ -1,35 +1,36 @@
-package br.com.techhub.server.techub.api.entity.empresa;
+package br.com.techhub.server.techub.api.entity.freelancer;
 
 import br.com.techhub.server.techub.api.entity.endereco.DadosCadastroEndereco;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.*;
 
-public record DadosCadastroEmpresaDto(
+import java.util.Date;
+import java.util.List;
+
+
+public record DadosCadastroFreelancerDto(
         @NotBlank
-        @Email
         String emailLogin,
         @NotBlank
         String senha,
         @NotBlank
-        String nomeEmpresa,
-        @NotBlank
-        String razaoSocial,
+        String nome,
         @NotBlank
         @Pattern(regexp = "\\d{14}")
-        String cnpj,
+        String cpf,
+        @NotBlank
+        @Past
+        Date dtNascimento,
+
         @NotBlank
         @Pattern(regexp = "\\d{11}")
-        String telefoneContato,
+        String telefone,
         @Email
         String emailContato,
         @NotBlank
-        String representante,
+        List<String> areaDeAtuacaoList,
         @NotBlank
         @Valid
         DadosCadastroEndereco endereco
-
 ) {
 }

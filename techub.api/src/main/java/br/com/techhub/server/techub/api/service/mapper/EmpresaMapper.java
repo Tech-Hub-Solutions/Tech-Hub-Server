@@ -12,33 +12,35 @@ public class EmpresaMapper {
     @Autowired
     EnderecoMapper enderecoMapper;
 
-    public Empresa cadastroEmpresaDtoToEmpresa (DadosCadastroEmpresaDto dto){
-        Empresa emp = new Empresa();
-        emp.setNomeEmpresa(dto.nomeEmpresa());
-        emp.setRazaoSocial(dto.razaoSocial());
-        emp.setCnpj(dto.cnpj());
-        emp.setTelefoneContato(dto.telefoneContato());
-        emp.setEmailContato(dto.emailContato());
-        emp.setRepresentante(dto.representante());
-        return emp;
+    public Empresa DadoscadastroEmpresaDtoToEmpresa(DadosCadastroEmpresaDto dto){
+        Empresa empresa = new Empresa();
+        empresa.setEmailLogin(dto.emailLogin());
+        empresa.setSenha(dto.senha());
+        empresa.setNomeEmpresa(dto.nomeEmpresa());
+        empresa.setRazaoSocial(dto.razaoSocial());
+        empresa.setCnpj(dto.cnpj());
+        empresa.setTelefoneContato(dto.telefoneContato());
+        empresa.setEmailContato(dto.emailContato());
+        empresa.setRepresentante(dto.representante());
+        return empresa;
     }
 
-    public DadosDetalhamentoEmpresaDto empresaToDetalhamentoDto (Empresa dados){
+    public DadosDetalhamentoEmpresaDto empresaToDadosDetalhamentoEmpresaDto (Empresa empresa){
         return new DadosDetalhamentoEmpresaDto(
-                dados.getNomeEmpresa(),
-                dados.getCnpj(),
-                dados.getEmailContato(),
-                dados.getTelefoneContato()
+                empresa.getNomeEmpresa(),
+                empresa.getCnpj(),
+                empresa.getEmailContato(),
+                empresa.getTelefoneContato()
         );
     }
 
-    public Empresa atualizacaoEmpresaDtoToEmpresa(Empresa emp ,DadosAtualizacaoEmpresaDto dto){
-        emp.setTelefoneContato(dto.telefoneContato());
-        emp.setEmailContato(dto.emailContato());
-        emp.setRepresentante(dto.representante());
-        emp.setEndereco(enderecoMapper.cadastroEnderecoDtoToEndereco(dto.endereco()));
+    public Empresa DadosatualizacaoEmpresaDtoToEmpresa(Empresa empresa, DadosAtualizacaoEmpresaDto dto){
+        empresa.setTelefoneContato(dto.telefoneContato());
+        empresa.setEmailContato(dto.emailContato());
+        empresa.setRepresentante(dto.representante());
+        empresa.setEndereco(enderecoMapper.cadastroEnderecoDtoToEndereco(dto.endereco()));
 
-        return emp;
+        return empresa;
     }
 
 }
