@@ -1,49 +1,31 @@
-/*package br.com.techhub.server.techub.api.infra.exceptionHandler;
+package br.com.techhub.server.techub.api.infra.exceptionHandler;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.client.HttpClientErrorException;
 
 @RestControllerAdvice
 public class ExceptionHandler {
-    @ExceptionHandler(Entity)
-    public ResponseEntity<ExceptionDto> NotFoundException(NotFoundException e){
 
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                new ExceptionDto(HttpStatus.NOT_FOUND, e.getMessage())
-        );
+    @org.springframework.web.bind.annotation.ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity tratarErro400(MethodArgumentNotValidException ex) {
+        var erros = ex.getFieldErrors();
+        return ResponseEntity.badRequest().body(erros.stream().map(DadosErroValidacao::new).toList());
     }
 
-    @ExceptionHandler(Forbidden.class)
-    public ResponseEntity<ExceptionDto> ForbiddenException(Forbidden e){
-
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
-                new ExceptionDto(HttpStatus.FORBIDDEN, e.getMessage())
-        );
+    @org.springframework.web.bind.annotation.ExceptionHandler(IndexOutOfBoundsException.class)
+    public ResponseEntity<Void> tratarErro404() {
+        return ResponseEntity.notFound().build();
     }
 
-    @ExceptionHandler(BadRequestException.class)
-    public ResponseEntity<ExceptionDto> BadRequestException(BadRequestException e){
-
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                new ExceptionDto(HttpStatus.BAD_REQUEST, e.getMessage())
-        );
+    private record DadosErroValidacao(String campo, String mensagem) {
+        public DadosErroValidacao(FieldError erro) {
+            this(erro.getField(), erro.getDefaultMessage());
+        }
     }
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ExceptionDto> IllegalArgumentException(IllegalArgumentException e){
-
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                new ExceptionDto(HttpStatus.BAD_REQUEST, e.getMessage())
-        );
-    }
-
-    @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<ExceptionDto> DataIntegrityViolationException(DataIntegrityViolationException e){
-
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                new ExceptionDto(HttpStatus.BAD_REQUEST, e.getMessage())
-        );
-    }
 }
-*/
