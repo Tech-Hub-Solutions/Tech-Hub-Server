@@ -13,9 +13,9 @@ import java.util.List;
 public record DadosAtualizacaoFreelancerDto(
         @NotBlank
         @Pattern(regexp = "\\d{11}")
-        String telefone,
+        String telefoneContato,
         @Email
-        String email,
+        String emailContato,
         @NotBlank
         List<String> areaDeAtuacaoList,
         @NotBlank

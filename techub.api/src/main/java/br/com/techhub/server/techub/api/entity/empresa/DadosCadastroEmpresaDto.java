@@ -27,7 +27,8 @@ public record DadosCadastroEmpresaDto(
         String emailContato,
         @NotBlank
         String representante,
-        @NotBlank
+
+        @NotNull
         @Valid
         DadosCadastroEndereco endereco
 

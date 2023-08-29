@@ -27,8 +27,9 @@ public class FreelancerController {
     }
 
     @GetMapping("/{indice}")
-    public ResponseEntity<Freelancer> getEmpresaPorIndice(@PathVariable int indice){
-        return ResponseEntity.status(200).body(freelancers.get(indice));
+    public ResponseEntity<DadosDetalhamentoFreelancerDto> getEmpresaPorIndice(@PathVariable int indice){
+        return ResponseEntity.status(200).body(freelancerMapper.freelancerToDadosDetalhamentoFreelancerDto(
+                freelancers.get(indice)));
     }
 
     @PostMapping

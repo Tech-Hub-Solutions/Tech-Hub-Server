@@ -20,7 +20,7 @@ public class Freelancer {
     private String nome;
     private String cpf;
     private Date dtNascimento;
-    private String telefone;
+    private String telefoneContato;
     private String emailContato;
     private List<String> areaDeAtuacaoList;
     private Endereco endereco;

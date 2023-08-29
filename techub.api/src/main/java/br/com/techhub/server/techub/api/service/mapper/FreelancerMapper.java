@@ -19,8 +19,9 @@ public class FreelancerMapper {
         freelancer.setSenha(dto.senha());
         freelancer.setNome(dto.nome());
         freelancer.setCpf(dto.cpf());
+        freelancer.setDtNascimento(dto.dtNascimento());
         freelancer.setEmailContato(dto.emailContato());
-        freelancer.setTelefone(dto.telefone());
+        freelancer.setTelefoneContato(dto.telefoneContato());
         freelancer.setAreaDeAtuacaoList(dto.areaDeAtuacaoList());
         freelancer.setEndereco(enderecoMapper.cadastroEnderecoDtoToEndereco(dto.endereco()));
 
@@ -31,7 +32,7 @@ public class FreelancerMapper {
         return new DadosDetalhamentoFreelancerDto(
                 freelancer.getNome(),
                 freelancer.getDtNascimento(),
-                freelancer.getTelefone(),
+                freelancer.getTelefoneContato(),
                 freelancer.getEmailContato(),
                 freelancer.getAreaDeAtuacaoList()
         );
@@ -39,8 +40,8 @@ public class FreelancerMapper {
 
     public Freelancer DadosatualizacaoFreelancerDtoToFreelancer(Freelancer freelancer,
                                                                 DadosAtualizacaoFreelancerDto dto) {
-        freelancer.setTelefone(dto.telefone());
-        freelancer.setEmailContato(dto.email());
+        freelancer.setTelefoneContato(dto.telefoneContato());
+        freelancer.setEmailContato(dto.emailContato());
         freelancer.setAreaDeAtuacaoList(dto.areaDeAtuacaoList());
         freelancer.setEndereco(enderecoMapper.cadastroEnderecoDtoToEndereco(dto.endereco()));
 

@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/empresas")
+@RequestMapping("empresas")
 public class EmpresaController {
     private List<Empresa> empresas = new ArrayList<>();
 
@@ -28,8 +28,8 @@ public class EmpresaController {
     }
 
     @GetMapping("/{indice}")
-    public ResponseEntity<Empresa> getEmpresaPorIndice(@PathVariable int indice){
-        return ResponseEntity.status(200).body(empresas.get(indice));
+    public ResponseEntity<DadosDetalhamentoEmpresaDto> getEmpresaPorIndice(@PathVariable int indice){
+        return ResponseEntity.status(200).body(empresaMapper.empresaToDadosDetalhamentoEmpresaDto(empresas.get(indice)));
     }
 
     @PostMapping

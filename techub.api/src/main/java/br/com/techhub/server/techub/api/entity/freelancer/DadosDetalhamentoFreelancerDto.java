@@ -7,7 +7,7 @@ public record DadosDetalhamentoFreelancerDto(String nome, Date dtNascimento, Str
                                              List<String> areaDeAtuacaoList) {
 
     public DadosDetalhamentoFreelancerDto (Freelancer freelancer){
-        this(freelancer.getNome(), freelancer.getDtNascimento(), freelancer.getTelefone(), freelancer.getEmailContato(),
+        this(freelancer.getNome(), freelancer.getDtNascimento(), freelancer.getTelefoneContato(), freelancer.getEmailContato(),
                 freelancer.getAreaDeAtuacaoList());
     }
 

@@ -16,20 +16,20 @@ public record DadosCadastroFreelancerDto(
         @NotBlank
         String nome,
         @NotBlank
-        @Pattern(regexp = "\\d{14}")
+        @Pattern(regexp = "\\d{11}")
         String cpf,
-        @NotBlank
+        @NotNull
         @Past
         Date dtNascimento,
 
         @NotBlank
         @Pattern(regexp = "\\d{11}")
-        String telefone,
+        String telefoneContato,
         @Email
         String emailContato,
-        @NotBlank
+        @NotNull
         List<String> areaDeAtuacaoList,
-        @NotBlank
+        @NotNull
         @Valid
         DadosCadastroEndereco endereco
 ) {
