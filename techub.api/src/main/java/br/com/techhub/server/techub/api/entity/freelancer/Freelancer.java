@@ -19,7 +19,7 @@ public class Freelancer {
     private String senha;
     private String nome;
     private String cpf;
-    private Date dtNascimgiento;
+    private Date dtNascimento;
     private String telefoneContato;
     private String emailContato;
     private List<String> areaDeAtuacaoList;
