@@ -15,13 +15,12 @@ import java.util.List;
 @NoArgsConstructor
 public class Freelancer {
 
-    private String emailLogin;
+    private String email;
     private String senha;
     private String nome;
     private String cpf;
     private Date dtNascimento;
     private String telefoneContato;
-    private String emailContato;
     private List<String> areaDeAtuacaoList;
     private Endereco endereco;
 

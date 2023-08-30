@@ -10,7 +10,7 @@ import jakarta.validation.constraints.Pattern;
 public record DadosCadastroEmpresaDto(
         @NotBlank
         @Email
-        String emailLogin,
+        String email,
         @NotBlank
         String senha,
         @NotBlank
@@ -23,8 +23,7 @@ public record DadosCadastroEmpresaDto(
         @NotBlank
         @Pattern(regexp = "\\d{11}")
         String telefoneContato,
-        @Email
-        String emailContato,
+
         @NotBlank
         String representante,
 

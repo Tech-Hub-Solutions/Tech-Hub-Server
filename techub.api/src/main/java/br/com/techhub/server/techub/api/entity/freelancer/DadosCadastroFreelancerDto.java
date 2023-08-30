@@ -10,7 +10,7 @@ import java.util.List;
 
 public record DadosCadastroFreelancerDto(
         @NotBlank
-        String emailLogin,
+        String email,
         @NotBlank
         String senha,
         @NotBlank
@@ -25,8 +25,6 @@ public record DadosCadastroFreelancerDto(
         @NotBlank
         @Pattern(regexp = "\\d{11}")
         String telefoneContato,
-        @Email
-        String emailContato,
         @NotNull
         List<String> areaDeAtuacaoList,
         @NotNull

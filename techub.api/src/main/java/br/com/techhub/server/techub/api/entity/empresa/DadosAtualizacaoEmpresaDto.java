@@ -11,7 +11,7 @@ public record DadosAtualizacaoEmpresaDto(
         @Pattern(regexp = "\\d{11}")
         String telefoneContato,
         @Email
-        String emailContato,
+        String email,
         @NotNull
         String representante,
         @NotNull

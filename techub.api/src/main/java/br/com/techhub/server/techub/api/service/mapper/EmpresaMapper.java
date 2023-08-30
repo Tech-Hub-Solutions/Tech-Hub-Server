@@ -14,13 +14,12 @@ public class EmpresaMapper {
 
     public Empresa DadoscadastroEmpresaDtoToEmpresa(DadosCadastroEmpresaDto dto){
         Empresa empresa = new Empresa();
-        empresa.setEmailLogin(dto.emailLogin());
+        empresa.setEmail(dto.email());
         empresa.setSenha(dto.senha());
         empresa.setNomeEmpresa(dto.nomeEmpresa());
         empresa.setRazaoSocial(dto.razaoSocial());
         empresa.setCnpj(dto.cnpj());
         empresa.setTelefoneContato(dto.telefoneContato());
-        empresa.setEmailContato(dto.emailContato());
         empresa.setRepresentante(dto.representante());
         return empresa;
     }
@@ -29,14 +28,14 @@ public class EmpresaMapper {
         return new DadosDetalhamentoEmpresaDto(
                 empresa.getNomeEmpresa(),
                 empresa.getCnpj(),
-                empresa.getEmailContato(),
+                empresa.getEmail(),
                 empresa.getTelefoneContato()
         );
     }
 
     public Empresa DadosatualizacaoEmpresaDtoToEmpresa(Empresa empresa, DadosAtualizacaoEmpresaDto dto){
         empresa.setTelefoneContato(dto.telefoneContato());
-        empresa.setEmailContato(dto.emailContato());
+        empresa.setEmail(dto.email());
         empresa.setRepresentante(dto.representante());
         empresa.setEndereco(enderecoMapper.cadastroEnderecoDtoToEndereco(dto.endereco()));
 

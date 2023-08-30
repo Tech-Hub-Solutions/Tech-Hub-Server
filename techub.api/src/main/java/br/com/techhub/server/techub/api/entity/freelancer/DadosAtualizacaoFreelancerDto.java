@@ -15,7 +15,7 @@ public record DadosAtualizacaoFreelancerDto(
         @Pattern(regexp = "\\d{11}")
         String telefoneContato,
         @Email
-        String emailContato,
+        String email,
         @NotBlank
         List<String> areaDeAtuacaoList,
         @NotBlank
