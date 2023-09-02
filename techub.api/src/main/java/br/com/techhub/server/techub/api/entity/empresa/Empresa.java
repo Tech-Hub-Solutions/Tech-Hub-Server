@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -24,7 +25,7 @@ public class Empresa {
     private String telefoneContato;
     private String representante;
     private Endereco endereco;
-    private List<Avaliacao> avaliacoes;
+    private List<Avaliacao> avaliacoes = new ArrayList<>();
 
     public void receberAvaliacao(Avaliacao avaliacao){
         avaliacoes.add(avaliacao);

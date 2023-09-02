@@ -3,6 +3,7 @@ package br.com.techhub.server.techub.api.entity.freelancer;
 import br.com.techhub.server.techub.api.entity.endereco.DadosCadastroEndereco;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
+import org.hibernate.validator.constraints.br.CPF;
 
 import java.util.Date;
 import java.util.List;
@@ -15,8 +16,8 @@ public record DadosCadastroFreelancerDto(
         String senha,
         @NotBlank
         String nome,
-        @NotBlank
-        @Pattern(regexp = "\\d{11}")
+        @NotNull
+        @CPF
         String cpf,
         @NotNull
         @Past

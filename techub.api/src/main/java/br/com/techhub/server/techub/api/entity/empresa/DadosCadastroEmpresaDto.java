@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
+import org.hibernate.validator.constraints.br.CNPJ;
 
 import java.util.List;
 
@@ -18,7 +19,7 @@ public record DadosCadastroEmpresaDto(
         @NotBlank
         String nomeEmpresa,
         @NotBlank
-        @Pattern(regexp = "\\d{14}")
+        @CNPJ
         String cnpj,
         @NotBlank
         @Pattern(regexp = "\\d{11}")

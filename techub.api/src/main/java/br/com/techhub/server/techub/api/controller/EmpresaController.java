@@ -20,9 +20,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("empresas")
-@Component
 public class EmpresaController {
-    private List<Empresa> empresas;
+    @Autowired
+    private List<Empresa> empresas = new ArrayList<>();
 
     @Autowired
     private EmpresaMapper empresaMapper;
@@ -32,10 +32,6 @@ public class EmpresaController {
     @Autowired
     private List<Freelancer> freelancers;
 
-    @Autowired
-    public EmpresaController(List<Empresa> empresas) {
-        this.empresas = empresas;
-    }
 
     @GetMapping
     public ResponseEntity<List<DadosDetalhamentoEmpresaDto>> listar(){
@@ -46,6 +42,11 @@ public class EmpresaController {
     @GetMapping("/{indice}")
     public ResponseEntity<DadosDetalhamentoEmpresaDto> getEmpresaPorIndice(@PathVariable int indice){
         return ResponseEntity.status(200).body(empresaMapper.empresaToDadosDetalhamentoEmpresaDto(empresas.get(indice)));
+    }
+
+    @GetMapping("avaliar/{indice}")
+    public ResponseEntity<List<Avaliacao>> getAvaliacaoDeEmpresaPorIndice(@PathVariable int indice){
+        return ResponseEntity.status(200).body(empresas.get(indice).getAvaliacoes());
     }
 
     @PostMapping
@@ -63,6 +64,7 @@ public class EmpresaController {
         Freelancer freelancer = freelancers.get(indiceFreelancer);
 
         Avaliacao avaliacao = empresaService.avaliar(empresa,freelancer,dto);
+        freelancer.receberAvaliacao(avaliacao);
 
         return ResponseEntity.status(200).body(avaliacao);
     }
