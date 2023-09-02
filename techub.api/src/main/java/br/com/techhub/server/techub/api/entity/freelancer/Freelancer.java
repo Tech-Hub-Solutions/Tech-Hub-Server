@@ -1,5 +1,6 @@
 package br.com.techhub.server.techub.api.entity.freelancer;
 
+import br.com.techhub.server.techub.api.entity.avaliacao.Avaliacao;
 import br.com.techhub.server.techub.api.entity.endereco.Endereco;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,5 +24,10 @@ public class Freelancer {
     private String telefoneContato;
     private List<String> areaDeAtuacaoList;
     private Endereco endereco;
+    private List<Avaliacao> avaliacoes;
+
+    public void receberAvaliacao(Avaliacao avaliacao){
+        avaliacoes.add(avaliacao);
+    }
 
 }

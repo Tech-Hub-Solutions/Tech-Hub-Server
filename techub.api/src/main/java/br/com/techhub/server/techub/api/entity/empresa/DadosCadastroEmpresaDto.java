@@ -7,6 +7,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
+import java.util.List;
+
 public record DadosCadastroEmpresaDto(
         @NotBlank
         @Email
@@ -15,8 +17,6 @@ public record DadosCadastroEmpresaDto(
         String senha,
         @NotBlank
         String nomeEmpresa,
-        @NotBlank
-        String razaoSocial,
         @NotBlank
         @Pattern(regexp = "\\d{14}")
         String cnpj,
@@ -30,6 +30,5 @@ public record DadosCadastroEmpresaDto(
         @NotNull
         @Valid
         DadosCadastroEndereco endereco
-
 ) {
 }

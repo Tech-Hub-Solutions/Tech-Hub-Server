@@ -12,12 +12,12 @@ public class EmpresaMapper {
     @Autowired
     EnderecoMapper enderecoMapper;
 
+
     public Empresa DadoscadastroEmpresaDtoToEmpresa(DadosCadastroEmpresaDto dto){
         Empresa empresa = new Empresa();
         empresa.setEmail(dto.email());
         empresa.setSenha(dto.senha());
         empresa.setNomeEmpresa(dto.nomeEmpresa());
-        empresa.setRazaoSocial(dto.razaoSocial());
         empresa.setCnpj(dto.cnpj());
         empresa.setTelefoneContato(dto.telefoneContato());
         empresa.setRepresentante(dto.representante());

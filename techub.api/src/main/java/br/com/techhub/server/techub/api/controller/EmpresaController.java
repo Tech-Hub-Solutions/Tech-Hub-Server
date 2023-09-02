@@ -1,13 +1,18 @@
 package br.com.techhub.server.techub.api.controller;
 
+import br.com.techhub.server.techub.api.entity.avaliacao.Avaliacao;
+import br.com.techhub.server.techub.api.entity.avaliacao.DadosAvaliacaoDto;
 import br.com.techhub.server.techub.api.entity.empresa.DadosAtualizacaoEmpresaDto;
 import br.com.techhub.server.techub.api.entity.empresa.DadosCadastroEmpresaDto;
 import br.com.techhub.server.techub.api.entity.empresa.DadosDetalhamentoEmpresaDto;
 import br.com.techhub.server.techub.api.entity.empresa.Empresa;
+import br.com.techhub.server.techub.api.entity.freelancer.Freelancer;
+import br.com.techhub.server.techub.api.service.EmpresaService;
 import br.com.techhub.server.techub.api.service.mapper.EmpresaMapper;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -15,11 +20,22 @@ import java.util.List;
 
 @RestController
 @RequestMapping("empresas")
+@Component
 public class EmpresaController {
-    private List<Empresa> empresas = new ArrayList<>();
+    private List<Empresa> empresas;
 
     @Autowired
     private EmpresaMapper empresaMapper;
+    @Autowired
+    EmpresaService empresaService;
+
+    @Autowired
+    private List<Freelancer> freelancers;
+
+    @Autowired
+    public EmpresaController(List<Empresa> empresas) {
+        this.empresas = empresas;
+    }
 
     @GetMapping
     public ResponseEntity<List<DadosDetalhamentoEmpresaDto>> listar(){
@@ -38,6 +54,17 @@ public class EmpresaController {
         empresas.add(empresa);
 
         return ResponseEntity.status(201).body(empresaMapper.empresaToDadosDetalhamentoEmpresaDto(empresa));
+    }
+
+    @PostMapping("avaliar/{indiceEmpresa}/{indiceFreelancer}")
+    public ResponseEntity<Avaliacao> avaliarFreelancer(@PathVariable int indiceEmpresa, @PathVariable int indiceFreelancer,
+                                                       @RequestBody @Valid DadosAvaliacaoDto dto){
+        Empresa empresa = empresas.get(indiceEmpresa);
+        Freelancer freelancer = freelancers.get(indiceFreelancer);
+
+        Avaliacao avaliacao = empresaService.avaliar(empresa,freelancer,dto);
+
+        return ResponseEntity.status(200).body(avaliacao);
     }
 
     @PutMapping("/{indice}")

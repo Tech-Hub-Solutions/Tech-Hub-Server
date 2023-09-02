@@ -1,24 +1,41 @@
 package br.com.techhub.server.techub.api.controller;
 
+import br.com.techhub.server.techub.api.entity.avaliacao.Avaliacao;
+import br.com.techhub.server.techub.api.entity.avaliacao.DadosAvaliacaoDto;
+import br.com.techhub.server.techub.api.entity.empresa.Empresa;
 import br.com.techhub.server.techub.api.entity.freelancer.DadosAtualizacaoFreelancerDto;
 import br.com.techhub.server.techub.api.entity.freelancer.DadosCadastroFreelancerDto;
 import br.com.techhub.server.techub.api.entity.freelancer.DadosDetalhamentoFreelancerDto;
 import br.com.techhub.server.techub.api.entity.freelancer.Freelancer;
+import br.com.techhub.server.techub.api.service.FreelancerService;
 import br.com.techhub.server.techub.api.service.mapper.FreelancerMapper;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
 @RestController
 @RequestMapping("/freelancers")
+@Component
 public class FreelancerController {
-    private List<Freelancer> freelancers = new ArrayList<>();
+
+    private List<Freelancer> freelancers;
 
     @Autowired
     private FreelancerMapper freelancerMapper;
+    @Autowired
+    private FreelancerService freelancerService;
+
+    @Autowired
+    private List<Empresa> empresas;
+
+    @Autowired
+    public FreelancerController(List<Freelancer> freelancers) {
+        this.freelancers = freelancers;
+    }
 
     @GetMapping
     public ResponseEntity<List<DadosDetalhamentoFreelancerDto>> listar(){
@@ -38,6 +55,17 @@ public class FreelancerController {
         freelancers.add(freelancer);
 
         return ResponseEntity.status(201).body(freelancerMapper.freelancerToDadosDetalhamentoFreelancerDto(freelancer));
+    }
+
+    @PostMapping("avaliar/{indiceEmpresa}/{indiceFreelancer}")
+    public ResponseEntity<Avaliacao> avaliarEmpresa(@PathVariable int indiceEmpresa, @PathVariable int indiceFreelancer,
+                                                       @RequestBody @Valid DadosAvaliacaoDto dto){
+        Empresa empresa = empresas.get(indiceEmpresa);
+        Freelancer freelancer = freelancers.get(indiceFreelancer);
+
+        Avaliacao avaliacao = freelancerService.avaliar(empresa,freelancer,dto);
+
+        return ResponseEntity.status(200).body(avaliacao);
     }
 
     @PutMapping("/{indice}")
