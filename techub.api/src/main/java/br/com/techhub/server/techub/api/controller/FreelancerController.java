@@ -56,7 +56,7 @@ public class FreelancerController {
         return ResponseEntity.status(201).body(freelancerMapper.freelancerToDadosDetalhamentoFreelancerDto(freelancer));
     }
 
-    @PostMapping("avaliar/{indiceEmpresa}/{indiceFreelancer}")
+    @PostMapping("avaliar/{indiceFreelancer}/{indiceEmpresa}")
     public ResponseEntity<Avaliacao> avaliarEmpresa(@PathVariable int indiceEmpresa, @PathVariable int indiceFreelancer,
                                                        @RequestBody @Valid DadosAvaliacaoDto dto){
         Empresa empresa = empresas.get(indiceEmpresa);
