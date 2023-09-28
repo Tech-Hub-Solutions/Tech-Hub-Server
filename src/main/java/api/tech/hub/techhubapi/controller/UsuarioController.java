@@ -13,17 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Optional;
-
 @RestController
 @RequestMapping("/usuarios")
 public class UsuarioController {
     @Autowired
     private UsuarioRepository repository;
-    @Autowired
-    private UsuarioMapper usuarioMapper;
-
     @Autowired
     private UsuarioService usuarioService;
 
@@ -34,28 +28,27 @@ public class UsuarioController {
     }
 
     @PostMapping
-    public ResponseEntity<Usuario> cadastrarUsuario(@RequestBody @Valid UsuarioCriacaoDto dados) {
-        Usuario usuario = this.repository.save(usuarioMapper.of(dados));
-        return ResponseEntity.status(201).body(usuario);
-    }
-
-    @GetMapping
-    public ResponseEntity<List<Usuario>> listarUsuarios() {
-        return ResponseEntity.status(201).body(this.repository.findAll());
+    public ResponseEntity<Usuario> cadastrarUsuario(@RequestBody @Valid UsuarioCriacaoDto dto) {
+        Usuario usuarioValidado = usuarioService.verificarUsuarioCadastro(dto);
+        return ResponseEntity.created(null).body(this.repository.save(usuarioValidado));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Usuario> buscarUsuario(@PathVariable Integer id) {
-        Optional<Usuario> usuarioOpt = this.repository.findById(id);
-
-        return usuarioOpt.map(usuario -> ResponseEntity.status(200).body(usuario))
-                .orElseGet(() -> ResponseEntity.status(404).build());
+        return ResponseEntity.of(this.repository.findUsuarioByIdAndIsAtivoTrue(id));
     }
 
-    @PutMapping
-    public ResponseEntity<Usuario> atualizarDadosDoUsuario(@PathVariable Integer id,
-                                                           @RequestBody @Valid UsuarioAtualizacaoDto usuario) {
-        return null;
+    @PutMapping("/{id}")
+    public ResponseEntity<Usuario> atualizarUsuarioPorId(@PathVariable Integer id,
+                                                         @RequestBody UsuarioAtualizacaoDto dto) {
+        Usuario usuarioAtualizacaoValidado = usuarioService.validarAtualizacaoUsuario(id,dto);
+        return ResponseEntity.ok(this.repository.save(usuarioAtualizacaoValidado));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> desativarUsuario (@PathVariable Integer id) {
+        usuarioService.deletarUsuario(id);
+        return ResponseEntity.noContent().build();
     }
 
 }
