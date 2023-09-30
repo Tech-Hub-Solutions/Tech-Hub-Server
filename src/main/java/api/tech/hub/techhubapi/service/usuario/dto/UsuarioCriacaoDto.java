@@ -17,7 +17,6 @@ public record UsuarioCriacaoDto(
         @NotBlank
         String senha,
 
-        @CNPJ
         String numeroCadastroPessoa,
 
         @NotBlank
@@ -25,6 +24,11 @@ public record UsuarioCriacaoDto(
 
         @NotBlank
         String funcao
+
+
+        // Possivelmente vai ter que criar uma anotação aqui
+        // Mas antes precisamos verificar com os professores se realmente precisa criar
+        //Mandei email pro reis e agora estou esperando resposta
 
 ) {
 }
