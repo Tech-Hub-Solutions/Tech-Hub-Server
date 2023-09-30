@@ -18,7 +18,6 @@ public record UsuarioCriacaoDto(
         String senha,
 
         @CNPJ
-        @CPF
         String numeroCadastroPessoa,
 
         @NotBlank

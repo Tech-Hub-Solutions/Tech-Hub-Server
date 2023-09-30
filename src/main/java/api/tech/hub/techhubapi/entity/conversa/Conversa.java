@@ -1,21 +1,24 @@
-package api.tech.hub.techhubapi.entity.usuario.chat;
+package api.tech.hub.techhubapi.entity.conversa;
 
 import api.tech.hub.techhubapi.entity.usuario.Usuario;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 @Entity
-@EqualsAndHashCode(of="id")
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Conversa {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Usuario usuario;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Sala sala;
+
+    boolean isAtivo;
 }
