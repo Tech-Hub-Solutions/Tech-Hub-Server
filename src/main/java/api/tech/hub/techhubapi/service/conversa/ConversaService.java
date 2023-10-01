@@ -62,8 +62,8 @@ public class ConversaService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Conversa já iniciada!");
         }
 
-        socketService.iniciarConversa(usuarioAutenticado);
-        socketService.iniciarConversa(usuarioASerIniciado);
+        socketService.recarregarConversas(usuarioAutenticado.getId());
+        socketService.recarregarConversas(usuarioASerIniciado.getId());
 
         return new RoomCodeDto(sala.getRoomCode());
     }
@@ -101,6 +101,12 @@ public class ConversaService {
         Usuario usuario = autenticacaoService.getUsuarioFromUsuarioDetails();
         Sala sala = this.salaRepository.findByRoomCode(roomCode)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatusCode.valueOf(404), "Sala não encontrada"));
+        Conversa conversaUsuarioAEnviar = this.conversaRepository.findBySala(sala)
+                .stream()
+                .filter(c->c.getUsuario()!=usuario)
+                .findFirst()
+                .orElseThrow(() -> new ResponseStatusException(HttpStatusCode.valueOf(404), "usuário não encontrada"));
+
 
         verificarUsuarioNaSala(usuario, sala);
 
@@ -112,6 +118,9 @@ public class ConversaService {
         MensagemASerEnviadaDto mensagemASerEnviadaDto = new MensagemASerEnviadaDto(mensagem);
 
         socketService.enviarMensagem(roomCode,mensagemASerEnviadaDto);
+
+        socketService.recarregarConversas(usuario.getId());
+        socketService.recarregarConversas(conversaUsuarioAEnviar.getUsuario().getId());
     }
 
     public List<MensagemASerEnviadaDto> listarMensagens(String roomCode) {

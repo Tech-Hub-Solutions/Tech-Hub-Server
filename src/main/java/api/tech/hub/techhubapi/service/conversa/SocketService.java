@@ -17,8 +17,8 @@ public class SocketService {
         template.convertAndSend(routeWebSocket, mensagemASerEnviadaDto);
     }
 
-    public void iniciarConversa(Usuario usuarioAutenticado) {
-        String routeWebSocket = String.format("/topic/usuario/%s", usuarioAutenticado.getId());
-        template.convertAndSend(routeWebSocket);
+    public void recarregarConversas(Integer id) {
+        String routeWebSocket = String.format("/topic/usuario/%s", id);
+        template.convertAndSend(routeWebSocket,"");
     }
 }

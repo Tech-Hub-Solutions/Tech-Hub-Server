@@ -19,9 +19,9 @@ public interface ConversaRepository extends JpaRepository<Conversa, Integer> {
 
     Conversa findByUsuarioAndSala(Usuario usuarioAutenticado, Sala sala);
 
-
-
     List<Conversa> findByUsuario(Usuario usuarioAutenticado);
 
     List<Conversa> findByAndSalaIn(List<Sala> salasDoUsuario);
+
+    List<Conversa> findBySala(Sala sala);
 }

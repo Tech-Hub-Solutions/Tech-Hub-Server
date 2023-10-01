@@ -14,11 +14,11 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ConversaDto {
-    private UsuarioConversaDto usuarioConversaDto;
+    private UsuarioConversaDto usuario;
     private MensagemASerEnviadaDto mensagem;
 
     public ConversaDto(Conversa conversa) {
-        this.usuarioConversaDto = new UsuarioConversaDto(conversa.getUsuario());
+        this.usuario = new UsuarioConversaDto(conversa.getUsuario());
         this.mensagem = null;
     }
 
