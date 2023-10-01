@@ -8,6 +8,7 @@ import api.tech.hub.techhubapi.repository.ConversaRepository;
 import api.tech.hub.techhubapi.repository.MensagemRepository;
 import api.tech.hub.techhubapi.repository.SalaRepository;
 import api.tech.hub.techhubapi.repository.UsuarioRepository;
+import api.tech.hub.techhubapi.service.conversa.dto.ConversaDto;
 import api.tech.hub.techhubapi.service.conversa.dto.MensagemASerEnviadaDto;
 import api.tech.hub.techhubapi.service.conversa.dto.MensagemRecebidaDto;
 import api.tech.hub.techhubapi.service.conversa.dto.RoomCodeDto;
@@ -21,21 +22,20 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class ConversaService {
+    private final AutenticacaoService autenticacaoService;
+    private final SocketService socketService;
 
-    private final SimpMessagingTemplate template;
     private final ConversaRepository conversaRepository;
     private final UsuarioRepository usuarioRepository;
     private final MensagemRepository mensagemRepository;
     private final SalaRepository salaRepository;
-    private final AutenticacaoService autenticacaoService;
 
     public RoomCodeDto iniciarConversa(Integer idUsuario) {
         Usuario usuarioAutenticado = autenticacaoService.getUsuarioFromUsuarioDetails();
@@ -62,6 +62,8 @@ public class ConversaService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Conversa já iniciada!");
         }
 
+        socketService.iniciarConversa(usuarioAutenticado);
+        socketService.iniciarConversa(usuarioASerIniciado);
 
         return new RoomCodeDto(sala.getRoomCode());
     }
@@ -107,10 +109,9 @@ public class ConversaService {
         Mensagem mensagem = new Mensagem(null, usuario, sala, mensagemDto.texto(), agora);
         this.mensagemRepository.save(mensagem);
 
-        String routeWebSocket = String.format("/topic/sala/%s", roomCode);
         MensagemASerEnviadaDto mensagemASerEnviadaDto = new MensagemASerEnviadaDto(mensagem);
 
-        template.convertAndSend(routeWebSocket, mensagemASerEnviadaDto);
+        socketService.enviarMensagem(roomCode,mensagemASerEnviadaDto);
     }
 
     public List<MensagemASerEnviadaDto> listarMensagens(String roomCode) {
@@ -147,5 +148,31 @@ public class ConversaService {
 
     private String gerarRoomCode() {
         return UUID.randomUUID().toString();
+    }
+
+    public List<ConversaDto> listarConversas() {
+        Usuario usuarioAutenticado = autenticacaoService.getUsuarioFromUsuarioDetails();
+
+
+        List<Conversa> conversasUsuario = conversaRepository.findByUsuario(usuarioAutenticado);
+        List<Sala> salasDoUsuario = conversasUsuario.stream().map(Conversa::getSala).distinct().toList();
+
+        List<Conversa> conversasDaSala = conversaRepository.findByAndSalaIn(salasDoUsuario);
+
+        List<ConversaDto> conversas = conversasDaSala
+                .stream()
+                .filter(conversa -> !conversa.getUsuario().equals(usuarioAutenticado))
+                .map(conversa -> {
+                    Optional<Mensagem> mensagem = mensagemRepository.findFirstBySalaOrderByDtMensagemDesc(conversa.getSala());
+
+                    return mensagem.map(value -> new ConversaDto(conversa, value))
+                            .orElseGet(() -> new ConversaDto(conversa));
+
+                })
+                .toList();
+
+
+
+        return conversas;
     }
 }

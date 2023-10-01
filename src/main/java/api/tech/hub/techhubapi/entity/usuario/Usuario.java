@@ -5,18 +5,21 @@ import api.tech.hub.techhubapi.entity.conversa.Conversa;
 import api.tech.hub.techhubapi.entity.conversa.Mensagem;
 import api.tech.hub.techhubapi.entity.contrato.UsuarioContrato;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import jakarta.validation.constraints.Null;
+import lombok.*;
 
 import java.util.List;
 
 @Entity
-@EqualsAndHashCode(of="id")
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     @OneToOne
     private Perfil perfil;
 
