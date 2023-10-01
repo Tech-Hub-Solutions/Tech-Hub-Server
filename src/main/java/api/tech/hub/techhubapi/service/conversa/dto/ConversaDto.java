@@ -14,15 +14,17 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ConversaDto {
+    private String roomCode;
     private UsuarioConversaDto usuario;
     private MensagemASerEnviadaDto mensagem;
 
     public ConversaDto(Conversa conversa) {
+        this.roomCode = conversa.getSala().getRoomCode();
         this.usuario = new UsuarioConversaDto(conversa.getUsuario());
         this.mensagem = null;
     }
 
     public ConversaDto(Conversa conversa, Mensagem mensagem) {
-        this(new UsuarioConversaDto(conversa.getUsuario()), new MensagemASerEnviadaDto(mensagem));
+        this(conversa.getSala().getRoomCode(), new UsuarioConversaDto(conversa.getUsuario()), new MensagemASerEnviadaDto(mensagem));
     }
 }

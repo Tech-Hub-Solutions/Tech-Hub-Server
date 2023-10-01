@@ -5,7 +5,7 @@ import api.tech.hub.techhubapi.entity.conversa.Mensagem;
 import java.time.LocalDateTime;
 
 public record MensagemASerEnviadaDto(
-        Integer idUsuario,
+        Integer usuarioId,
         String texto,
         LocalDateTime dtHora
 ) {

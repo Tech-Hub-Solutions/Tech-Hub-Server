@@ -13,11 +13,12 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UsuarioConversaDto {
-
+    private Integer id;
     private String nome;
     private String pathPerfilImage;
 
     public UsuarioConversaDto(Usuario usuario) {
+        this.id = usuario.getId();
         this.nome = usuario.getNome();
         if (usuario.getPerfil() == null) {
             this.pathPerfilImage = null;

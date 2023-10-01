@@ -4,6 +4,7 @@ import api.tech.hub.techhubapi.entity.perfil.Perfil;
 import api.tech.hub.techhubapi.entity.conversa.Conversa;
 import api.tech.hub.techhubapi.entity.conversa.Mensagem;
 import api.tech.hub.techhubapi.entity.contrato.UsuarioContrato;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Null;
 import lombok.*;
@@ -34,6 +35,7 @@ public class Usuario {
     @OneToMany
     private List<UsuarioContrato> usuarioContratoList;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "usuario")
     private List<Conversa> conversaList;
 

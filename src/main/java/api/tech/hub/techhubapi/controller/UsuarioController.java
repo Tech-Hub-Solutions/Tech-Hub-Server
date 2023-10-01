@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/usuarios")
 public class UsuarioController {
@@ -27,6 +29,15 @@ public class UsuarioController {
         return ResponseEntity.status(200).body(usuarioTokenDto);
     }
 
+    @GetMapping
+    public ResponseEntity<List<Usuario>> listar() {
+        List<Usuario> usuarios = this.usuarioService.listar();
+
+        if(usuarios.isEmpty()) {
+            return  ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.status(200).body(usuarios);
+    }
     @PostMapping
     public ResponseEntity<Usuario> cadastrarUsuario(@RequestBody @Valid UsuarioCriacaoDto dto) {
         Usuario usuarioValidado = usuarioService.verificarUsuarioCadastro(dto);
