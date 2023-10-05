@@ -1,16 +1,20 @@
 package api.tech.hub.techhubapi.service.usuario.dto;
 
 import api.tech.hub.techhubapi.entity.usuario.Usuario;
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
 public class UsuarioDetailsDto implements UserDetails {
+    @Getter
+    private final Integer id;
     private final String email;
     private final String senha;
 
     public UsuarioDetailsDto(Usuario usuario) {
+        this.id = usuario.getId();
         this.email = usuario.getEmail();
         this.senha = usuario.getSenha();
     }
@@ -49,4 +53,5 @@ public class UsuarioDetailsDto implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
 }

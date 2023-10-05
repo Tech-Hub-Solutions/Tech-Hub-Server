@@ -1,22 +1,26 @@
 package api.tech.hub.techhubapi.entity.usuario;
 
 import api.tech.hub.techhubapi.entity.perfil.Perfil;
-import api.tech.hub.techhubapi.entity.usuario.chat.Conversa;
-import api.tech.hub.techhubapi.entity.usuario.chat.Mensagem;
-import api.tech.hub.techhubapi.entity.usuario.contrato.UsuarioContrato;
+import api.tech.hub.techhubapi.entity.conversa.Conversa;
+import api.tech.hub.techhubapi.entity.conversa.Mensagem;
+import api.tech.hub.techhubapi.entity.contrato.UsuarioContrato;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import jakarta.validation.constraints.Null;
+import lombok.*;
 
 import java.util.List;
 
 @Entity
-@EqualsAndHashCode(of="id")
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     @OneToOne
     private Perfil perfil;
 
@@ -30,9 +34,9 @@ public class Usuario {
 
     @OneToMany
     private List<UsuarioContrato> usuarioContratoList;
-    @OneToMany
-    private List<Mensagem> mensagemList;
-    @OneToMany
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "usuario")
     private List<Conversa> conversaList;
 
 }

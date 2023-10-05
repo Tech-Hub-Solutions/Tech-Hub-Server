@@ -1,14 +1,15 @@
 package api.tech.hub.techhubapi.entity.perfil.flag;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 import java.util.List;
 
 @Entity
-@EqualsAndHashCode(of="id")
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Flag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

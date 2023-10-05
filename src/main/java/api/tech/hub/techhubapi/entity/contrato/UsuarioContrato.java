@@ -1,12 +1,13 @@
-package api.tech.hub.techhubapi.entity.usuario.contrato;
+package api.tech.hub.techhubapi.entity.contrato;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 @Entity
-@EqualsAndHashCode(of="id")
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class UsuarioContrato {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
