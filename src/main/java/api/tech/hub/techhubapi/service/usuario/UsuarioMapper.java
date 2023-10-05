@@ -1,6 +1,7 @@
 package api.tech.hub.techhubapi.service.usuario;
 
 import api.tech.hub.techhubapi.entity.usuario.Usuario;
+import api.tech.hub.techhubapi.service.usuario.dto.UsuarioAtualizacaoDto;
 import api.tech.hub.techhubapi.service.usuario.dto.UsuarioTokenDto;
 import api.tech.hub.techhubapi.service.usuario.dto.UsuarioCriacaoDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,16 @@ public class UsuarioMapper {
         usuario.setPais(dto.pais());
         usuario.setFuncao(dto.funcao());
         usuario.setAtivo(true);
+
+        return usuario;
+    }
+
+    public Usuario of(Usuario usuario, UsuarioAtualizacaoDto dto) {
+
+        usuario.setNome(dto.nome());
+        usuario.setEmail(dto.email());
+        usuario.setPais(dto.pais());
+        usuario.setFuncao(dto.funcao());
 
         return usuario;
     }

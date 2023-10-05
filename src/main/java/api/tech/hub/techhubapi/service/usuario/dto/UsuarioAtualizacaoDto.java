@@ -1,4 +1,21 @@
 package api.tech.hub.techhubapi.service.usuario.dto;
 
-public record UsuarioAtualizacaoDto() {
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import org.hibernate.validator.constraints.br.CNPJ;
+import org.hibernate.validator.constraints.br.CPF;
+
+public record UsuarioAtualizacaoDto(
+        @NotBlank
+        String nome,
+
+        @Email
+        String email,
+
+        @NotBlank
+        String pais,
+
+        @NotBlank
+        String funcao
+) {
 }

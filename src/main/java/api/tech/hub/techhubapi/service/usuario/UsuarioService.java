@@ -3,6 +3,8 @@ package api.tech.hub.techhubapi.service.usuario;
 import api.tech.hub.techhubapi.configuration.security.jwt.GerenciadorTokenJwt;
 import api.tech.hub.techhubapi.entity.usuario.Usuario;
 import api.tech.hub.techhubapi.repository.UsuarioRepository;
+import api.tech.hub.techhubapi.service.usuario.dto.UsuarioAtualizacaoDto;
+import api.tech.hub.techhubapi.service.usuario.dto.UsuarioCriacaoDto;
 import api.tech.hub.techhubapi.service.usuario.dto.UsuarioLoginDto;
 import api.tech.hub.techhubapi.service.usuario.dto.UsuarioTokenDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
 public class UsuarioService {
     @Autowired
@@ -25,6 +30,8 @@ public class UsuarioService {
     private GerenciadorTokenJwt gerenciadorTokenJwt;
     @Autowired
     private AuthenticationManager authenticationManager;
+    @Autowired
+    private UsuarioMapper usuarioMapper;
 
     public UsuarioTokenDto autenticar(UsuarioLoginDto usuarioLoginDto) {
         final UsernamePasswordAuthenticationToken credentials = new UsernamePasswordAuthenticationToken(
@@ -40,6 +47,37 @@ public class UsuarioService {
 
         final String token = gerenciadorTokenJwt.generateToken(authentication);
 
-        return UsuarioMapper.of(usuarioAutenticado,token);
+        return UsuarioMapper.of(usuarioAutenticado, token);
+    }
+
+    public Usuario verificarUsuarioCadastro(UsuarioCriacaoDto dto) {
+        Usuario validado = usuarioMapper.of(dto);
+        Optional<Usuario> usuarioOpt = this.usuarioRepository.findUsuarioByEmailAndNumeroCadastroPessoa(validado.getEmail(),
+                validado.getNumeroCadastroPessoa());
+
+        if (usuarioOpt.isPresent()) {
+            throw new ResponseStatusException(HttpStatusCode.valueOf(409), "Usuário já existe!");
+        }
+
+        return validado;
+    }
+
+    public Usuario validarAtualizacaoUsuario(Integer id, UsuarioAtualizacaoDto dto) {
+        Usuario usuario = usuarioRepository.findUsuarioByIdAndIsAtivoTrue(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatusCode.valueOf(404), "Usuário não encontrado!"));
+
+        return usuarioMapper.of(usuario, dto);
+    }
+
+    public void deletarUsuario(Integer id) {
+        Usuario usuario = usuarioRepository.findUsuarioByIdAndIsAtivoTrue(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatusCode.valueOf(404),"Usuário não encontrado"));
+
+        usuario.setAtivo(false);
+        usuarioRepository.save(usuario);
+    }
+
+    public List<Usuario> listar() {
+        return this.usuarioRepository.findAll();
     }
 }

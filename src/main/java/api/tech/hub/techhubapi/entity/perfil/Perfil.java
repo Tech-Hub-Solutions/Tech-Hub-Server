@@ -3,14 +3,15 @@ package api.tech.hub.techhubapi.entity.perfil;
 import api.tech.hub.techhubapi.entity.perfil.flag.FlagUsuario;
 import api.tech.hub.techhubapi.entity.usuario.Usuario;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 import java.util.List;
 
 @Entity
-@EqualsAndHashCode(of="id")
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Perfil {
 
     @Id

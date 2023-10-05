@@ -1,15 +1,17 @@
-package api.tech.hub.techhubapi.entity.usuario.chat;
+package api.tech.hub.techhubapi.entity.conversa;
 
 import api.tech.hub.techhubapi.entity.usuario.Usuario;
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Entity
-@EqualsAndHashCode(of = "id")
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Mensagem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,6 +19,7 @@ public class Mensagem {
 
     @ManyToOne
     private Usuario usuario;
+
     @ManyToOne
     private Sala sala;
 
