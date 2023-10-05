@@ -3,11 +3,9 @@ package api.tech.hub.techhubapi.service.usuario;
 import api.tech.hub.techhubapi.configuration.security.jwt.GerenciadorTokenJwt;
 import api.tech.hub.techhubapi.entity.usuario.Usuario;
 import api.tech.hub.techhubapi.repository.UsuarioRepository;
-import api.tech.hub.techhubapi.service.usuario.dto.UsuarioAtualizacaoDto;
-import api.tech.hub.techhubapi.service.usuario.dto.UsuarioCriacaoDto;
-import api.tech.hub.techhubapi.service.usuario.dto.UsuarioLoginDto;
-import api.tech.hub.techhubapi.service.usuario.dto.UsuarioTokenDto;
+import api.tech.hub.techhubapi.service.usuario.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -50,7 +48,7 @@ public class UsuarioService {
         return UsuarioMapper.of(usuarioAutenticado, token);
     }
 
-    public Usuario verificarUsuarioCadastro(UsuarioCriacaoDto dto) {
+    public Usuario salvarUsuarioCadastro(UsuarioCriacaoDto dto) {
         Usuario validado = usuarioMapper.of(dto);
         Optional<Usuario> usuarioOpt = this.usuarioRepository.findUsuarioByEmailAndNumeroCadastroPessoa(validado.getEmail(),
                 validado.getNumeroCadastroPessoa());
@@ -59,14 +57,26 @@ public class UsuarioService {
             throw new ResponseStatusException(HttpStatusCode.valueOf(409), "Usuário já existe!");
         }
 
-        return validado;
+        return this.usuarioRepository.save(validado);
     }
 
-    public Usuario validarAtualizacaoUsuario(Integer id, UsuarioAtualizacaoDto dto) {
+    public UsuarioDetalhadoDto atualizarInformacaoUsuarioPorId(Integer id, UsuarioAtualizacaoDto dto) {
         Usuario usuario = usuarioRepository.findUsuarioByIdAndIsAtivoTrue(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatusCode.valueOf(404), "Usuário não encontrado!"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado!"));
 
-        return usuarioMapper.of(usuario, dto);
+        return usuarioMapper.dtoOf(
+                this.usuarioRepository.save(
+                        usuarioMapper.of(usuario, dto)
+                )
+        );
+    }
+
+    public UsuarioDetalhadoDto buscarPorId(Integer id) {
+        return usuarioMapper.dtoOf(
+                this.usuarioRepository.findUsuarioByIdAndIsAtivoTrue(id).orElseThrow(
+                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Usuário não encontrado")
+                )
+        );
     }
 
     public void deletarUsuario(Integer id) {

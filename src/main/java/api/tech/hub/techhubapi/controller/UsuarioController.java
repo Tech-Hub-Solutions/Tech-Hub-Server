@@ -1,27 +1,26 @@
 package api.tech.hub.techhubapi.controller;
 
 import api.tech.hub.techhubapi.entity.usuario.Usuario;
-import api.tech.hub.techhubapi.repository.UsuarioRepository;
-import api.tech.hub.techhubapi.service.usuario.UsuarioMapper;
 import api.tech.hub.techhubapi.service.usuario.UsuarioService;
-import api.tech.hub.techhubapi.service.usuario.dto.UsuarioAtualizacaoDto;
-import api.tech.hub.techhubapi.service.usuario.dto.UsuarioLoginDto;
-import api.tech.hub.techhubapi.service.usuario.dto.UsuarioTokenDto;
-import api.tech.hub.techhubapi.service.usuario.dto.UsuarioCriacaoDto;
+import api.tech.hub.techhubapi.service.usuario.dto.*;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/usuarios")
 public class UsuarioController {
-    @Autowired
-    private UsuarioRepository repository;
-    @Autowired
-    private UsuarioService usuarioService;
+
+    private final UsuarioService usuarioService;
+
+    public UsuarioController(UsuarioService usuarioService) {
+        this.usuarioService = usuarioService;
+    }
 
     @PostMapping("/login")
     public ResponseEntity<UsuarioTokenDto> login(@RequestBody UsuarioLoginDto usuarioLoginDto) {
@@ -40,20 +39,26 @@ public class UsuarioController {
     }
     @PostMapping
     public ResponseEntity<Usuario> cadastrarUsuario(@RequestBody @Valid UsuarioCriacaoDto dto) {
-        Usuario usuarioValidado = usuarioService.verificarUsuarioCadastro(dto);
-        return ResponseEntity.created(null).body(this.repository.save(usuarioValidado));
+        Usuario usuarioSalvo = usuarioService.salvarUsuarioCadastro(dto);
+
+        URI uri = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(usuarioSalvo.getId())
+                .toUri();
+
+        return ResponseEntity.created(uri).body(usuarioSalvo);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Usuario> buscarUsuario(@PathVariable Integer id) {
-        return ResponseEntity.of(this.repository.findUsuarioByIdAndIsAtivoTrue(id));
+    public ResponseEntity<UsuarioDetalhadoDto> buscarUsuario(@PathVariable Integer id) {
+        return ResponseEntity.ok(this.usuarioService.buscarPorId(id));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Usuario> atualizarUsuarioPorId(@PathVariable Integer id,
+    public ResponseEntity<UsuarioDetalhadoDto> atualizarUsuarioPorId(@PathVariable Integer id,
                                                          @RequestBody UsuarioAtualizacaoDto dto) {
-        Usuario usuarioAtualizacaoValidado = usuarioService.validarAtualizacaoUsuario(id,dto);
-        return ResponseEntity.ok(this.repository.save(usuarioAtualizacaoValidado));
+        return ResponseEntity.ok(this.usuarioService.atualizarInformacaoUsuarioPorId(id,dto));
     }
 
     @DeleteMapping("/{id}")
