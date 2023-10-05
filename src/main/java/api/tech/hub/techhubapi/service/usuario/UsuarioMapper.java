@@ -2,6 +2,7 @@ package api.tech.hub.techhubapi.service.usuario;
 
 import api.tech.hub.techhubapi.entity.usuario.Usuario;
 import api.tech.hub.techhubapi.service.usuario.dto.UsuarioAtualizacaoDto;
+import api.tech.hub.techhubapi.service.usuario.dto.UsuarioDetalhadoDto;
 import api.tech.hub.techhubapi.service.usuario.dto.UsuarioTokenDto;
 import api.tech.hub.techhubapi.service.usuario.dto.UsuarioCriacaoDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,10 @@ public class UsuarioMapper {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    public UsuarioDetalhadoDto dtoOf (Usuario usuario) {
+        return new UsuarioDetalhadoDto(usuario);
+    }
 
     public Usuario of(UsuarioCriacaoDto dto) {
         Usuario usuario = new Usuario();
