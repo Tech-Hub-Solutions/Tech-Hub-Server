@@ -5,6 +5,7 @@ import api.tech.hub.techhubapi.service.conversa.dto.ConversaDto;
 import api.tech.hub.techhubapi.service.conversa.dto.MensagemASerEnviadaDto;
 import api.tech.hub.techhubapi.service.conversa.dto.MensagemRecebidaDto;
 import api.tech.hub.techhubapi.service.conversa.dto.RoomCodeDto;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/conversas")
+@SecurityRequirement(name = "bearer-key")
 @RequiredArgsConstructor
 public class ConversaController {
 
