@@ -28,12 +28,16 @@ public class Perfil {
 
     @OneToOne
     private Usuario usuario;
-    @OneToMany
+
+    @OneToMany(mappedBy = "perfil")
     private List<FlagUsuario> flagUsuarioList;
-    @OneToMany
+
+    @OneToMany(mappedBy = "perfil")
     private List<Avaliacao> avaliacaoList;
-    @OneToMany
+
+    @OneToMany(mappedBy = "perfil")
     private List<Projeto> projetoList;
-    @OneToMany
+
+    @OneToMany(mappedBy = "perfil")
     private List<ReferenciaPerfil> referenciaPerfilList;
 }
