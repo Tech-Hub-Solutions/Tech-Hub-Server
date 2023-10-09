@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -27,4 +28,7 @@ public class Mensagem {
     @Size(max = 200000)
     private String texto;
     private LocalDateTime dtMensagem;
+
+    @OneToMany(mappedBy = "mensagem")
+    private List<Arquivo> arquivos;
 }

@@ -38,6 +38,6 @@ public class Perfil {
     @OneToMany(mappedBy = "perfil")
     private List<Projeto> projetoList;
 
-    @OneToMany(mappedBy = "perfil")
+    @OneToMany
     private List<ReferenciaPerfil> referenciaPerfilList;
 }

@@ -112,7 +112,7 @@ public class ConversaService {
 
         LocalDateTime agora = LocalDateTime.now();
 
-        Mensagem mensagem = new Mensagem(null, usuario, sala, mensagemDto.texto(), agora);
+        Mensagem mensagem = new Mensagem(null, usuario, sala, mensagemDto.texto(), agora, null);
         this.mensagemRepository.save(mensagem);
 
         MensagemASerEnviadaDto mensagemASerEnviadaDto = new MensagemASerEnviadaDto(mensagem);
