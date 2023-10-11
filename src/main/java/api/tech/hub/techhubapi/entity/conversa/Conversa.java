@@ -9,6 +9,7 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class Conversa {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

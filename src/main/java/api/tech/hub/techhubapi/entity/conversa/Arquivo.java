@@ -1,5 +1,6 @@
 package api.tech.hub.techhubapi.entity.conversa;
 
+import api.tech.hub.techhubapi.service.arquivo.TipoArquivo;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,6 +22,7 @@ public class Arquivo {
   private String nomeArquivoOriginal;
   private String nomeArquivoSalvo;
   private LocalDate dataUpload;
+  private TipoArquivo tipoArquivo;
   @ManyToOne
   private Mensagem mensagem;
 }
