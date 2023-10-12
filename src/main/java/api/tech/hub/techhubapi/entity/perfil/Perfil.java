@@ -2,6 +2,7 @@ package api.tech.hub.techhubapi.entity.perfil;
 
 import api.tech.hub.techhubapi.entity.perfil.flag.FlagUsuario;
 import api.tech.hub.techhubapi.entity.usuario.Usuario;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -38,6 +39,6 @@ public class Perfil {
     @OneToMany(mappedBy = "perfil")
     private List<Projeto> projetoList;
 
-    @OneToMany(mappedBy = "perfil")
+    @OneToMany(mappedBy = "avaliado")
     private List<ReferenciaPerfil> referenciaPerfilList;
 }
