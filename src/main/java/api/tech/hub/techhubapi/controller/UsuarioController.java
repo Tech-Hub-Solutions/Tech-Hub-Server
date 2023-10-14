@@ -1,5 +1,6 @@
 package api.tech.hub.techhubapi.controller;
 
+import api.tech.hub.techhubapi.entity.ListaObj;
 import api.tech.hub.techhubapi.entity.usuario.Usuario;
 import api.tech.hub.techhubapi.service.usuario.UsuarioService;
 import api.tech.hub.techhubapi.service.usuario.dto.*;
@@ -31,14 +32,15 @@ public class UsuarioController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Usuario>> listar() {
-        List<Usuario> usuarios = this.usuarioService.listar();
+    public ResponseEntity<ListaObj<Usuario>> listar() {
+        ListaObj<Usuario> usuarios = this.usuarioService.listar();
 
-        if(usuarios.isEmpty()) {
+        if(usuarios.getTamanho() == 0) {
             return  ResponseEntity.noContent().build();
         }
         return ResponseEntity.status(200).body(usuarios);
     }
+
     @PostMapping
     public ResponseEntity<Usuario> cadastrarUsuario(@RequestBody @Valid UsuarioCriacaoDto dto) {
         Usuario usuarioSalvo = usuarioService.salvarUsuarioCadastro(dto);

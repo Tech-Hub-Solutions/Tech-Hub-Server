@@ -1,6 +1,7 @@
 package api.tech.hub.techhubapi.service.avaliacao;
 
 import api.tech.hub.techhubapi.entity.perfil.Avaliacao;
+import api.tech.hub.techhubapi.service.avaliacao.dto.AvaliacaoDetalhadoDto;
 import api.tech.hub.techhubapi.service.avaliacao.dto.avaliacaoDto;
 import org.springframework.stereotype.Component;
 
@@ -13,5 +14,9 @@ public class AvaliacaoMapper {
         novaAvaliacao.setQtdEstrela(dto.qtdEstrela());
 
         return novaAvaliacao;
+    }
+
+    public AvaliacaoDetalhadoDto dtoOf(Avaliacao avaliacao) {
+        return new AvaliacaoDetalhadoDto(avaliacao);
     }
 }

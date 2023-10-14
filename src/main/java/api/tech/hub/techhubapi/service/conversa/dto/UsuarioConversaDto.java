@@ -23,7 +23,7 @@ public class UsuarioConversaDto {
         if (usuario.getPerfil() == null) {
             this.pathPerfilImage = null;
         } else {
-            this.pathPerfilImage = usuario.getPerfil().getPathPerfilImage();
+            this.pathPerfilImage = null;
         }
     }
 }

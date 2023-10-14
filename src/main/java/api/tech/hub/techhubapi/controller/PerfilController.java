@@ -1,17 +1,16 @@
 package api.tech.hub.techhubapi.controller;
 
 import api.tech.hub.techhubapi.entity.perfil.Avaliacao;
-import api.tech.hub.techhubapi.entity.perfil.Perfil;
-import api.tech.hub.techhubapi.entity.perfil.Projeto;
 import api.tech.hub.techhubapi.service.avaliacao.AvaliacaoService;
+import api.tech.hub.techhubapi.service.avaliacao.dto.AvaliacaoDetalhadoDto;
 import api.tech.hub.techhubapi.service.perfil.PerfilService;
 import api.tech.hub.techhubapi.service.perfil.dto.PerfilCadastroDto;
 import api.tech.hub.techhubapi.service.avaliacao.dto.avaliacaoDto;
 import api.tech.hub.techhubapi.service.perfil.dto.PerfilDetalhadoDto;
 import api.tech.hub.techhubapi.service.projeto.ProjetoService;
-import api.tech.hub.techhubapi.service.projeto.dto.projetoCriacaoDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.boot.spi.NaturalIdUniqueKeyBinder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,22 +24,17 @@ public class PerfilController {
     private final ProjetoService projetoService;
 
     @PostMapping("/{idUsuario}")
-    public ResponseEntity<PerfilDetalhadoDto> criarPerfil(@PathVariable int idUsuario, @RequestBody @Valid PerfilCadastroDto dto){
+    public ResponseEntity<PerfilDetalhadoDto> criarPerfil(@PathVariable Integer idUsuario, @RequestBody @Valid PerfilCadastroDto dto){
         return ResponseEntity.ok(this.perfilService.validarDtoCadastro(idUsuario,dto));
     }
 
-    @PostMapping("/avaliar")
-    public ResponseEntity<Avaliacao> avaliarPerfil(@RequestBody @Valid avaliacaoDto dto){
-        return ResponseEntity.ok(this.avaliacaoService.validarDtoAvaliacao(dto));
-    }
-
-    @PostMapping("/projeto")
-    public ResponseEntity<Projeto> criarProjeto(@RequestBody @Valid projetoCriacaoDto dto){
-        return ResponseEntity.ok(this.projetoService.cadastrarProjeto(dto));
+    @PostMapping("/avaliar/{idUsuario}")
+    public ResponseEntity<AvaliacaoDetalhadoDto> avaliarPerfil(@PathVariable Integer idUsuario, @RequestBody @Valid avaliacaoDto dto){
+        return ResponseEntity.ok(this.avaliacaoService.avaliar(dto, idUsuario));
     }
 
     @GetMapping("/{idUsuario}")
-    public ResponseEntity<PerfilDetalhadoDto> buscarPerfil(@PathVariable int idUsuario){
+    public ResponseEntity<PerfilDetalhadoDto> buscarPerfil(@PathVariable Integer idUsuario){
         return ResponseEntity.ok(this.perfilService.buscarPerfilPorIdUsuario(idUsuario));
     }
 

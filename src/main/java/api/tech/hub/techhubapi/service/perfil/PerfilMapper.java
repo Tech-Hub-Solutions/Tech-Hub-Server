@@ -2,11 +2,14 @@ package api.tech.hub.techhubapi.service.perfil;
 
 import api.tech.hub.techhubapi.entity.perfil.Avaliacao;
 import api.tech.hub.techhubapi.entity.perfil.Perfil;
+import api.tech.hub.techhubapi.entity.perfil.flag.Flag;
 import api.tech.hub.techhubapi.entity.usuario.Usuario;
 import api.tech.hub.techhubapi.service.perfil.dto.PerfilCadastroDto;
 import api.tech.hub.techhubapi.service.avaliacao.dto.avaliacaoDto;
 import api.tech.hub.techhubapi.service.perfil.dto.PerfilDetalhadoDto;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 public class PerfilMapper {
@@ -16,8 +19,6 @@ public class PerfilMapper {
         novoPerfil.setSobreMim(dto.sobreMim());
         novoPerfil.setExperiencia(dto.experiencia());
         novoPerfil.setDescricao(dto.descricao());
-        novoPerfil.setPathPerfilImage(dto.pathPerfilImage());
-        novoPerfil.setPathWallpaperImage(dto.pathWallpaperImage());
         novoPerfil.setPrecoMedio(dto.precoMedio());
         novoPerfil.setLinkGithub(dto.linkGithub());
         novoPerfil.setLinkLinkedin(dto.linkLinkedin());

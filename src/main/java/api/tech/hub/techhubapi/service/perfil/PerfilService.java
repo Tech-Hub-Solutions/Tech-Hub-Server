@@ -1,23 +1,19 @@
 package api.tech.hub.techhubapi.service.perfil;
 
-import api.tech.hub.techhubapi.entity.perfil.Avaliacao;
 import api.tech.hub.techhubapi.entity.perfil.Perfil;
 import api.tech.hub.techhubapi.entity.perfil.flag.Flag;
-import api.tech.hub.techhubapi.entity.perfil.flag.FlagUsuario;
 import api.tech.hub.techhubapi.entity.usuario.Usuario;
-import api.tech.hub.techhubapi.repository.FlagRepository;
-import api.tech.hub.techhubapi.repository.FlagUsuarioRepository;
 import api.tech.hub.techhubapi.repository.PerfilRepository;
 import api.tech.hub.techhubapi.repository.UsuarioRepository;
+import api.tech.hub.techhubapi.service.flag.FlagService;
+import api.tech.hub.techhubapi.service.flag.FlagUsuarioService;
 import api.tech.hub.techhubapi.service.perfil.dto.PerfilCadastroDto;
-import api.tech.hub.techhubapi.service.avaliacao.dto.avaliacaoDto;
 import api.tech.hub.techhubapi.service.perfil.dto.PerfilDetalhadoDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -27,8 +23,8 @@ public class PerfilService {
     private final PerfilRepository perfilRepository;
     private final UsuarioRepository usuarioRepository;
     private final PerfilMapper perfilMapper;
-    private final FlagUsuarioRepository flagUsuarioRepository;
-    private final FlagRepository flagRepository;
+    private final FlagUsuarioService flagUsuarioService;
+    private final FlagService flagService;
 
     public PerfilDetalhadoDto buscarPerfilPorIdUsuario(Integer idUsuario) {
         if (!this.usuarioRepository.existsById(idUsuario)) {
@@ -43,12 +39,25 @@ public class PerfilService {
         return perfilMapper.dtoOf(perfil);
     }
 
-    public Integer encontrarIdPerfil(int idUsuario) {
-        if (this.usuarioRepository.existsById(idUsuario)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Perfil não encontrado");
+    public PerfilDetalhadoDto validarDtoCadastro(int idUsuario, PerfilCadastroDto dto) {
+        Usuario usuario = usuarioRepository.findById(idUsuario).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Usuário não encontrado")
+        );
+
+        Perfil perfilValidado = this.perfilRepository.save(this.perfilMapper.of(usuario,dto));
+
+        flagUsuarioService.salvarFlagUsuario(perfilValidado,dto.flagList());
+        List<Flag> flags = flagService.buscarFlagsDoPerfil(perfilValidado.getId());
+
+        if (flags.isEmpty()) {
+            throw new ResponseStatusException(
+                    HttpStatus.NO_CONTENT, "O perfil não possui flags cadastradas!"
+            );
         }
-        return this.usuarioRepository.findById(idUsuario).get().getPerfil().getId();
+
+        return this.perfilMapper.dtoOf(perfilValidado);
     }
+
 
 //    public Perfil atualizarSobreMim(int idUsuario, String sobreMim) {
 //        Integer perfilId = encontrarIdPerfil(idUsuario);
@@ -113,32 +122,5 @@ public class PerfilService {
 //
 //        return this.perfilRepository.findById(perfilId).get();
 //    }
-
-    public PerfilDetalhadoDto validarDtoCadastro(int idUsuario, PerfilCadastroDto dto) {
-        Usuario usuario = usuarioRepository.findById(idUsuario).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Usuário não encontrado")
-        );
-
-        Perfil perfilValidado = this.perfilRepository.save(this.perfilMapper.of(usuario,dto));
-        List<FlagUsuario> flagUsuarioList = new ArrayList<>();
-
-        for (Flag f : dto.flagList()) {
-            FlagUsuario flagUsuario = new FlagUsuario();
-            flagUsuario.setPerfil(perfilValidado);
-
-            if (this.flagRepository.existsById(f.getId())) {
-                Flag flag = this.flagRepository.findById(f.getId()).get();
-                flagUsuario.setFlag(flag);
-            } else {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Flag não encontrada!");
-            }
-            this.flagUsuarioRepository.save(flagUsuario);
-            flagUsuarioList.add(flagUsuario);
-        }
-
-        perfilValidado.setFlagUsuarioList(flagUsuarioList);
-
-        return this.perfilMapper.dtoOf(perfilValidado);
-    }
 
 }
