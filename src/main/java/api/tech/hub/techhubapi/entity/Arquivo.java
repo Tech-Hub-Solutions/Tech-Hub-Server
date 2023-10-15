@@ -1,5 +1,7 @@
-package api.tech.hub.techhubapi.entity.conversa;
+package api.tech.hub.techhubapi.entity;
 
+import api.tech.hub.techhubapi.entity.conversa.Mensagem;
+import api.tech.hub.techhubapi.entity.perfil.Perfil;
 import api.tech.hub.techhubapi.service.arquivo.TipoArquivo;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -25,4 +27,6 @@ public class Arquivo {
   private TipoArquivo tipoArquivo;
   @ManyToOne
   private Mensagem mensagem;
+  @ManyToOne
+  private Perfil perfil;
 }

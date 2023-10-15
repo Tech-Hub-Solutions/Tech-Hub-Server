@@ -1,6 +1,6 @@
 package api.tech.hub.techhubapi.controller;
 
-import api.tech.hub.techhubapi.entity.conversa.Arquivo;
+import api.tech.hub.techhubapi.entity.Arquivo;
 import api.tech.hub.techhubapi.service.arquivo.ArquivoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 
@@ -21,13 +20,6 @@ import java.io.IOException;
 
 public class ArquivoController {
     private final ArquivoService arquivoService;
-
-    //    @PostMapping("/arquivo")
-//    public ResponseEntity<Object> arquivo(@RequestParam MultipartFile arquivo) {
-//        this.arquivoService.salvarArquivo(arquivo, TipoArquivo.DOCUMENTO);
-//        return ResponseEntity.noContent().build();
-//    }
-
 
     @GetMapping("/image/{id}")
     public ResponseEntity<byte[]> getImage(@PathVariable Integer id) {

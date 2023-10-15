@@ -1,9 +1,8 @@
 package api.tech.hub.techhubapi.entity.perfil;
 
-import api.tech.hub.techhubapi.entity.perfil.flag.Flag;
+import api.tech.hub.techhubapi.entity.Arquivo;
 import api.tech.hub.techhubapi.entity.perfil.flag.FlagUsuario;
 import api.tech.hub.techhubapi.entity.usuario.Usuario;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -39,9 +38,6 @@ public class Perfil {
     @OneToMany(mappedBy = "avaliado")
     private List<ReferenciaPerfil> referenciaPerfilList;
 
-    @OneToMany
-    private List<ReferenciaPerfil> referenciaPerfilList;
-  
     @OneToMany(mappedBy = "perfil")
     private List<Arquivo> arquivos;
 }

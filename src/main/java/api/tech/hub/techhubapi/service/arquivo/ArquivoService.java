@@ -1,13 +1,12 @@
 package api.tech.hub.techhubapi.service.arquivo;
 
-import api.tech.hub.techhubapi.entity.conversa.Arquivo;
+import api.tech.hub.techhubapi.entity.Arquivo;
 import api.tech.hub.techhubapi.repository.ArquivoRepository;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;

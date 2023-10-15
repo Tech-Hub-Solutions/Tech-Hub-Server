@@ -1,6 +1,6 @@
 package api.tech.hub.techhubapi.service.conversa;
 
-import api.tech.hub.techhubapi.entity.conversa.Arquivo;
+import api.tech.hub.techhubapi.entity.Arquivo;
 import api.tech.hub.techhubapi.entity.conversa.Conversa;
 import api.tech.hub.techhubapi.entity.conversa.Mensagem;
 import api.tech.hub.techhubapi.entity.conversa.Sala;
@@ -13,22 +13,18 @@ import api.tech.hub.techhubapi.service.arquivo.ArquivoService;
 import api.tech.hub.techhubapi.service.arquivo.TipoArquivo;
 import api.tech.hub.techhubapi.service.conversa.dto.ConversaDto;
 import api.tech.hub.techhubapi.service.conversa.dto.MensagemASerEnviadaDto;
-import api.tech.hub.techhubapi.service.conversa.dto.MensagemRecebidaDto;
 import api.tech.hub.techhubapi.service.conversa.dto.RoomCodeDto;
 import api.tech.hub.techhubapi.service.usuario.autenticacao.AutenticacaoService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor

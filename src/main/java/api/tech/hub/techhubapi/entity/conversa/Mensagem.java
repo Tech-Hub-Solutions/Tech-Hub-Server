@@ -1,7 +1,7 @@
 package api.tech.hub.techhubapi.entity.conversa;
 
+import api.tech.hub.techhubapi.entity.Arquivo;
 import api.tech.hub.techhubapi.entity.usuario.Usuario;
-import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.*;
