@@ -1,6 +1,7 @@
 package api.tech.hub.techhubapi.service.usuario;
 
 import api.tech.hub.techhubapi.configuration.security.jwt.GerenciadorTokenJwt;
+import api.tech.hub.techhubapi.entity.ListaObj;
 import api.tech.hub.techhubapi.entity.usuario.Usuario;
 import api.tech.hub.techhubapi.repository.UsuarioRepository;
 import api.tech.hub.techhubapi.service.usuario.dto.*;
@@ -87,7 +88,13 @@ public class UsuarioService {
         usuarioRepository.save(usuario);
     }
 
-    public List<Usuario> listar() {
-        return this.usuarioRepository.findAll();
+    public ListaObj<Usuario> listar() {
+        ListaObj<Usuario> usuarios = new ListaObj<>(10);
+
+        for (Usuario u: this.usuarioRepository.findAll()) {
+            usuarios.adiciona(u);
+        }
+
+        return usuarios;
     }
 }

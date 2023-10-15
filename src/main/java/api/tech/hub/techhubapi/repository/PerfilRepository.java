@@ -3,11 +3,14 @@ package api.tech.hub.techhubapi.repository;
 import api.tech.hub.techhubapi.entity.perfil.Perfil;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
 
 @Repository
 public interface PerfilRepository extends JpaRepository<Perfil,Integer> {
-
+//
 //    @Query("UPDATE Perfil p SET p.sobreMim = :novoSobreMim WHERE p.id = :id")
 //    void atualizarSobreMimPorId(Integer id,String novoSobreMim);
 //
@@ -25,4 +28,7 @@ public interface PerfilRepository extends JpaRepository<Perfil,Integer> {
 //    void atualizarLinkGithub(Integer perfilId, String linkGithub);
 //    @Query("UPDATE Perfil p SET p.linkLinkedin = :linkLinkedin WHERE p.id = :id")
 //    void atualizarlinkLinkedinPorId(Integer perfilId, String linkLinkedin);
+
+    @Query("SELECT p FROM Perfil p WHERE p.usuario.id = :idUsuario")
+    Optional<Perfil> encontrarPerfilPorIdUsuario(Integer idUsuario);
 }

@@ -1,11 +1,16 @@
 package api.tech.hub.techhubapi.controller;
 
-import api.tech.hub.techhubapi.entity.perfil.Perfil;
+import api.tech.hub.techhubapi.entity.perfil.Avaliacao;
+import api.tech.hub.techhubapi.service.avaliacao.AvaliacaoService;
+import api.tech.hub.techhubapi.service.avaliacao.dto.AvaliacaoDetalhadoDto;
 import api.tech.hub.techhubapi.service.perfil.PerfilService;
 import api.tech.hub.techhubapi.service.perfil.dto.PerfilCadastroDto;
+import api.tech.hub.techhubapi.service.avaliacao.dto.avaliacaoDto;
+import api.tech.hub.techhubapi.service.perfil.dto.PerfilDetalhadoDto;
+import api.tech.hub.techhubapi.service.projeto.ProjetoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
+import org.hibernate.boot.spi.NaturalIdUniqueKeyBinder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,12 +20,30 @@ import org.springframework.web.bind.annotation.*;
 public class PerfilController {
 
     private final PerfilService perfilService;
+    private final AvaliacaoService avaliacaoService;
+    private final ProjetoService projetoService;
 
 //    @GetMapping("/{idUsuario}")
 //    public ResponseEntity<Perfil> buscarPerfil(@PathVariable Integer idUsuario){
 //        return ResponseEntity.ok(this.perfilService.buscarPerfilPorIdUsuario(idUsuario));
 //    }
 //
+    @PostMapping("/{idUsuario}")
+    public ResponseEntity<PerfilDetalhadoDto> criarPerfil(@PathVariable Integer idUsuario, @RequestBody @Valid PerfilCadastroDto dto){
+        return ResponseEntity.ok(this.perfilService.validarDtoCadastro(idUsuario,dto));
+    }
+
+    @PostMapping("/avaliar/{idUsuario}")
+    public ResponseEntity<AvaliacaoDetalhadoDto> avaliarPerfil(@PathVariable Integer idUsuario, @RequestBody @Valid avaliacaoDto dto){
+        return ResponseEntity.ok(this.avaliacaoService.avaliar(dto, idUsuario));
+    }
+
+    @GetMapping("/{idUsuario}")
+    public ResponseEntity<PerfilDetalhadoDto> buscarPerfil(@PathVariable Integer idUsuario){
+        return ResponseEntity.ok(this.perfilService.buscarPerfilPorIdUsuario(idUsuario));
+    }
+
+
 //    @PatchMapping("/atualizar/sobre-mim/{idUsuario}")
 //    public ResponseEntity<Perfil> atualizarSobreMim(@PathVariable int idUsuario,
 //                                                    @RequestParam String sobreMim) {
