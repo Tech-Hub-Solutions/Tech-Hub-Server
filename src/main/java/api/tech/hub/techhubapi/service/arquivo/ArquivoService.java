@@ -34,6 +34,10 @@ public class ArquivoService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
 
+        if(!diretorioBase.toFile().exists()) {
+            diretorioBase.toFile().mkdir();
+        }
+
         Path diretorioParaSalvar = Path.of(this.diretorioBase + "/" + tipo.toString());
         if (!diretorioParaSalvar.toFile().exists()) {
             diretorioParaSalvar.toFile().mkdir();
