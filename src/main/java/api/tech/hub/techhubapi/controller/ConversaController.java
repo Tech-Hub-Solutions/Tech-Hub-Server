@@ -1,14 +1,21 @@
 package api.tech.hub.techhubapi.controller;
 
+import api.tech.hub.techhubapi.entity.conversa.Arquivo;
+import api.tech.hub.techhubapi.service.arquivo.ArquivoService;
+import api.tech.hub.techhubapi.service.arquivo.TipoArquivo;
 import api.tech.hub.techhubapi.service.conversa.ConversaService;
 import api.tech.hub.techhubapi.service.conversa.dto.ConversaDto;
 import api.tech.hub.techhubapi.service.conversa.dto.MensagemASerEnviadaDto;
 import api.tech.hub.techhubapi.service.conversa.dto.MensagemRecebidaDto;
 import api.tech.hub.techhubapi.service.conversa.dto.RoomCodeDto;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import org.springframework.core.io.Resource;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -24,7 +31,7 @@ public class ConversaController {
     public ResponseEntity<List<ConversaDto>> carregarConversas() {
         List<ConversaDto> conversaDtos = this.conversaService.listarConversas();
 
-        if(conversaDtos.isEmpty()){
+        if (conversaDtos.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(conversaDtos);
@@ -36,8 +43,13 @@ public class ConversaController {
     }
 
     @PostMapping("/sala/{roomCode}")
-    public ResponseEntity<Object> enviarMensagem(@PathVariable String roomCode, @RequestBody MensagemRecebidaDto mensagemDto) {
-        this.conversaService.enviarMensagem(roomCode, mensagemDto);
+    public ResponseEntity<Object> enviarMensagem(
+            @PathVariable String roomCode,
+            @RequestParam String mensagem,
+            @RequestParam(required = false) MultipartFile arquivo,
+            @RequestParam(required = false) TipoArquivo tipoArquivo) {
+
+        this.conversaService.enviarMensagem(roomCode, mensagem, arquivo, tipoArquivo);
         return ResponseEntity.ok(null);
     }
 

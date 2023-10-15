@@ -19,7 +19,7 @@ public class Sala {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String roomCode;
-    @OneToMany
+    @OneToMany(mappedBy = "sala")
     private List<Conversa> conversaList;
     @OneToMany(mappedBy = "sala")
     private List<Mensagem> mensagemList;

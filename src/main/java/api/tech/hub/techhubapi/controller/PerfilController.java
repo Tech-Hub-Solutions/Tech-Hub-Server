@@ -23,6 +23,11 @@ public class PerfilController {
     private final AvaliacaoService avaliacaoService;
     private final ProjetoService projetoService;
 
+//    @GetMapping("/{idUsuario}")
+//    public ResponseEntity<Perfil> buscarPerfil(@PathVariable Integer idUsuario){
+//        return ResponseEntity.ok(this.perfilService.buscarPerfilPorIdUsuario(idUsuario));
+//    }
+//
     @PostMapping("/{idUsuario}")
     public ResponseEntity<PerfilDetalhadoDto> criarPerfil(@PathVariable Integer idUsuario, @RequestBody @Valid PerfilCadastroDto dto){
         return ResponseEntity.ok(this.perfilService.validarDtoCadastro(idUsuario,dto));
@@ -37,6 +42,7 @@ public class PerfilController {
     public ResponseEntity<PerfilDetalhadoDto> buscarPerfil(@PathVariable Integer idUsuario){
         return ResponseEntity.ok(this.perfilService.buscarPerfilPorIdUsuario(idUsuario));
     }
+
 
 //    @PatchMapping("/atualizar/sobre-mim/{idUsuario}")
 //    public ResponseEntity<Perfil> atualizarSobreMim(@PathVariable int idUsuario,

@@ -39,6 +39,9 @@ public class Perfil {
     @OneToMany(mappedBy = "avaliado")
     private List<ReferenciaPerfil> referenciaPerfilList;
 
+    @OneToMany
+    private List<ReferenciaPerfil> referenciaPerfilList;
+  
     @OneToMany(mappedBy = "perfil")
     private List<Arquivo> arquivos;
 }
