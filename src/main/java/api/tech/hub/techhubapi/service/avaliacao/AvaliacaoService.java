@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -35,5 +36,19 @@ public class AvaliacaoService {
         novaAvaliacao.setPerfil(perfil);
 
         return this.mapper.dtoOf(this.AvaliacaoRepository.save(novaAvaliacao));
+    }
+
+    public List<AvaliacaoDetalhadoDto> encontrarAvaliacoesPerfil(Integer idUsuario) {
+        Perfil perfil = this.perfilRepository.encontrarPerfilPorIdUsuario(idUsuario).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Perfil não encontrado")
+        );
+
+        List<Avaliacao> listaAvaliacoes = this.AvaliacaoRepository.findAvaliacaoByPerfilId(perfil.getId());
+
+        if(listaAvaliacoes.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Perfil não possui avaliações");
+        }
+
+        return listaAvaliacoes.stream().map(mapper::dtoOf).toList();
     }
 }
