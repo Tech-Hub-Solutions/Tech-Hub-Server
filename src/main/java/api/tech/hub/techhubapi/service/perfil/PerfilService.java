@@ -26,7 +26,7 @@ public class PerfilService {
     private final FlagUsuarioService flagUsuarioService;
     private final FlagService flagService;
 
-    public PerfilDetalhadoDto buscarPerfilPorIdUsuario(Integer idUsuario) {
+    public Perfil buscarPerfilPorIdUsuario(Integer idUsuario) {
         if (!this.usuarioRepository.existsById(idUsuario)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado");
         }
@@ -36,7 +36,7 @@ public class PerfilService {
                         () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Perfil não encontrado")
                 );
 
-        return perfilMapper.dtoOf(perfil);
+        return perfil;
     }
 
     public PerfilDetalhadoDto validarDtoCadastro(int idUsuario, PerfilCadastroDto dto) {
@@ -56,6 +56,19 @@ public class PerfilService {
         }
 
         return this.perfilMapper.dtoOf(perfilValidado);
+    }
+
+    public PerfilDetalhadoDto buscarPerfilDetalhadoPorIdUsuario(Integer idUsuario) {
+        if (!this.usuarioRepository.existsById(idUsuario)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado");
+        }
+
+        Perfil perfil = this.perfilRepository.encontrarPerfilPorIdUsuario(idUsuario)
+                .orElseThrow(
+                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Perfil não encontrado")
+                );
+
+        return this.perfilMapper.dtoOf(perfil);
     }
 
 
