@@ -132,8 +132,8 @@ public class ConversaService {
 
         newMensagem = this.mensagemRepository.save(newMensagem);
 
-        if(arquivo != null) {
-            if(tipoArquivo == null) {
+        if (arquivo != null) {
+            if (tipoArquivo == null) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
             }
             Arquivo arquivoSalvado = this.arquivoService.salvarArquivoLocal(arquivo, tipoArquivo);
@@ -199,5 +199,26 @@ public class ConversaService {
 
 
         return conversas;
+    }
+
+    public List<Mensagem> listarMensagensBanco(String room) {
+        Sala sala = this.salaRepository.findByRoomCode(room)
+                .orElseThrow(
+                        () -> new ResponseStatusException(HttpStatus.BAD_REQUEST)
+                );
+        return sala.getMensagemList();
+    }
+
+    public List<Usuario> listarUsuarios(String room) {
+        List<Conversa> conversa = this.conversaRepository.findBySalaRoomCode(room);
+
+        if(conversa.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+
+        return conversa.stream()
+                .map(Conversa::getUsuario)
+                .toList();
+
     }
 }

@@ -1,7 +1,11 @@
 package api.tech.hub.techhubapi.service.arquivo;
 
 import api.tech.hub.techhubapi.entity.Arquivo;
+import api.tech.hub.techhubapi.entity.conversa.Mensagem;
+import api.tech.hub.techhubapi.entity.usuario.Usuario;
 import api.tech.hub.techhubapi.repository.ArquivoRepository;
+import api.tech.hub.techhubapi.service.conversa.dto.MensagemASerEnviadaDto;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import lombok.RequiredArgsConstructor;
@@ -12,14 +16,14 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -34,7 +38,7 @@ public class ArquivoService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
 
-        if(!diretorioBase.toFile().exists()) {
+        if (!diretorioBase.toFile().exists()) {
             diretorioBase.toFile().mkdir();
         }
 
@@ -111,5 +115,73 @@ public class ArquivoService {
 
     public Arquivo salvarArquivo(Arquivo arquivo) {
         return this.arquivoRepository.save(arquivo);
+    }
+
+    public Resource gerarCsvConversa(List<Mensagem> mensagens, List<Usuario> usuarios) {
+        FileWriter arquivo = null;
+        Formatter saida = null;
+
+        // Define the directory path
+        String dirPath = "./arquivos/CSV";
+        File directory = new File(dirPath);
+
+        // Check if the directory exists, if not, create it
+        if (!directory.exists()) {
+            directory.mkdir();
+        }
+
+        // Now define the file path with the directory
+        String nomeArq = dirPath + "/" + mensagens.get(0).getSala().getRoomCode() + ".csv";
+
+        boolean deuRuim = false;
+
+        try {
+            arquivo = new FileWriter(nomeArq);
+            saida = new Formatter(arquivo);
+        } catch (IOException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+
+
+        try {
+            for (Usuario usuario : usuarios) {
+                saida.format("C1;%d;%s;%s;%s;%s\n",
+                        usuario.getId(),
+                        usuario.getNome(),
+                        usuario.getEmail(),
+                        usuario.getFuncao(),
+                        usuario.getPais()
+                );
+            }
+
+            for (Mensagem mensagem : mensagens) {
+                saida.format("C2;%d;%d;%s;%s;%s;%s\n",
+                        mensagem.getId(),
+                        mensagem.getUsuario().getId(),
+                        mensagem.getTexto(),
+                        mensagem.getDtMensagem().toString(),
+                        mensagem.getArquivos().isEmpty() ? "" : mensagem.getArquivos().get(0).getNomeArquivoOriginal(),
+                        mensagem.getArquivos().isEmpty() ? "" : mensagem.getArquivos().get(0).getTipoArquivo().toString()
+                );
+
+            }
+        } catch (FormatterClosedException e) {
+            deuRuim = true;
+        } finally {
+            saida.close();
+            try {
+                arquivo.close();
+            } catch (IOException e) {
+                System.out.println("Erro ao fechar o arquivo");
+                deuRuim = true;
+            }
+        }
+
+        if (deuRuim) {
+            throw new ResponseStatusException(HttpStatusCode.valueOf(422));
+        }
+
+        return new FileSystemResource(nomeArq);
+
     }
 }
