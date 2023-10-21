@@ -39,7 +39,6 @@ public class PerfilMapper {
     public PerfilDetalhadoDto dtoOf(Perfil perfil) {
         PerfilDetalhadoDto dto = new PerfilDetalhadoDto();
 
-
         dto.setId(perfil.getId());
         dto.setSobreMim(perfil.getSobreMim());
         dto.setExperiencia(perfil.getExperiencia());

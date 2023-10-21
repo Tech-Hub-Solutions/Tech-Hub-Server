@@ -23,10 +23,7 @@ public class PerfilService {
     private final PerfilRepository perfilRepository;
     private final UsuarioRepository usuarioRepository;
     private final PerfilMapper perfilMapper;
-    private final FlagUsuarioRepository flagUsuarioRepository;
     private final FlagUsuarioService flagUsuarioService;
-    private final AvaliacaoRepository avaliacaoRepository;
-    private final ReferenciaPerfilRepository referenciaPerfilRepository;
 
 
     public Perfil buscarPerfilPorIdUsuario(Integer idUsuario) {
@@ -70,76 +67,7 @@ public class PerfilService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado");
         }
 
-        Perfil perfil = this.perfilRepository.encontrarPerfilPorIdUsuario(idUsuario)
-                .orElseThrow(
-                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Perfil não encontrado")
-                );
-
         return criarPerfilDetalhadoDto(idUsuario);
     }
 
-
-//    public Perfil atualizarSobreMim(int idUsuario, String sobreMim) {
-//        Integer perfilId = encontrarIdPerfil(idUsuario);
-//
-//        this.perfilRepository.atualizarSobreMimPorId(perfilId, sobreMim);
-//
-//        return this.perfilRepository.findById(perfilId).get();
-//    }
-//
-//    public Perfil atualizarExperiencia(int idUsuario, String experiencia) {
-//        Integer perfilId = encontrarIdPerfil(idUsuario);
-//
-//        this.perfilRepository.atualizarExperienciaPorId(perfilId, experiencia);
-//
-//        return this.perfilRepository.findById(perfilId).get();
-//    }
-//
-//    public Perfil atualizarDescricao(int idUsuario, String descricao) {
-//        Integer perfilId = encontrarIdPerfil(idUsuario);
-//
-//        this.perfilRepository.atualizarDescricaoPorId(perfilId, descricao);
-//
-//        return this.perfilRepository.findById(perfilId).get();
-//    }
-//
-//    public Perfil atualizarPathPerfilImage(int idUsuario, String pathPerfilImage) {
-//        Integer perfilId = encontrarIdPerfil(idUsuario);
-//
-//        this.perfilRepository.atualizarPathPerfilImagePorId(perfilId, pathPerfilImage);
-//
-//        return this.perfilRepository.findById(perfilId).get();
-//    }
-//
-//    public Perfil atualizarPathWallpaperImage(int idUsuario, String pathWallpaperImage) {
-//        Integer perfilId = encontrarIdPerfil(idUsuario);
-//
-//        this.perfilRepository.atualizarPathWallpaperImagePorId(perfilId, pathWallpaperImage);
-//
-//        return this.perfilRepository.findById(perfilId).get();
-//    }
-//
-//    public Perfil atualizarPrecoMedio(int idUsuario, String precoMedio) {
-//        Integer perfilId = encontrarIdPerfil(idUsuario);
-//
-//        this.perfilRepository.atualizarPrecoMedioPorId(perfilId, precoMedio);
-//
-//        return this.perfilRepository.findById(perfilId).get();
-//    }
-//
-//    public Perfil atualizarLinkGithub(int idUsuario, String linkGithub) {
-//        Integer perfilId = encontrarIdPerfil(idUsuario);
-//
-//        this.perfilRepository.atualizarLinkGithub(perfilId, linkGithub);
-//
-//        return this.perfilRepository.findById(perfilId).get();
-//    }
-//
-//    public Perfil atualizarLinkLinkedin(int idUsuario, String linkLinkedin) {
-//        Integer perfilId = encontrarIdPerfil(idUsuario);
-//
-//        this.perfilRepository.atualizarlinkLinkedinPorId(perfilId, linkLinkedin);
-//
-//        return this.perfilRepository.findById(perfilId).get();
-//    }
 }

@@ -21,6 +21,7 @@ public class FlagUsuarioService {
     private final FlagRepository flagRepository;
 
     public void salvarFlagUsuario(Perfil perfilValidado, List<Flag> list) {
+        this.flagUsuarioRepository.deleteFlagUsuarioByPerfil(perfilValidado);
         List<FlagUsuario> flagUsuarioList = new ArrayList<>();
 
         for (Flag f : list) {

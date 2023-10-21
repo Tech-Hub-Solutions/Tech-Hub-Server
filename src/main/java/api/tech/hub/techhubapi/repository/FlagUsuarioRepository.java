@@ -14,4 +14,6 @@ public interface FlagUsuarioRepository extends JpaRepository<FlagUsuario,Integer
     List<Flag> encontrarFlagPorPerfil(Perfil perfil);
 
     List<FlagUsuario> findFlagUsuarioByPerfil(Perfil perfil);
+
+    void deleteFlagUsuarioByPerfil(Perfil perfil);
 }

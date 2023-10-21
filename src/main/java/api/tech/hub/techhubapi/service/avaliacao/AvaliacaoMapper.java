@@ -4,6 +4,7 @@ import api.tech.hub.techhubapi.entity.perfil.Avaliacao;
 import api.tech.hub.techhubapi.entity.perfil.flag.Flag;
 import api.tech.hub.techhubapi.entity.perfil.flag.FlagUsuario;
 import api.tech.hub.techhubapi.service.avaliacao.dto.AvaliacaoDetalhadoDto;
+import api.tech.hub.techhubapi.service.avaliacao.dto.AvaliacaoTotal;
 import api.tech.hub.techhubapi.service.avaliacao.dto.avaliacaoDto;
 import org.springframework.stereotype.Component;
 

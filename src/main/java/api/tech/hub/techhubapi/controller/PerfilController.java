@@ -23,26 +23,12 @@ import java.util.List;
 public class PerfilController {
 
     private final PerfilService perfilService;
-    private final AvaliacaoService avaliacaoService;
-    private final ProjetoService projetoService;
     private final ReferenciaPerfilService referenciaPerfilService;
 
     @PutMapping("/{idUsuario}")
     public ResponseEntity<PerfilDetalhadoDto> atualizarPerfil(@PathVariable Integer idUsuario,
                                                           @RequestBody @Valid PerfilCadastroDto dto){
         return ResponseEntity.ok(this.perfilService.atualizarPerfil(idUsuario,dto));
-    }
-
-    @PostMapping("/avaliar/{idUsuario}")
-    public ResponseEntity<AvaliacaoDetalhadoDto> avaliarPerfil(@PathVariable Integer idUsuario,
-                                                               @RequestBody @Valid avaliacaoDto dto){
-        return ResponseEntity.ok(this.avaliacaoService.avaliar(dto, idUsuario));
-    }
-
-    @PostMapping("/referenciar/{idAvaliador}")
-    public ResponseEntity<ReferenciaDetalhadoDto> referenciarPerfil(@PathVariable Integer idAvaliador,
-                                                                    @RequestBody @Valid ReferenciaPerfilCriacaoDto dto) {
-        return ResponseEntity.ok(this.referenciaPerfilService.criarReferenciaPerfil(idAvaliador, dto));
     }
 
     @GetMapping("/{idUsuario}")
@@ -54,13 +40,6 @@ public class PerfilController {
     public ResponseEntity<List<ReferenciaDetalhadoDto>> buscarReferenciasDoPerfilPorIdUsuario(@PathVariable Integer idUsuario){
         return ResponseEntity.ok(this.referenciaPerfilService.encontrarReferenciasPerfil(idUsuario));
     }
-
-
-    @GetMapping("/avaliar/{idUsuario}")
-    public ResponseEntity<List<AvaliacaoDetalhadoDto>> buscarAvaliacoesDoPerfilPorIdUsuario(@PathVariable Integer idUsuario){
-        return ResponseEntity.ok(this.avaliacaoService.encontrarAvaliacoesPerfil(idUsuario));
-    }
-
 
 //    @PatchMapping("/atualizar/sobre-mim/{idUsuario}")
 //    public ResponseEntity<Perfil> atualizarSobreMim(@PathVariable int idUsuario,
