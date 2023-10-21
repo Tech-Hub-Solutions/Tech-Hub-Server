@@ -75,7 +75,7 @@ public class PerfilService {
                         () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Perfil não encontrado")
                 );
 
-        return criarPerfilDetalhadoDto(perfil);
+        return criarPerfilDetalhadoDto(idUsuario);
     }
 
 

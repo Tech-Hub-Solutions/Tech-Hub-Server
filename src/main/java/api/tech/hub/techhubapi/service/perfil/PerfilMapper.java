@@ -7,6 +7,7 @@ import api.tech.hub.techhubapi.entity.perfil.flag.Flag;
 import api.tech.hub.techhubapi.entity.perfil.flag.FlagUsuario;
 import api.tech.hub.techhubapi.service.avaliacao.AvaliacaoMapper;
 import api.tech.hub.techhubapi.service.flag.FlagUsuarioMapper;
+import api.tech.hub.techhubapi.service.flag.dto.FlagDto;
 import api.tech.hub.techhubapi.service.perfil.dto.PerfilCadastroDto;
 import api.tech.hub.techhubapi.service.perfil.dto.PerfilDetalhadoDto;
 import api.tech.hub.techhubapi.service.referencia.ReferenciaPerfilMapper;
@@ -47,7 +48,7 @@ public class PerfilMapper {
         dto.setNomeGithub(perfil.getNomeGithub());
         dto.setLinkGithub(perfil.getLinkGithub());
         dto.setLinkLinkedin(perfil.getLinkLinkedin());
-        dto.setFlags(this.flagUsuarioMapper.retornarFlagList(perfil.getFlagUsuarioList()));
+        dto.setFlags(this.flagUsuarioMapper.retornarFlagList(perfil.getFlagUsuarioList()).stream().map(FlagDto::new).toList());
         dto.setAvaliacoes(this.avaliacaoMapper.retornarListaAvaliacoesDto(perfil.getAvaliacaoList()));
         dto.setReferencias(this.referenciaPerfilMapper.retornarListaReferenciasDto(perfil.getReferenciaPerfilList()));
 
