@@ -35,8 +35,9 @@ public class PerfilMapper {
     }
 
 
-    public PerfilDetalhadoDto dtoOf(Perfil perfil, List<Flag> flagList, List<Avaliacao> avaliacaoDetalhadoDtoList, List<ReferenciaPerfil> referenciaDetalhadoDtoList) {
+    public PerfilDetalhadoDto dtoOf(Perfil perfil) {
         PerfilDetalhadoDto dto = new PerfilDetalhadoDto();
+
 
         dto.setId(perfil.getId());
         dto.setSobreMim(perfil.getSobreMim());
@@ -46,24 +47,10 @@ public class PerfilMapper {
         dto.setNomeGithub(perfil.getNomeGithub());
         dto.setLinkGithub(perfil.getLinkGithub());
         dto.setLinkLinkedin(perfil.getLinkLinkedin());
+        dto.setFlags(this.flagUsuarioMapper.retornarFlagList(perfil.getFlagUsuarioList()));
+        dto.setAvaliacoes(this.avaliacaoMapper.retornarListaAvaliacoesDto(perfil.getAvaliacaoList()));
+        dto.setReferencias(this.referenciaPerfilMapper.retornarListaReferenciasDto(perfil.getReferenciaPerfilList()));
 
-        if (flagList.isEmpty()) {
-            dto.setFlags(null);
-        } else {
-            dto.setFlags(flagList);
-        }
-
-        if (avaliacaoDetalhadoDtoList.isEmpty()) {
-            dto.setAvaliacoes(null);
-        } else {
-            dto.setAvaliacoes(this.avaliacaoMapper.retornarListaAvaliacoesDto(avaliacaoDetalhadoDtoList));
-        }
-
-        if (referenciaDetalhadoDtoList.isEmpty()) {
-            dto.setReferencias(null);
-        } else {
-            dto.setReferencias(this.referenciaPerfilMapper.retornarListaReferenciasDto(referenciaDetalhadoDtoList));
-        }
 
         return dto;
     }

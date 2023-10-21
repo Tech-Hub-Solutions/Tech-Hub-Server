@@ -22,6 +22,7 @@ public class FlagUsuarioService {
 
     public void salvarFlagUsuario(Perfil perfilValidado, List<Flag> list) {
         List<FlagUsuario> flagUsuarioList = new ArrayList<>();
+
         for (Flag f : list) {
             FlagUsuario flagUsuario = new FlagUsuario();
             flagUsuario.setPerfil(perfilValidado);
@@ -33,6 +34,7 @@ public class FlagUsuarioService {
             }
             flagUsuarioList.add(flagUsuario);
         }
+
         this.flagUsuarioRepository.saveAll(flagUsuarioList);
     }
 
