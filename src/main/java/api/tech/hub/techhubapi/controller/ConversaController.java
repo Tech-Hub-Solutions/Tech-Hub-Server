@@ -15,7 +15,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/conversas")
-@SecurityRequirement(name = "bearer-key")
 @RequiredArgsConstructor
 public class
 ConversaController {
