@@ -8,6 +8,9 @@ import api.tech.hub.techhubapi.service.usuario.UsuarioService;
 import api.tech.hub.techhubapi.service.usuario.dto.*;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -73,9 +76,28 @@ public class UsuarioController {
         return ResponseEntity.noContent().build();
     }
 
+
+    // Para passar a paginação, adicionar size e page
+    // localhost:8080/recursos?size=3&page=1
+
+    // 10 registros/
+    // size 1, 10 paginas
+
+    // Para ordenar, sort e nome do atributo
+
+    // localhost:8080/recursos?sort=nome,desc
+
+    //  Se não passarmos o parâmetro size, o Spring devolverá 20 registros por padrão.
+
+
+    // Pode juntar os dois
+    // localhost:8080/recursos?sort=nome,desc&size=1&page=1
     @PostMapping("/filtro")
-    public ResponseEntity<List<UsuarioDetalhadoDto>> listarPor(@RequestBody UsuarioFiltroDto usuarioFiltroDto) {
-        List<UsuarioDetalhadoDto> usuarios = this.usuarioService.listarPor(usuarioFiltroDto);
+    public ResponseEntity<Page<UsuarioDetalhadoDto>> listarPor(
+            @RequestBody UsuarioFiltroDto usuarioFiltroDto,
+            Pageable paginacao
+    ) {
+        Page<UsuarioDetalhadoDto> usuarios = this.usuarioService.listarPor(usuarioFiltroDto, paginacao);
 
         if (usuarios.isEmpty()) {
             return ResponseEntity.noContent().build();

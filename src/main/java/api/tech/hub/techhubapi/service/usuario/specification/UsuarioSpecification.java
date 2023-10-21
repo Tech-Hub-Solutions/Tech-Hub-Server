@@ -32,6 +32,7 @@ public final class UsuarioSpecification {
             }
 
             Expression<String> nomeExp = criteriaBuilder.lower(root.get("nome"));
+
             return criteriaBuilder.like(nomeExp, "%" + nome.toLowerCase() + "%");
         };
     }
@@ -69,5 +70,6 @@ public final class UsuarioSpecification {
             return criteriaBuilder.between(precoExpression, precoMin, precoMax);
         }));
     }
+
 
 }

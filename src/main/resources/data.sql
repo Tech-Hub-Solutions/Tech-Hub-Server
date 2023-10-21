@@ -1,6 +1,3 @@
-INSERT INTO Perfil (experiencia)
-VALUES ('experiencia');
-
 INSERT INTO Perfil (sobre_mim, experiencia, descricao, preco_medio, nome_github, link_github, link_linkedin) VALUES
  ('SOBRE MIM', 'EXPERICENCIA', 'I am particularly interested in projects that involve data analysis and machine learning.', 450.0, 'mygithubusername', 'https://github.com/mygithubusername', 'https://www.linkedin.com/in/mylinkedinusername'),
  ('SOBRE MIM', 'EXPERICENCIA','I am open to collaborating with dynamic teams and addressing unique challenges.', 550.0, 'mygithubuser', 'https://github.com/mygithubuser', 'https://www.linkedin.com/in/mylinkedinuser');

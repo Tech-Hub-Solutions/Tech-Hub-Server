@@ -8,6 +8,8 @@ import api.tech.hub.techhubapi.repository.UsuarioRepository;
 import api.tech.hub.techhubapi.service.usuario.dto.*;
 import api.tech.hub.techhubapi.service.usuario.specification.UsuarioSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -101,10 +103,14 @@ public class UsuarioService {
         return usuarios;
     }
 
-    public List<UsuarioDetalhadoDto> listarPor(UsuarioFiltroDto usuarioFiltroDto) {
+    public Page<UsuarioDetalhadoDto> listarPor(UsuarioFiltroDto usuarioFiltroDto, Pageable pageable) {
         Specification<Usuario> specification = Specification
-                .where(UsuarioSpecification.hasFlags(usuarioFiltroDto.tecnologias()))
-                .and(UsuarioSpecification.hasNome(usuarioFiltroDto.area()));
-        return usuarioRepository.findAll(specification).stream().map(UsuarioDetalhadoDto::new).toList();
+                .where(UsuarioSpecification.hasArea(usuarioFiltroDto.area()))
+                .and(UsuarioSpecification.hasFlags(usuarioFiltroDto.tecnologias()))
+                .and(UsuarioSpecification.hasPrecoBetween(usuarioFiltroDto.precoMin(), usuarioFiltroDto.precoMax()));
+
+        return usuarioRepository.findAll(specification, pageable)
+                .map(usuarioMapper::dtoOf);
     }
+
 }
