@@ -103,14 +103,16 @@ public class UsuarioService {
         return usuarios;
     }
 
-    public Page<UsuarioDetalhadoDto> listarPor(UsuarioFiltroDto usuarioFiltroDto, Pageable pageable) {
+    public Page<UsuarioBuscaDto> listarPor(UsuarioFiltroDto usuarioFiltroDto, Pageable pageable) {
         Specification<Usuario> specification = Specification
-                .where(UsuarioSpecification.hasArea(usuarioFiltroDto.area()))
-                .and(UsuarioSpecification.hasFlags(usuarioFiltroDto.tecnologias()))
-                .and(UsuarioSpecification.hasPrecoBetween(usuarioFiltroDto.precoMin(), usuarioFiltroDto.precoMax()));
+                .allOf(
+                        UsuarioSpecification.hasArea(usuarioFiltroDto.area()),
+                        UsuarioSpecification.hasPrecoBetween(usuarioFiltroDto.precoMin(), usuarioFiltroDto.precoMax()),
+                        UsuarioSpecification.hasFlags(usuarioFiltroDto.tecnologias())
+                );
 
         return usuarioRepository.findAll(specification, pageable)
-                .map(usuarioMapper::dtoOf);
+                .map(UsuarioBuscaDto::new);
     }
 
 }

@@ -3,11 +3,13 @@ package api.tech.hub.techhubapi.controller;
 import api.tech.hub.techhubapi.entity.ListaObj;
 import api.tech.hub.techhubapi.entity.perfil.flag.Flag;
 import api.tech.hub.techhubapi.entity.usuario.Usuario;
+import api.tech.hub.techhubapi.service.usuario.UsuarioBuscaDto;
 import api.tech.hub.techhubapi.service.usuario.UsuarioMapper;
 import api.tech.hub.techhubapi.service.usuario.UsuarioService;
 import api.tech.hub.techhubapi.service.usuario.dto.*;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
+import org.springdoc.core.converters.models.PageableAsQueryParam;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -77,27 +79,18 @@ public class UsuarioController {
     }
 
 
-    // Para passar a paginação, adicionar size e page
-    // localhost:8080/recursos?size=3&page=1
-
-    // 10 registros/
-    // size 1, 10 paginas
-
-    // Para ordenar, sort e nome do atributo
-
-    // localhost:8080/recursos?sort=nome,desc
-
-    //  Se não passarmos o parâmetro size, o Spring devolverá 20 registros por padrão.
-
-
-    // Pode juntar os dois
-    // localhost:8080/recursos?sort=nome,desc&size=1&page=1
+    // Para utilizar a paginação, passar dois parâmetros na URL: page e size
+    // Page é o número da página, começando em 0
+    // Size é o tamanho da página
+    // Exemplo: http://localhost:8080/usuarios?page=0&size=10
+    // Para ordernar, passar o parâmetro sort na URL
+    // Exemplo: http://localhost:8080/usuarios?page=0&size=10&sort=nome,asc
     @PostMapping("/filtro")
-    public ResponseEntity<Page<UsuarioDetalhadoDto>> listarPor(
+    public ResponseEntity<Page<UsuarioBuscaDto>> listarPor(
             @RequestBody UsuarioFiltroDto usuarioFiltroDto,
             Pageable paginacao
     ) {
-        Page<UsuarioDetalhadoDto> usuarios = this.usuarioService.listarPor(usuarioFiltroDto, paginacao);
+        Page<UsuarioBuscaDto> usuarios = this.usuarioService.listarPor(usuarioFiltroDto, paginacao);
 
         if (usuarios.isEmpty()) {
             return ResponseEntity.noContent().build();

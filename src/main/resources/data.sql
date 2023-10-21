@@ -66,10 +66,9 @@ INSERT INTO Flag_Usuario (flag_id, perfil_id) VALUES
 (7,2),
 (8,2),
 (9,2),
-(10,1),
 (10,2),
-(11,1),
-(11,2);
+(14,1),
+(14,2);
 
 INSERT INTO Usuario (perfil_id,nome, email, senha, numero_cadastro_pessoa, pais, funcao, is_ativo)
 VALUES (1,'Murilo', 'murilo@hotmail.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '26828654000100', 'Brasil', 'dev', 1);

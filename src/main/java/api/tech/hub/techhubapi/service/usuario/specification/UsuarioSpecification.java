@@ -21,19 +21,9 @@ public final class UsuarioSpecification {
             Join<FlagUsuario, Flag> flagJoin = flagUsuarioJoin.join("flag");
 
             Predicate predicate = flagJoin.in(flags);
+
+            query.distinct(true);
             return predicate;
-        };
-    }
-
-    public static Specification<Usuario> hasNome(final String nome) {
-        return (root, query, criteriaBuilder) -> {
-            if (nome == null || nome.isBlank()) {
-                return criteriaBuilder.conjunction();
-            }
-
-            Expression<String> nomeExp = criteriaBuilder.lower(root.get("nome"));
-
-            return criteriaBuilder.like(nomeExp, "%" + nome.toLowerCase() + "%");
         };
     }
 
@@ -52,6 +42,8 @@ public final class UsuarioSpecification {
             Expression<String> areaExp = criteriaBuilder.lower(flagJoin.get("area"));
             Predicate predicate = criteriaBuilder.like(areaExp, areaPattern);
 
+
+            query.distinct(true);
             return predicate;
         });
     }
@@ -67,6 +59,7 @@ public final class UsuarioSpecification {
 
             Expression<Double> precoExpression = perfilJoin.get("precoMedio");
 
+            query.distinct(true);
             return criteriaBuilder.between(precoExpression, precoMin, precoMax);
         }));
     }
