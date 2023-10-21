@@ -1,26 +1,20 @@
 package api.tech.hub.techhubapi.controller;
 
 import api.tech.hub.techhubapi.entity.ListaObj;
-import api.tech.hub.techhubapi.entity.perfil.flag.Flag;
 import api.tech.hub.techhubapi.entity.usuario.Usuario;
-import api.tech.hub.techhubapi.service.usuario.UsuarioBuscaDto;
-import api.tech.hub.techhubapi.service.usuario.UsuarioMapper;
+import api.tech.hub.techhubapi.service.conversa.dto.UsuarioConversaDto;
+import api.tech.hub.techhubapi.service.usuario.dto.UsuarioBuscaDto;
 import api.tech.hub.techhubapi.service.usuario.UsuarioService;
 import api.tech.hub.techhubapi.service.usuario.dto.*;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springdoc.core.converters.models.PageableAsQueryParam;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/usuarios")
@@ -36,8 +30,18 @@ public class UsuarioController {
     }
 
     @GetMapping
-    public ResponseEntity<ListaObj<Usuario>> listar() {
-        ListaObj<Usuario> usuarios = this.usuarioService.listar();
+    public ResponseEntity<ListaObj<UsuarioDetalhadoDto>> listar() {
+        ListaObj<UsuarioDetalhadoDto> usuarios = this.usuarioService.listar();
+
+        if (usuarios.getTamanho() == 0) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.status(200).body(usuarios);
+    }
+
+    @GetMapping("/teste")
+    public ResponseEntity<ListaObj<UsuarioConversaDto>> listarTeste() {
+        ListaObj<UsuarioConversaDto> usuarios = this.usuarioService.listarTeste();
 
         if (usuarios.getTamanho() == 0) {
             return ResponseEntity.noContent().build();

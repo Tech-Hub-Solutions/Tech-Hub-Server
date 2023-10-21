@@ -1,10 +1,12 @@
 package api.tech.hub.techhubapi.service.usuario;
 
 import api.tech.hub.techhubapi.configuration.security.jwt.GerenciadorTokenJwt;
+import api.tech.hub.techhubapi.entity.Arquivo;
 import api.tech.hub.techhubapi.entity.ListaObj;
-import api.tech.hub.techhubapi.entity.perfil.flag.Flag;
 import api.tech.hub.techhubapi.entity.usuario.Usuario;
 import api.tech.hub.techhubapi.repository.UsuarioRepository;
+import api.tech.hub.techhubapi.service.arquivo.TipoArquivo;
+import api.tech.hub.techhubapi.service.conversa.dto.UsuarioConversaDto;
 import api.tech.hub.techhubapi.service.usuario.dto.*;
 import api.tech.hub.techhubapi.service.usuario.specification.UsuarioSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,11 +95,39 @@ public class UsuarioService {
         usuarioRepository.save(usuario);
     }
 
-    public ListaObj<Usuario> listar() {
-        ListaObj<Usuario> usuarios = new ListaObj<>(10);
+    public ListaObj<UsuarioDetalhadoDto> listar() {
+        ListaObj<UsuarioDetalhadoDto> usuarios = new ListaObj<>(10);
+
 
         for (Usuario u : this.usuarioRepository.findAll()) {
-            usuarios.adiciona(u);
+            usuarios.adiciona(new UsuarioDetalhadoDto(u));
+        }
+
+        // Ordernar por nome
+        for (int i = 0; i < usuarios.getTamanho() - 1; i++) {
+            UsuarioDetalhadoDto menorNome = usuarios.getElemento(i);
+            for (int j = i + 1; j < usuarios.getTamanho(); j++) {
+                UsuarioDetalhadoDto usuario = usuarios.getElemento(j);
+                if (usuario.nome().compareTo(menorNome.nome()) < 0) {
+                    menorNome = usuario;
+                }
+            }
+            UsuarioDetalhadoDto aux = usuarios.getElemento(i);
+            usuarios.setElemento(i, menorNome);
+            usuarios.setElemento(usuarios.getTamanho() - 1, aux);
+
+        }
+
+
+        return usuarios;
+    }
+
+    public ListaObj<UsuarioConversaDto> listarTeste() {
+        ListaObj<UsuarioConversaDto> usuarios = new ListaObj<>(10);
+
+
+        for (Usuario u : this.usuarioRepository.findAll()) {
+            usuarios.adiciona(new UsuarioConversaDto(u));
         }
 
         return usuarios;
@@ -113,6 +143,14 @@ public class UsuarioService {
 
         return usuarioRepository.findAll(specification, pageable)
                 .map(UsuarioBuscaDto::new);
+    }
+
+    public static String criarUrlFotoPerfil(List<Arquivo> arquivos) {
+        return arquivos.stream()
+                .filter(arquivo -> arquivo.getTipoArquivo().equals(TipoArquivo.PERFIL))
+                .findFirst()
+                .map(arquivo -> "perfil/" + arquivo.getId())
+                .orElse("");
     }
 
 }
