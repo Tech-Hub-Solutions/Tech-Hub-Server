@@ -2,6 +2,7 @@ package api.tech.hub.techhubapi.service.avaliacao;
 
 import api.tech.hub.techhubapi.entity.perfil.Avaliacao;
 import api.tech.hub.techhubapi.entity.perfil.Perfil;
+import api.tech.hub.techhubapi.entity.perfil.ReferenciaPerfil;
 import api.tech.hub.techhubapi.entity.usuario.Usuario;
 import api.tech.hub.techhubapi.repository.AvaliacaoRepository;
 import api.tech.hub.techhubapi.repository.PerfilRepository;
@@ -43,7 +44,7 @@ public class AvaliacaoService {
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Perfil não encontrado")
         );
 
-        List<Avaliacao> listaAvaliacoes = this.AvaliacaoRepository.findAvaliacaoByPerfilId(perfil.getId());
+        List<Avaliacao> listaAvaliacoes = this.AvaliacaoRepository.findAvaliacaoByPerfil(perfil);
 
         if(listaAvaliacoes.isEmpty()){
             throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Perfil não possui avaliações");
@@ -51,4 +52,5 @@ public class AvaliacaoService {
 
         return listaAvaliacoes.stream().map(mapper::dtoOf).toList();
     }
+
 }

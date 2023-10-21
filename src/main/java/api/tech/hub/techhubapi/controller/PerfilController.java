@@ -1,9 +1,5 @@
 package api.tech.hub.techhubapi.controller;
 
-import api.tech.hub.techhubapi.entity.perfil.Avaliacao;
-import api.tech.hub.techhubapi.entity.perfil.Perfil;
-import api.tech.hub.techhubapi.entity.perfil.ReferenciaPerfil;
-import api.tech.hub.techhubapi.entity.usuario.Usuario;
 import api.tech.hub.techhubapi.service.avaliacao.AvaliacaoService;
 import api.tech.hub.techhubapi.service.avaliacao.dto.AvaliacaoDetalhadoDto;
 import api.tech.hub.techhubapi.service.perfil.PerfilService;
@@ -16,7 +12,6 @@ import api.tech.hub.techhubapi.service.referencia.dto.ReferenciaDetalhadoDto;
 import api.tech.hub.techhubapi.service.referencia.dto.ReferenciaPerfilCriacaoDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.boot.spi.NaturalIdUniqueKeyBinder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,10 +27,10 @@ public class PerfilController {
     private final ProjetoService projetoService;
     private final ReferenciaPerfilService referenciaPerfilService;
 
-    @PostMapping("/{idUsuario}")
-    public ResponseEntity<PerfilDetalhadoDto> criarPerfil(@PathVariable Integer idUsuario,
+    @PutMapping("/{idUsuario}")
+    public ResponseEntity<PerfilDetalhadoDto> atualizarPerfil(@PathVariable Integer idUsuario,
                                                           @RequestBody @Valid PerfilCadastroDto dto){
-        return ResponseEntity.ok(this.perfilService.validarDtoCadastro(idUsuario,dto));
+        return ResponseEntity.ok(this.perfilService.atualizarPerfil(idUsuario,dto));
     }
 
     @PostMapping("/avaliar/{idUsuario}")

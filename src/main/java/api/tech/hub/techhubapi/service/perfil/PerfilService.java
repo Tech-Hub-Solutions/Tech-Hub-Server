@@ -1,11 +1,11 @@
 package api.tech.hub.techhubapi.service.perfil;
 
+import api.tech.hub.techhubapi.entity.perfil.Avaliacao;
 import api.tech.hub.techhubapi.entity.perfil.Perfil;
+import api.tech.hub.techhubapi.entity.perfil.ReferenciaPerfil;
 import api.tech.hub.techhubapi.entity.perfil.flag.Flag;
-import api.tech.hub.techhubapi.entity.usuario.Usuario;
-import api.tech.hub.techhubapi.repository.PerfilRepository;
-import api.tech.hub.techhubapi.repository.UsuarioRepository;
-import api.tech.hub.techhubapi.service.flag.FlagService;
+import api.tech.hub.techhubapi.entity.perfil.flag.FlagUsuario;
+import api.tech.hub.techhubapi.repository.*;
 import api.tech.hub.techhubapi.service.flag.FlagUsuarioService;
 import api.tech.hub.techhubapi.service.perfil.dto.PerfilCadastroDto;
 import api.tech.hub.techhubapi.service.perfil.dto.PerfilDetalhadoDto;
@@ -23,8 +23,11 @@ public class PerfilService {
     private final PerfilRepository perfilRepository;
     private final UsuarioRepository usuarioRepository;
     private final PerfilMapper perfilMapper;
+    private final FlagUsuarioRepository flagUsuarioRepository;
     private final FlagUsuarioService flagUsuarioService;
-    private final FlagService flagService;
+    private final AvaliacaoRepository avaliacaoRepository;
+    private final ReferenciaPerfilRepository referenciaPerfilRepository;
+
 
     public Perfil buscarPerfilPorIdUsuario(Integer idUsuario) {
         if (!this.usuarioRepository.existsById(idUsuario)) {
@@ -39,23 +42,35 @@ public class PerfilService {
         return perfil;
     }
 
-    public PerfilDetalhadoDto validarDtoCadastro(int idUsuario, PerfilCadastroDto dto) {
-        Usuario usuario = usuarioRepository.findById(idUsuario).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Usuário não encontrado")
-        );
-
-        Perfil perfilValidado = this.perfilRepository.save(this.perfilMapper.of(usuario,dto));
-
-        flagUsuarioService.salvarFlagUsuario(perfilValidado,dto.flagList());
-        List<Flag> flags = flagService.buscarFlagsDoPerfil(perfilValidado.getId());
-
-        if (flags.isEmpty()) {
-            throw new ResponseStatusException(
-                    HttpStatus.NO_CONTENT, "O perfil não possui flags cadastradas!"
-            );
+    public PerfilDetalhadoDto atualizarPerfil(int idUsuario, PerfilCadastroDto dto) {
+        if (!this.usuarioRepository.existsById(idUsuario)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado");
         }
 
-        return this.perfilMapper.dtoOf(perfilValidado);
+        Perfil perfil = this.perfilRepository.encontrarPerfilPorIdUsuario(idUsuario).get();
+
+        perfil = this.perfilMapper.of(perfil, dto);
+
+        this.perfilRepository.save(perfil);
+
+        if (!dto.flagList().isEmpty()) {
+            flagUsuarioService.salvarFlagUsuario(perfil, dto.flagList());
+        }
+
+        return criarPerfilDetalhadoDto(perfil);
+    }
+
+    private PerfilDetalhadoDto criarPerfilDetalhadoDto(Perfil perfil) {
+
+        List<Flag> flagList = this.flagUsuarioRepository.encontrarFlagPorPerfil(perfil);
+
+        List<Avaliacao> avaliacaoDetalhadoDtoList = this.avaliacaoRepository.findAvaliacaoByPerfil(perfil);
+
+        List<ReferenciaPerfil> referenciaPerfil = this.referenciaPerfilRepository
+                .findByAvaliado(perfil);
+
+        return this.perfilMapper.dtoOf(perfil, flagList, avaliacaoDetalhadoDtoList,
+                referenciaPerfil);
     }
 
     public PerfilDetalhadoDto buscarPerfilDetalhadoPorIdUsuario(Integer idUsuario) {
@@ -68,7 +83,7 @@ public class PerfilService {
                         () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Perfil não encontrado")
                 );
 
-        return this.perfilMapper.dtoOf(perfil);
+        return criarPerfilDetalhadoDto(perfil);
     }
 
 

@@ -18,9 +18,10 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
 
     Optional<Usuario> findUsuarioByIdAndIsAtivoTrue(Integer id);
 
-//    @Modifying
-//    @Transactional
-//    @Query("UPDATE Usuario u SET u.perfil = :perfil WHERE u.id = :idUsuario")
-//    void atualizarPerfilDoUsuario(Integer idUsuario, Perfil perfil);
+    @Transactional
+    @Modifying
+    @Query("UPDATE Usuario u SET u.perfil = :perfil WHERE u.id = :id")
+    void atualizarPerfilDoUsuario(Integer id, Perfil perfil);
+
 
 }

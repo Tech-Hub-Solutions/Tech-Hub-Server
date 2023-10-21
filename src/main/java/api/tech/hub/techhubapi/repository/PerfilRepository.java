@@ -1,7 +1,10 @@
 package api.tech.hub.techhubapi.repository;
 
 import api.tech.hub.techhubapi.entity.perfil.Perfil;
+import api.tech.hub.techhubapi.entity.usuario.Usuario;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Repository;
@@ -31,4 +34,9 @@ public interface PerfilRepository extends JpaRepository<Perfil,Integer> {
 
     @Query("SELECT p FROM Perfil p WHERE p.usuario.id = :idUsuario")
     Optional<Perfil> encontrarPerfilPorIdUsuario(Integer idUsuario);
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE Perfil p SET p.usuario = :usuario WHERE p.id = :id")
+    void atualizarUsuarioDoPerfil(Integer id, Usuario usuario);
 }

@@ -2,7 +2,9 @@ package api.tech.hub.techhubapi.service.usuario;
 
 import api.tech.hub.techhubapi.configuration.security.jwt.GerenciadorTokenJwt;
 import api.tech.hub.techhubapi.entity.ListaObj;
+import api.tech.hub.techhubapi.entity.perfil.Perfil;
 import api.tech.hub.techhubapi.entity.usuario.Usuario;
+import api.tech.hub.techhubapi.repository.PerfilRepository;
 import api.tech.hub.techhubapi.repository.UsuarioRepository;
 import api.tech.hub.techhubapi.service.usuario.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +33,8 @@ public class UsuarioService {
     private AuthenticationManager authenticationManager;
     @Autowired
     private UsuarioMapper usuarioMapper;
+    @Autowired
+    private PerfilRepository perfilRepository;
 
     public UsuarioTokenDto autenticar(UsuarioLoginDto usuarioLoginDto) {
         final UsernamePasswordAuthenticationToken credentials = new UsernamePasswordAuthenticationToken(
@@ -58,7 +62,13 @@ public class UsuarioService {
             throw new ResponseStatusException(HttpStatusCode.valueOf(409), "Usuário já existe!");
         }
 
-        return this.usuarioRepository.save(validado);
+        Perfil perfilUsuario = this.perfilRepository.save(new Perfil());
+        Usuario usuarioSalvo = this.usuarioRepository.save(validado);
+
+        this.perfilRepository.atualizarUsuarioDoPerfil(perfilUsuario.getId(),usuarioSalvo);
+        this.usuarioRepository.atualizarPerfilDoUsuario(usuarioSalvo.getId(), perfilUsuario);
+
+        return usuarioSalvo;
     }
 
     public UsuarioDetalhadoDto atualizarInformacaoUsuarioPorId(Integer id, UsuarioAtualizacaoDto dto) {
