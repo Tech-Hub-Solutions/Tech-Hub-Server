@@ -2,10 +2,15 @@ package api.tech.hub.techhubapi.service.usuario;
 
 import api.tech.hub.techhubapi.configuration.security.jwt.GerenciadorTokenJwt;
 import api.tech.hub.techhubapi.entity.ListaObj;
+import api.tech.hub.techhubapi.entity.perfil.flag.Flag;
 import api.tech.hub.techhubapi.entity.usuario.Usuario;
 import api.tech.hub.techhubapi.repository.UsuarioRepository;
 import api.tech.hub.techhubapi.service.usuario.dto.*;
+import api.tech.hub.techhubapi.service.usuario.specification.UsuarioSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -75,14 +80,14 @@ public class UsuarioService {
     public UsuarioDetalhadoDto buscarPorId(Integer id) {
         return usuarioMapper.dtoOf(
                 this.usuarioRepository.findUsuarioByIdAndIsAtivoTrue(id).orElseThrow(
-                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Usuário não encontrado")
+                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado")
                 )
         );
     }
 
     public void deletarUsuario(Integer id) {
         Usuario usuario = usuarioRepository.findUsuarioByIdAndIsAtivoTrue(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatusCode.valueOf(404),"Usuário não encontrado"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatusCode.valueOf(404), "Usuário não encontrado"));
 
         usuario.setAtivo(false);
         usuarioRepository.save(usuario);
@@ -91,10 +96,23 @@ public class UsuarioService {
     public ListaObj<Usuario> listar() {
         ListaObj<Usuario> usuarios = new ListaObj<>(10);
 
-        for (Usuario u: this.usuarioRepository.findAll()) {
+        for (Usuario u : this.usuarioRepository.findAll()) {
             usuarios.adiciona(u);
         }
 
         return usuarios;
     }
+
+    public Page<UsuarioBuscaDto> listarPor(UsuarioFiltroDto usuarioFiltroDto, Pageable pageable) {
+        Specification<Usuario> specification = Specification
+                .allOf(
+                        UsuarioSpecification.hasArea(usuarioFiltroDto.area()),
+                        UsuarioSpecification.hasPrecoBetween(usuarioFiltroDto.precoMin(), usuarioFiltroDto.precoMax()),
+                        UsuarioSpecification.hasFlags(usuarioFiltroDto.tecnologias())
+                );
+
+        return usuarioRepository.findAll(specification, pageable)
+                .map(UsuarioBuscaDto::new);
+    }
+
 }
