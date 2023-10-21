@@ -57,20 +57,12 @@ public class PerfilService {
             flagUsuarioService.salvarFlagUsuario(perfil, dto.flagList());
         }
 
-        return criarPerfilDetalhadoDto(perfil);
+        return criarPerfilDetalhadoDto(idUsuario);
     }
 
-    private PerfilDetalhadoDto criarPerfilDetalhadoDto(Perfil perfil) {
-
-        List<Flag> flagList = this.flagUsuarioRepository.encontrarFlagPorPerfil(perfil);
-
-        List<Avaliacao> avaliacaoDetalhadoDtoList = this.avaliacaoRepository.findAvaliacaoByPerfil(perfil);
-
-        List<ReferenciaPerfil> referenciaPerfil = this.referenciaPerfilRepository
-                .findByAvaliado(perfil);
-
-        return this.perfilMapper.dtoOf(perfil, flagList, avaliacaoDetalhadoDtoList,
-                referenciaPerfil);
+    private PerfilDetalhadoDto criarPerfilDetalhadoDto(int idUsuario) {
+        Perfil perfil = this.perfilRepository.encontrarPerfilPorIdUsuario(idUsuario).get();
+        return this.perfilMapper.dtoOf(perfil);
     }
 
     public PerfilDetalhadoDto buscarPerfilDetalhadoPorIdUsuario(Integer idUsuario) {
@@ -83,7 +75,7 @@ public class PerfilService {
                         () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Perfil não encontrado")
                 );
 
-        return criarPerfilDetalhadoDto(perfil);
+        return criarPerfilDetalhadoDto(idUsuario);
     }
 
 

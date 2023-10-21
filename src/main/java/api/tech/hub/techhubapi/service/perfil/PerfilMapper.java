@@ -7,6 +7,7 @@ import api.tech.hub.techhubapi.entity.perfil.flag.Flag;
 import api.tech.hub.techhubapi.entity.perfil.flag.FlagUsuario;
 import api.tech.hub.techhubapi.service.avaliacao.AvaliacaoMapper;
 import api.tech.hub.techhubapi.service.flag.FlagUsuarioMapper;
+import api.tech.hub.techhubapi.service.flag.dto.FlagDto;
 import api.tech.hub.techhubapi.service.perfil.dto.PerfilCadastroDto;
 import api.tech.hub.techhubapi.service.perfil.dto.PerfilDetalhadoDto;
 import api.tech.hub.techhubapi.service.referencia.ReferenciaPerfilMapper;
@@ -35,8 +36,9 @@ public class PerfilMapper {
     }
 
 
-    public PerfilDetalhadoDto dtoOf(Perfil perfil, List<Flag> flagList, List<Avaliacao> avaliacaoDetalhadoDtoList, List<ReferenciaPerfil> referenciaDetalhadoDtoList) {
+    public PerfilDetalhadoDto dtoOf(Perfil perfil) {
         PerfilDetalhadoDto dto = new PerfilDetalhadoDto();
+
 
         dto.setId(perfil.getId());
         dto.setSobreMim(perfil.getSobreMim());
@@ -46,24 +48,10 @@ public class PerfilMapper {
         dto.setNomeGithub(perfil.getNomeGithub());
         dto.setLinkGithub(perfil.getLinkGithub());
         dto.setLinkLinkedin(perfil.getLinkLinkedin());
+        dto.setFlags(this.flagUsuarioMapper.retornarFlagList(perfil.getFlagUsuarioList()).stream().map(FlagDto::new).toList());
+        dto.setAvaliacoes(this.avaliacaoMapper.retornarListaAvaliacoesDto(perfil.getAvaliacaoList()));
+        dto.setReferencias(this.referenciaPerfilMapper.retornarListaReferenciasDto(perfil.getReferenciaPerfilList()));
 
-        if (flagList.isEmpty()) {
-            dto.setFlags(null);
-        } else {
-            dto.setFlags(flagList);
-        }
-
-        if (avaliacaoDetalhadoDtoList.isEmpty()) {
-            dto.setAvaliacoes(null);
-        } else {
-            dto.setAvaliacoes(this.avaliacaoMapper.retornarListaAvaliacoesDto(avaliacaoDetalhadoDtoList));
-        }
-
-        if (referenciaDetalhadoDtoList.isEmpty()) {
-            dto.setReferencias(null);
-        } else {
-            dto.setReferencias(this.referenciaPerfilMapper.retornarListaReferenciasDto(referenciaDetalhadoDtoList));
-        }
 
         return dto;
     }
