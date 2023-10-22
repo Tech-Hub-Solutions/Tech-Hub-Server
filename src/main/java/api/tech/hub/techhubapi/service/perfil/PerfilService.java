@@ -1,8 +1,12 @@
 package api.tech.hub.techhubapi.service.perfil;
 
+import api.tech.hub.techhubapi.entity.perfil.Avaliacao;
 import api.tech.hub.techhubapi.entity.Arquivo;
 import api.tech.hub.techhubapi.entity.perfil.Perfil;
+import api.tech.hub.techhubapi.entity.perfil.ReferenciaPerfil;
 import api.tech.hub.techhubapi.entity.perfil.flag.Flag;
+import api.tech.hub.techhubapi.entity.perfil.flag.FlagUsuario;
+import api.tech.hub.techhubapi.repository.*;
 import api.tech.hub.techhubapi.entity.usuario.Usuario;
 import api.tech.hub.techhubapi.repository.PerfilRepository;
 import api.tech.hub.techhubapi.repository.UsuarioRepository;
@@ -44,23 +48,28 @@ public class PerfilService {
         return perfil;
     }
 
-    public PerfilDetalhadoDto validarDtoCadastro(int idUsuario, PerfilCadastroDto dto) {
-        Usuario usuario = usuarioRepository.findById(idUsuario).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado")
-        );
-
-        Perfil perfilValidado = this.perfilRepository.save(this.perfilMapper.of(usuario, dto));
-
-        flagUsuarioService.salvarFlagUsuario(perfilValidado, dto.flagList());
-        List<Flag> flags = flagService.buscarFlagsDoPerfil(perfilValidado.getId());
-
-        if (flags.isEmpty()) {
-            throw new ResponseStatusException(
-                    HttpStatus.NO_CONTENT, "O perfil não possui flags cadastradas!"
-            );
+    public PerfilDetalhadoDto atualizarPerfil(int idUsuario, PerfilCadastroDto dto) {
+        if (!this.usuarioRepository.existsById(idUsuario)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado");
         }
 
-        return this.perfilMapper.dtoOf(perfilValidado);
+        Perfil perfil = this.perfilRepository.encontrarPerfilPorIdUsuario(idUsuario).get();
+
+        perfil = this.perfilMapper.of(perfil, dto);
+
+        this.perfilRepository.save(perfil);
+
+
+        if (!dto.flagList().isEmpty()) {
+            flagUsuarioService.salvarFlagUsuario(perfil, dto.flagList());
+        }
+
+        return criarPerfilDetalhadoDto(idUsuario);
+    }
+
+    private PerfilDetalhadoDto criarPerfilDetalhadoDto(int idUsuario) {
+        Perfil perfil = this.perfilRepository.encontrarPerfilPorIdUsuario(idUsuario).get();
+        return this.perfilMapper.dtoOf(perfil);
     }
 
     public PerfilDetalhadoDto buscarPerfilDetalhadoPorIdUsuario(Integer idUsuario) {
@@ -68,12 +77,7 @@ public class PerfilService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado");
         }
 
-        Perfil perfil = this.perfilRepository.encontrarPerfilPorIdUsuario(idUsuario)
-                .orElseThrow(
-                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Perfil não encontrado")
-                );
-
-        return this.perfilMapper.dtoOf(perfil);
+        return criarPerfilDetalhadoDto(idUsuario);
     }
 
     public void atualizarArquivoPerfil(Integer id, MultipartFile arquivo, TipoArquivo tipoArquivo) {
@@ -101,69 +105,4 @@ public class PerfilService {
         arquivoSalvo.setPerfil(perfil);
         this.arquivoService.salvarArquivo(arquivoSalvo);
     }
-
-
-//    public Perfil atualizarSobreMim(int idUsuario, String sobreMim) {
-//        Integer perfilId = encontrarIdPerfil(idUsuario);
-//
-//        this.perfilRepository.atualizarSobreMimPorId(perfilId, sobreMim);
-//
-//        return this.perfilRepository.findById(perfilId).get();
-//    }
-//
-//    public Perfil atualizarExperiencia(int idUsuario, String experiencia) {
-//        Integer perfilId = encontrarIdPerfil(idUsuario);
-//
-//        this.perfilRepository.atualizarExperienciaPorId(perfilId, experiencia);
-//
-//        return this.perfilRepository.findById(perfilId).get();
-//    }
-//
-//    public Perfil atualizarDescricao(int idUsuario, String descricao) {
-//        Integer perfilId = encontrarIdPerfil(idUsuario);
-//
-//        this.perfilRepository.atualizarDescricaoPorId(perfilId, descricao);
-//
-//        return this.perfilRepository.findById(perfilId).get();
-//    }
-//
-//    public Perfil atualizarPathPerfilImage(int idUsuario, String pathPerfilImage) {
-//        Integer perfilId = encontrarIdPerfil(idUsuario);
-//
-//        this.perfilRepository.atualizarPathPerfilImagePorId(perfilId, pathPerfilImage);
-//
-//        return this.perfilRepository.findById(perfilId).get();
-//    }
-//
-//    public Perfil atualizarPathWallpaperImage(int idUsuario, String pathWallpaperImage) {
-//        Integer perfilId = encontrarIdPerfil(idUsuario);
-//
-//        this.perfilRepository.atualizarPathWallpaperImagePorId(perfilId, pathWallpaperImage);
-//
-//        return this.perfilRepository.findById(perfilId).get();
-//    }
-//
-//    public Perfil atualizarPrecoMedio(int idUsuario, String precoMedio) {
-//        Integer perfilId = encontrarIdPerfil(idUsuario);
-//
-//        this.perfilRepository.atualizarPrecoMedioPorId(perfilId, precoMedio);
-//
-//        return this.perfilRepository.findById(perfilId).get();
-//    }
-//
-//    public Perfil atualizarLinkGithub(int idUsuario, String linkGithub) {
-//        Integer perfilId = encontrarIdPerfil(idUsuario);
-//
-//        this.perfilRepository.atualizarLinkGithub(perfilId, linkGithub);
-//
-//        return this.perfilRepository.findById(perfilId).get();
-//    }
-//
-//    public Perfil atualizarLinkLinkedin(int idUsuario, String linkLinkedin) {
-//        Integer perfilId = encontrarIdPerfil(idUsuario);
-//
-//        this.perfilRepository.atualizarlinkLinkedinPorId(perfilId, linkLinkedin);
-//
-//        return this.perfilRepository.findById(perfilId).get();
-//    }
 }

@@ -5,6 +5,7 @@ import api.tech.hub.techhubapi.entity.Arquivo;
 import api.tech.hub.techhubapi.entity.ListaObj;
 import api.tech.hub.techhubapi.entity.perfil.Perfil;
 import api.tech.hub.techhubapi.entity.usuario.Usuario;
+import api.tech.hub.techhubapi.repository.PerfilRepository;
 import api.tech.hub.techhubapi.repository.UsuarioRepository;
 import api.tech.hub.techhubapi.service.arquivo.TipoArquivo;
 import api.tech.hub.techhubapi.service.conversa.dto.UsuarioConversaDto;
@@ -39,6 +40,8 @@ public class UsuarioService {
     private AuthenticationManager authenticationManager;
     @Autowired
     private UsuarioMapper usuarioMapper;
+    @Autowired
+    private PerfilRepository perfilRepository;
 
     public UsuarioTokenDto autenticar(UsuarioLoginDto usuarioLoginDto) {
         final UsernamePasswordAuthenticationToken credentials = new UsernamePasswordAuthenticationToken(
@@ -66,7 +69,13 @@ public class UsuarioService {
             throw new ResponseStatusException(HttpStatusCode.valueOf(409), "Usuário já existe!");
         }
 
-        return this.usuarioRepository.save(validado);
+        Perfil perfilUsuario = this.perfilRepository.save(new Perfil());
+        Usuario usuarioSalvo = this.usuarioRepository.save(validado);
+
+        this.perfilRepository.atualizarUsuarioDoPerfil(perfilUsuario.getId(),usuarioSalvo);
+        this.usuarioRepository.atualizarPerfilDoUsuario(usuarioSalvo.getId(), perfilUsuario);
+
+        return usuarioSalvo;
     }
 
     public UsuarioDetalhadoDto atualizarInformacaoUsuarioPorId(Integer id, UsuarioAtualizacaoDto dto) {

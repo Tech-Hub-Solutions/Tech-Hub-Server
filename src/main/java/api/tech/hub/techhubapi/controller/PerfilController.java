@@ -17,7 +17,6 @@ import api.tech.hub.techhubapi.service.referencia.dto.ReferenciaDetalhadoDto;
 import api.tech.hub.techhubapi.service.referencia.dto.ReferenciaPerfilCriacaoDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.boot.spi.NaturalIdUniqueKeyBinder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,26 +29,12 @@ import java.util.List;
 public class PerfilController {
 
     private final PerfilService perfilService;
-    private final AvaliacaoService avaliacaoService;
-    private final ProjetoService projetoService;
     private final ReferenciaPerfilService referenciaPerfilService;
 
-    @PostMapping("/{idUsuario}")
-    public ResponseEntity<PerfilDetalhadoDto> criarPerfil(@PathVariable Integer idUsuario,
+    @PutMapping("/{idUsuario}")
+    public ResponseEntity<PerfilDetalhadoDto> atualizarPerfil(@PathVariable Integer idUsuario,
                                                           @RequestBody @Valid PerfilCadastroDto dto){
-        return ResponseEntity.ok(this.perfilService.validarDtoCadastro(idUsuario,dto));
-    }
-
-    @PostMapping("/avaliar/{idUsuario}")
-    public ResponseEntity<AvaliacaoDetalhadoDto> avaliarPerfil(@PathVariable Integer idUsuario,
-                                                               @RequestBody @Valid avaliacaoDto dto){
-        return ResponseEntity.ok(this.avaliacaoService.avaliar(dto, idUsuario));
-    }
-
-    @PostMapping("/referenciar/{idAvaliador}")
-    public ResponseEntity<ReferenciaDetalhadoDto> referenciarPerfil(@PathVariable Integer idAvaliador,
-                                                                    @RequestBody @Valid ReferenciaPerfilCriacaoDto dto) {
-        return ResponseEntity.ok(this.referenciaPerfilService.criarReferenciaPerfil(idAvaliador, dto));
+        return ResponseEntity.ok(this.perfilService.atualizarPerfil(idUsuario,dto));
     }
 
     @GetMapping("/{idUsuario}")

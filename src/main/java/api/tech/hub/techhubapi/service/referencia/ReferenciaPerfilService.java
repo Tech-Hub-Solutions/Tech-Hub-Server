@@ -2,11 +2,8 @@ package api.tech.hub.techhubapi.service.referencia;
 
 import api.tech.hub.techhubapi.entity.perfil.Perfil;
 import api.tech.hub.techhubapi.entity.perfil.ReferenciaPerfil;
-import api.tech.hub.techhubapi.entity.usuario.Usuario;
 import api.tech.hub.techhubapi.repository.PerfilRepository;
 import api.tech.hub.techhubapi.repository.ReferenciaPerfilRepository;
-import api.tech.hub.techhubapi.service.perfil.PerfilService;
-import api.tech.hub.techhubapi.service.perfil.dto.PerfilDetalhadoDto;
 import api.tech.hub.techhubapi.service.referencia.dto.ReferenciaDetalhadoDto;
 import api.tech.hub.techhubapi.service.referencia.dto.ReferenciaPerfilCriacaoDto;
 import lombok.RequiredArgsConstructor;
@@ -50,7 +47,7 @@ public class ReferenciaPerfilService {
         );
 
         List<ReferenciaPerfil> listaReferenciaPerfil = this.referenciaPerfilRepository
-                .findReferenciaPerfilByAvaliadoId(perfil.getId());
+                .findByAvaliado(perfil);
 
         if(listaReferenciaPerfil.isEmpty()){
             throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Perfil não possui referencias");

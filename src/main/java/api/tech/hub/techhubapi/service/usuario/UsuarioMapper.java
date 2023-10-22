@@ -1,5 +1,6 @@
 package api.tech.hub.techhubapi.service.usuario;
 
+import api.tech.hub.techhubapi.entity.perfil.Perfil;
 import api.tech.hub.techhubapi.entity.usuario.Usuario;
 import api.tech.hub.techhubapi.service.usuario.dto.UsuarioAtualizacaoDto;
 import api.tech.hub.techhubapi.service.usuario.dto.UsuarioDetalhadoDto;

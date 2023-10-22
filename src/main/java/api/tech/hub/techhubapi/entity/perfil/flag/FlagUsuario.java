@@ -16,6 +16,6 @@ public class FlagUsuario {
 
     @ManyToOne
     private Flag flag;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Perfil perfil;
 }
