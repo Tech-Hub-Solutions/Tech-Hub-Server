@@ -6,15 +6,15 @@ import api.tech.hub.techhubapi.entity.usuario.Usuario;
 import api.tech.hub.techhubapi.service.arquivo.ArquivoService;
 import api.tech.hub.techhubapi.service.arquivo.TipoArquivo;
 import api.tech.hub.techhubapi.service.conversa.ConversaService;
+import api.tech.hub.techhubapi.service.usuario.UsuarioService;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.*;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -29,11 +29,12 @@ import java.util.List;
 public class ArquivoController {
     private final ArquivoService arquivoService;
     private final ConversaService conversaService;
+    private final UsuarioService usuarioService;
 
     @GetMapping("/image/{id}")
     public ResponseEntity<byte[]> getImage(@PathVariable Integer id) {
         Arquivo arquivo = this.arquivoService.getArquivo(id);
-        byte[] imagem = this.arquivoService.getImage(arquivo.getNomeArquivoSalvo());
+        byte[] imagem = this.arquivoService.getImage(arquivo.getNomeArquivoSalvo(), TipoArquivo.IMAGEM);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.IMAGE_JPEG);
@@ -52,7 +53,7 @@ public class ArquivoController {
         // Getting file size
         try {
 
-        fileSize = resource.contentLength(); // It's important that resource should be able to provide this info
+            fileSize = resource.contentLength(); // It's important that resource should be able to provide this info
         } catch (IOException e) {
             return ResponseEntity.badRequest().build();
         }
@@ -92,5 +93,21 @@ public class ArquivoController {
                 .body(resource);
     }
 
+    @GetMapping("/usuario/{id}")
+    public ResponseEntity<byte[]> getUsuarioPerfil(
+            @PathVariable Integer id,
+            @RequestParam TipoArquivo tipoArquivo
+    ) {
+
+        Arquivo arquivo = this.arquivoService.getArquivo(id, tipoArquivo);
+        byte[] imagem = this.arquivoService.getImage(arquivo.getNomeArquivoSalvo(), tipoArquivo);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.IMAGE_JPEG);
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=" + arquivo.getNomeArquivoOriginal());
+
+        return ResponseEntity.status(200).headers(headers).body(imagem);
+
+    }
 
 }

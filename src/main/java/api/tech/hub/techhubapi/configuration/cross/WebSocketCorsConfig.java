@@ -1,4 +1,4 @@
-package api.tech.hub.techhubapi.configuration.websocket;
+package api.tech.hub.techhubapi.configuration.cross;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

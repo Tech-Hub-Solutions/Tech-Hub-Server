@@ -1,17 +1,25 @@
 package api.tech.hub.techhubapi.service.perfil;
 
 import api.tech.hub.techhubapi.entity.perfil.Avaliacao;
+import api.tech.hub.techhubapi.entity.Arquivo;
 import api.tech.hub.techhubapi.entity.perfil.Perfil;
 import api.tech.hub.techhubapi.entity.perfil.ReferenciaPerfil;
 import api.tech.hub.techhubapi.entity.perfil.flag.Flag;
 import api.tech.hub.techhubapi.entity.perfil.flag.FlagUsuario;
 import api.tech.hub.techhubapi.repository.*;
+import api.tech.hub.techhubapi.entity.usuario.Usuario;
+import api.tech.hub.techhubapi.repository.PerfilRepository;
+import api.tech.hub.techhubapi.repository.UsuarioRepository;
+import api.tech.hub.techhubapi.service.arquivo.ArquivoService;
+import api.tech.hub.techhubapi.service.arquivo.TipoArquivo;
+import api.tech.hub.techhubapi.service.flag.FlagService;
 import api.tech.hub.techhubapi.service.flag.FlagUsuarioService;
 import api.tech.hub.techhubapi.service.perfil.dto.PerfilCadastroDto;
 import api.tech.hub.techhubapi.service.perfil.dto.PerfilDetalhadoDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -24,7 +32,8 @@ public class PerfilService {
     private final UsuarioRepository usuarioRepository;
     private final PerfilMapper perfilMapper;
     private final FlagUsuarioService flagUsuarioService;
-
+    private final FlagService flagService;
+    private final ArquivoService arquivoService;
 
     public Perfil buscarPerfilPorIdUsuario(Integer idUsuario) {
         if (!this.usuarioRepository.existsById(idUsuario)) {
@@ -50,6 +59,7 @@ public class PerfilService {
 
         this.perfilRepository.save(perfil);
 
+
         if (!dto.flagList().isEmpty()) {
             flagUsuarioService.salvarFlagUsuario(perfil, dto.flagList());
         }
@@ -70,4 +80,29 @@ public class PerfilService {
         return criarPerfilDetalhadoDto(idUsuario);
     }
 
+    public void atualizarArquivoPerfil(Integer id, MultipartFile arquivo, TipoArquivo tipoArquivo) {
+        Perfil perfil = this.perfilRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Perfil não encontrado"));
+
+        if (!tipoArquivo.equals(TipoArquivo.PERFIL) && !tipoArquivo.equals(TipoArquivo.WALLPAPER)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tipo de arquivo inválido");
+        }
+
+        Arquivo arquivoSalvo = this.arquivoService.salvarArquivoLocal(arquivo, tipoArquivo);
+
+        arquivoSalvo.setId(
+                perfil.getArquivos().stream()
+                        .filter(arquivo1 -> arquivo1.getTipoArquivo().equals(tipoArquivo))
+                        .findFirst()
+                        .map(Arquivo::getId)
+                        .orElse(null)
+        );
+
+        if (arquivoSalvo.getId() != null) {
+            this.arquivoService.deletarArquivo(arquivoSalvo.getId(), tipoArquivo);
+        }
+
+        arquivoSalvo.setPerfil(perfil);
+        this.arquivoService.salvarArquivo(arquivoSalvo);
+    }
 }

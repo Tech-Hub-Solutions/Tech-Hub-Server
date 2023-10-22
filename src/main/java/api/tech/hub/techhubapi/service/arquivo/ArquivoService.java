@@ -2,8 +2,11 @@ package api.tech.hub.techhubapi.service.arquivo;
 
 import api.tech.hub.techhubapi.entity.Arquivo;
 import api.tech.hub.techhubapi.entity.conversa.Mensagem;
+import api.tech.hub.techhubapi.entity.perfil.Perfil;
 import api.tech.hub.techhubapi.entity.usuario.Usuario;
 import api.tech.hub.techhubapi.repository.ArquivoRepository;
+import api.tech.hub.techhubapi.repository.PerfilRepository;
+import api.tech.hub.techhubapi.repository.UsuarioRepository;
 import api.tech.hub.techhubapi.service.conversa.dto.MensagemASerEnviadaDto;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
@@ -31,6 +34,7 @@ public class ArquivoService {
 
     private Path diretorioBase = Path.of(System.getProperty("user.dir") + "/arquivos");
     private final ArquivoRepository arquivoRepository;
+    private final UsuarioRepository usuarioRepository;
 
     public Arquivo salvarArquivoLocal(MultipartFile arquivo, TipoArquivo tipo) {
 
@@ -82,9 +86,28 @@ public class ArquivoService {
         return arquivoOptional.get();
     }
 
-    public byte[] getImage(String nomeArquivo) {
+    public Arquivo getArquivo(Integer idUsuario, TipoArquivo tipoArquivo) {
+        Usuario usuario =  this.usuarioRepository.findById(idUsuario)
+                .orElseThrow(
+                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado")
+                );
+
+        Perfil perfil = usuario.getPerfil();
+
+        if (perfil == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Perfil não encontrado");
+        }
+
+        return perfil.getArquivos().stream()
+                .filter(arq -> arq.getTipoArquivo().equals(tipoArquivo))
+                .findFirst()
+                .orElseThrow(
+                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Arquivo não encontrado")
+                );
+    }
+    public byte[] getImage(String nomeArquivo, TipoArquivo tipoArquivo) {
         try {
-            Path path = Path.of(this.diretorioBase + "/IMAGEM");
+            Path path = Path.of(this.diretorioBase + "/" + tipoArquivo.toString());
             Path filePath = Paths.get(path.toString(), nomeArquivo);
             return Files.readAllBytes(filePath);
 
@@ -115,6 +138,21 @@ public class ArquivoService {
 
     public Arquivo salvarArquivo(Arquivo arquivo) {
         return this.arquivoRepository.save(arquivo);
+    }
+
+    public static String criarUrlFoto(Perfil perfil, TipoArquivo tipoArquivo) {
+        List<Arquivo> arquivos = perfil.getArquivos();
+
+        String url = String.format("http://localhost:8080/arquivos/usuario/%d?tipoArquivo=%s",
+                perfil.getUsuario().getId(),
+                tipoArquivo.name()
+        );
+
+        return arquivos.stream()
+                .filter(arquivo -> arquivo.getTipoArquivo().equals(TipoArquivo.PERFIL))
+                .findFirst()
+                .map(arquivo -> url)
+                .orElse("");
     }
 
     public Resource gerarCsvConversa(List<Mensagem> mensagens, List<Usuario> usuarios) {
@@ -183,5 +221,28 @@ public class ArquivoService {
 
         return new FileSystemResource(nomeArq);
 
+    }
+
+    public void deletarArquivo(Integer idArquivo, TipoArquivo tipoArquivo) {
+        Arquivo arquivo = this.arquivoRepository.findById(idArquivo)
+                .orElseThrow(
+                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Arquivo não encontrado")
+                );
+
+        this.arquivoRepository.delete(arquivo);
+        this.deletarArquivoLocal(arquivo);
+
+    }
+
+    private void deletarArquivoLocal(Arquivo arquivo) {
+        Path path = Path.of(this.diretorioBase + "/" + arquivo.getTipoArquivo().toString());
+        Path filePath = Paths.get(path.toString(), arquivo.getNomeArquivoSalvo());
+
+        try {
+            Files.delete(filePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new ResponseStatusException(422, "Não foi possível deletar o arquivo", null);
+        }
     }
 }

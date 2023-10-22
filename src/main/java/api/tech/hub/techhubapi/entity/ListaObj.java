@@ -83,6 +83,13 @@ public class ListaObj<T> {
     public T[] getVetor() {
         return this.vetor;
     }
+
+    public void setElemento(int j, T elemento) {
+        if (j < 0 || j >= nroElem) {
+            System.out.println("Posição inválida");
+        }
+        this.vetor[j] = elemento;
+    }
 }
 
 
