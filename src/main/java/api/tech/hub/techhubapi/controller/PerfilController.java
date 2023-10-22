@@ -4,6 +4,7 @@ import api.tech.hub.techhubapi.entity.perfil.Avaliacao;
 import api.tech.hub.techhubapi.entity.perfil.Perfil;
 import api.tech.hub.techhubapi.entity.perfil.ReferenciaPerfil;
 import api.tech.hub.techhubapi.entity.usuario.Usuario;
+import api.tech.hub.techhubapi.service.arquivo.TipoArquivo;
 import api.tech.hub.techhubapi.service.avaliacao.AvaliacaoService;
 import api.tech.hub.techhubapi.service.avaliacao.dto.AvaliacaoDetalhadoDto;
 import api.tech.hub.techhubapi.service.perfil.PerfilService;
@@ -19,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.hibernate.boot.spi.NaturalIdUniqueKeyBinder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -66,6 +68,15 @@ public class PerfilController {
         return ResponseEntity.ok(this.avaliacaoService.encontrarAvaliacoesPerfil(idUsuario));
     }
 
+    @PutMapping("/{id}/arquivo")
+    public ResponseEntity<Void> atualizarArquivoPerfil(
+            @PathVariable Integer id,
+            @RequestParam MultipartFile arquivo,
+            @RequestParam TipoArquivo tipoArquivo
+            ) {
+        this.perfilService.atualizarArquivoPerfil(id, arquivo, tipoArquivo);
+        return ResponseEntity.ok().build();
+    }
 
 //    @PatchMapping("/atualizar/sobre-mim/{idUsuario}")
 //    public ResponseEntity<Perfil> atualizarSobreMim(@PathVariable int idUsuario,

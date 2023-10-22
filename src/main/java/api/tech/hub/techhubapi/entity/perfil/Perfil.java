@@ -26,7 +26,7 @@ public class Perfil {
     private String linkGithub;
     private String linkLinkedin;
 
-    @OneToOne
+    @OneToOne(mappedBy = "perfil")
     private Usuario usuario;
 
     @OneToMany(mappedBy = "perfil")

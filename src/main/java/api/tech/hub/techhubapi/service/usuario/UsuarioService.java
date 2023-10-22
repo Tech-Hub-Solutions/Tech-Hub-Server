@@ -3,6 +3,7 @@ package api.tech.hub.techhubapi.service.usuario;
 import api.tech.hub.techhubapi.configuration.security.jwt.GerenciadorTokenJwt;
 import api.tech.hub.techhubapi.entity.Arquivo;
 import api.tech.hub.techhubapi.entity.ListaObj;
+import api.tech.hub.techhubapi.entity.perfil.Perfil;
 import api.tech.hub.techhubapi.entity.usuario.Usuario;
 import api.tech.hub.techhubapi.repository.UsuarioRepository;
 import api.tech.hub.techhubapi.service.arquivo.TipoArquivo;
@@ -145,12 +146,5 @@ public class UsuarioService {
                 .map(UsuarioBuscaDto::new);
     }
 
-    public static String criarUrlFotoPerfil(List<Arquivo> arquivos) {
-        return arquivos.stream()
-                .filter(arquivo -> arquivo.getTipoArquivo().equals(TipoArquivo.PERFIL))
-                .findFirst()
-                .map(arquivo -> "perfil/" + arquivo.getId())
-                .orElse("");
-    }
 
 }
