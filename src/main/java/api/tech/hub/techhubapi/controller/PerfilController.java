@@ -30,6 +30,7 @@ public class PerfilController {
 
     private final PerfilService perfilService;
     private final ReferenciaPerfilService referenciaPerfilService;
+    private final AvaliacaoService avaliacaoService;
 
     @PutMapping("/{idUsuario}")
     public ResponseEntity<PerfilDetalhadoDto> atualizarPerfil(@PathVariable Integer idUsuario,
