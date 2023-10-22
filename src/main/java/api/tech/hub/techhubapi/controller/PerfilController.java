@@ -4,6 +4,7 @@ import api.tech.hub.techhubapi.entity.perfil.Avaliacao;
 import api.tech.hub.techhubapi.entity.perfil.Perfil;
 import api.tech.hub.techhubapi.entity.perfil.ReferenciaPerfil;
 import api.tech.hub.techhubapi.entity.usuario.Usuario;
+import api.tech.hub.techhubapi.service.arquivo.TipoArquivo;
 import api.tech.hub.techhubapi.service.avaliacao.AvaliacaoService;
 import api.tech.hub.techhubapi.service.avaliacao.dto.AvaliacaoDetalhadoDto;
 import api.tech.hub.techhubapi.service.perfil.PerfilService;
@@ -16,9 +17,9 @@ import api.tech.hub.techhubapi.service.referencia.dto.ReferenciaDetalhadoDto;
 import api.tech.hub.techhubapi.service.referencia.dto.ReferenciaPerfilCriacaoDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.boot.spi.NaturalIdUniqueKeyBinder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -28,26 +29,13 @@ import java.util.List;
 public class PerfilController {
 
     private final PerfilService perfilService;
-    private final AvaliacaoService avaliacaoService;
-    private final ProjetoService projetoService;
     private final ReferenciaPerfilService referenciaPerfilService;
+    private final AvaliacaoService avaliacaoService;
 
-    @PostMapping("/{idUsuario}")
-    public ResponseEntity<PerfilDetalhadoDto> criarPerfil(@PathVariable Integer idUsuario,
+    @PutMapping("/{idUsuario}")
+    public ResponseEntity<PerfilDetalhadoDto> atualizarPerfil(@PathVariable Integer idUsuario,
                                                           @RequestBody @Valid PerfilCadastroDto dto){
-        return ResponseEntity.ok(this.perfilService.validarDtoCadastro(idUsuario,dto));
-    }
-
-    @PostMapping("/avaliar/{idUsuario}")
-    public ResponseEntity<AvaliacaoDetalhadoDto> avaliarPerfil(@PathVariable Integer idUsuario,
-                                                               @RequestBody @Valid avaliacaoDto dto){
-        return ResponseEntity.ok(this.avaliacaoService.avaliar(dto, idUsuario));
-    }
-
-    @PostMapping("/referenciar/{idAvaliador}")
-    public ResponseEntity<ReferenciaDetalhadoDto> referenciarPerfil(@PathVariable Integer idAvaliador,
-                                                                    @RequestBody @Valid ReferenciaPerfilCriacaoDto dto) {
-        return ResponseEntity.ok(this.referenciaPerfilService.criarReferenciaPerfil(idAvaliador, dto));
+        return ResponseEntity.ok(this.perfilService.atualizarPerfil(idUsuario,dto));
     }
 
     @GetMapping("/{idUsuario}")
@@ -66,6 +54,15 @@ public class PerfilController {
         return ResponseEntity.ok(this.avaliacaoService.encontrarAvaliacoesPerfil(idUsuario));
     }
 
+    @PutMapping("/{id}/arquivo")
+    public ResponseEntity<Void> atualizarArquivoPerfil(
+            @PathVariable Integer id,
+            @RequestParam MultipartFile arquivo,
+            @RequestParam TipoArquivo tipoArquivo
+            ) {
+        this.perfilService.atualizarArquivoPerfil(id, arquivo, tipoArquivo);
+        return ResponseEntity.ok().build();
+    }
 
 //    @PatchMapping("/atualizar/sobre-mim/{idUsuario}")
 //    public ResponseEntity<Perfil> atualizarSobreMim(@PathVariable int idUsuario,

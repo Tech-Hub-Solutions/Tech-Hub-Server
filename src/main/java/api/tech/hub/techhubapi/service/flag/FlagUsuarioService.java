@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -20,17 +21,25 @@ public class FlagUsuarioService {
     private final FlagRepository flagRepository;
 
     public void salvarFlagUsuario(Perfil perfilValidado, List<Flag> list) {
+        this.flagUsuarioRepository.deleteFlagUsuarioByPerfil(perfilValidado);
+        List<FlagUsuario> flagUsuarioList = new ArrayList<>();
+
         for (Flag f : list) {
             FlagUsuario flagUsuario = new FlagUsuario();
             flagUsuario.setPerfil(perfilValidado);
 
-            if (this.flagRepository.existsById(f.getId())) {
-                Flag flag = this.flagRepository.findById(f.getId()).get();
+            Flag flag = this.flagRepository.getReferenceById(f.getId());
+
+            if (flag != null) {
                 flagUsuario.setFlag(flag);
             } else {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Flag não encontrada!");
             }
-            this.flagUsuarioRepository.save(flagUsuario);
+            flagUsuarioList.add(flagUsuario);
         }
+
+        this.flagUsuarioRepository.saveAll(flagUsuarioList);
     }
+
+
 }

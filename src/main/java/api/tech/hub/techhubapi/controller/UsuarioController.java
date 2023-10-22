@@ -1,6 +1,7 @@
 package api.tech.hub.techhubapi.controller;
 
 import api.tech.hub.techhubapi.entity.ListaObj;
+import api.tech.hub.techhubapi.entity.perfil.Perfil;
 import api.tech.hub.techhubapi.entity.usuario.Usuario;
 import api.tech.hub.techhubapi.service.conversa.dto.UsuarioConversaDto;
 import api.tech.hub.techhubapi.service.usuario.dto.UsuarioBuscaDto;
@@ -52,7 +53,6 @@ public class UsuarioController {
     @PostMapping
     public ResponseEntity<Usuario> cadastrarUsuario(@RequestBody @Valid UsuarioCriacaoDto dto) {
         Usuario usuarioSalvo = usuarioService.salvarUsuarioCadastro(dto);
-
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")

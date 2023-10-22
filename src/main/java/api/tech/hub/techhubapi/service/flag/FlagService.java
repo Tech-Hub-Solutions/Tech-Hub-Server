@@ -11,8 +11,5 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FlagService {
     private final FlagUsuarioRepository flagUsuarioRepositoryRepository;
-
-    public List<Flag> buscarFlagsDoPerfil(Integer idPerfil) {
-        return this.flagUsuarioRepositoryRepository.encontrarFlagPorIdPerfil(idPerfil);
-    }
+    
 }
