@@ -26,7 +26,13 @@ public class AvaliacaoController {
 
     @GetMapping("/{idUsuario}")
     public ResponseEntity<List<AvaliacaoDetalhadoDto>> buscarAvaliacoesDoPerfilPorIdUsuario(@PathVariable Integer idUsuario){
-        return ResponseEntity.ok(this.avaliacaoService.encontrarAvaliacoesPerfil(idUsuario));
+        List<AvaliacaoDetalhadoDto> lista = this.avaliacaoService.encontrarAvaliacoesPerfil(idUsuario);
+
+        if (lista.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok(lista);
     }
 
     @GetMapping("contar/{idUsuario}")

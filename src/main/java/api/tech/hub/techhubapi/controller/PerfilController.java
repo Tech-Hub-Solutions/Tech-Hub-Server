@@ -48,12 +48,6 @@ public class PerfilController {
         return ResponseEntity.ok(this.referenciaPerfilService.encontrarReferenciasPerfil(idUsuario));
     }
 
-
-    @GetMapping("/avaliar/{idUsuario}")
-    public ResponseEntity<List<AvaliacaoDetalhadoDto>> buscarAvaliacoesDoPerfilPorIdUsuario(@PathVariable Integer idUsuario){
-        return ResponseEntity.ok(this.avaliacaoService.encontrarAvaliacoesPerfil(idUsuario));
-    }
-
     @PutMapping("/{id}/arquivo")
     public ResponseEntity<Void> atualizarArquivoPerfil(
             @PathVariable Integer id,
