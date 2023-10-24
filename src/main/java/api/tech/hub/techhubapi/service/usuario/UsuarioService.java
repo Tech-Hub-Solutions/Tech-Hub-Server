@@ -113,7 +113,7 @@ public class UsuarioService {
             usuarios.adiciona(new UsuarioDetalhadoDto(u));
         }
 
-        // OrdernarPorNome
+        // OrdernarPorNome (SELECTION SORT)
         for (int i = 0; i < usuarios.getTamanho() - 1; i++) {
             int menor = i;
             String menorNome = usuarios.getElemento(menor).nome();
@@ -133,8 +133,34 @@ public class UsuarioService {
             }
         }
 
+        System.out.println("Implementação pesquisa binária");
+        System.out.println("Busca pelo nome Murilo");
+        System.out.println(pesquisaBinaria(usuarios, "Murilo"));
+        System.out.println("Pesquisar pelo nome Yoshi");
+        System.out.println(pesquisaBinaria(usuarios, "Yoshi"));
+
 
         return usuarios;
+    }
+
+    public int pesquisaBinaria(ListaObj<UsuarioDetalhadoDto> usuarios, String nome) {
+        int inicio = 0;
+        int fim = usuarios.getTamanho() - 1;
+        int meio;
+
+        while (inicio <= fim) {
+            meio = (inicio + fim) / 2;
+
+            if (usuarios.getElemento(meio).nome().equals(nome)) {
+                return meio;
+            } else if (usuarios.getElemento(meio).nome().compareTo(nome) < 0) {
+                inicio = meio + 1;
+            } else {
+                fim = meio - 1;
+            }
+        }
+
+        return -1;
     }
 
     public ListaObj<UsuarioConversaDto> listarTeste() {
