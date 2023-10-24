@@ -54,13 +54,13 @@ public class PerfilController {
         return ResponseEntity.ok(this.avaliacaoService.encontrarAvaliacoesPerfil(idUsuario));
     }
 
-    @PutMapping("/{id}/arquivo")
+    @PutMapping("/{idUsuario}/arquivo")
     public ResponseEntity<Void> atualizarArquivoPerfil(
-            @PathVariable Integer id,
+            @PathVariable Integer idUsuario,
             @RequestParam MultipartFile arquivo,
             @RequestParam TipoArquivo tipoArquivo
             ) {
-        this.perfilService.atualizarArquivoPerfil(id, arquivo, tipoArquivo);
+        this.perfilService.atualizarArquivoPerfil(idUsuario, arquivo, tipoArquivo);
         return ResponseEntity.ok().build();
     }
 

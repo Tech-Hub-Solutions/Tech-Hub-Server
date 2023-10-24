@@ -80,9 +80,10 @@ public class PerfilService {
         return criarPerfilDetalhadoDto(idUsuario);
     }
 
-    public void atualizarArquivoPerfil(Integer id, MultipartFile arquivo, TipoArquivo tipoArquivo) {
-        Perfil perfil = this.perfilRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Perfil não encontrado"));
+    public void atualizarArquivoPerfil(Integer idUsuario, MultipartFile arquivo, TipoArquivo tipoArquivo) {
+        Perfil perfil = this.usuarioRepository.findById(idUsuario)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado"))
+                .getPerfil();
 
         if (!tipoArquivo.equals(TipoArquivo.PERFIL) && !tipoArquivo.equals(TipoArquivo.WALLPAPER)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tipo de arquivo inválido");
