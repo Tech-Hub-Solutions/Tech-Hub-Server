@@ -177,6 +177,7 @@ public class UsuarioService {
     public Page<UsuarioBuscaDto> listarPor(UsuarioFiltroDto usuarioFiltroDto, Pageable pageable) {
         Specification<Usuario> specification = Specification
                 .allOf(
+                        UsuarioSpecification.hasNome(usuarioFiltroDto.nome()),
                         UsuarioSpecification.hasArea(usuarioFiltroDto.area()),
                         UsuarioSpecification.hasPrecoBetween(usuarioFiltroDto.precoMin(), usuarioFiltroDto.precoMax()),
                         UsuarioSpecification.hasFlags(usuarioFiltroDto.tecnologias())

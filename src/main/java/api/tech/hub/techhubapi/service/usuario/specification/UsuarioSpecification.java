@@ -10,21 +10,17 @@ import org.springframework.data.jpa.domain.Specification;
 import java.util.List;
 
 public final class UsuarioSpecification {
-    public static Specification<Usuario> hasFlags(List<Flag> flags) {
-        return (root, query, criteriaBuilder) -> {
-            if (flags == null || flags.isEmpty()) {
-                return criteriaBuilder.conjunction(); // Always true
+    public static Specification<Usuario> hasNome(String nome) {
+        return ((root, query, criteriaBuilder) -> {
+            if(nome == null || nome.isBlank()) {
+                return criteriaBuilder.conjunction();
             }
 
-            Join<Usuario, Perfil> perfilJoin = root.join("perfil");
-            Join<Perfil, FlagUsuario> flagUsuarioJoin = perfilJoin.join("flagUsuarioList");
-            Join<FlagUsuario, Flag> flagJoin = flagUsuarioJoin.join("flag");
+            Expression<String> nomeExp = criteriaBuilder.lower(root.get("nome"));
+            String nomePattern = "%" + nome + "%";
 
-            Predicate predicate = flagJoin.in(flags);
-
-            query.distinct(true);
-            return predicate;
-        };
+            return criteriaBuilder.like(nomeExp, nomePattern);
+        });
     }
 
     public static Specification<Usuario> hasArea(String area) {
@@ -64,5 +60,21 @@ public final class UsuarioSpecification {
         }));
     }
 
+    public static Specification<Usuario> hasFlags(List<Flag> flags) {
+        return (root, query, criteriaBuilder) -> {
+            if (flags == null || flags.isEmpty()) {
+                return criteriaBuilder.conjunction(); // Always true
+            }
+
+            Join<Usuario, Perfil> perfilJoin = root.join("perfil");
+            Join<Perfil, FlagUsuario> flagUsuarioJoin = perfilJoin.join("flagUsuarioList");
+            Join<FlagUsuario, Flag> flagJoin = flagUsuarioJoin.join("flag");
+
+            Predicate predicate = flagJoin.in(flags);
+
+            query.distinct(true);
+            return predicate;
+        };
+    }
 
 }
