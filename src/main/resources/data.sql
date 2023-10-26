@@ -102,7 +102,7 @@ INSERT INTO Flag_Usuario (perfil_id, flag_id) VALUES
 -- Lista de usuários
 INSERT INTO Usuario (perfil_id,nome, email, senha, numero_cadastro_pessoa, pais, funcao, is_ativo) VALUES
 (1,'Murilo', 'murilo@hotmail.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '26828654000100', 'Brasil', 'FREELANCER', 1),
-(2,'Leonardo', 'leo@hotmail.com', '$2a$10$ZMM5Jes4mEKhZoRbu4lafuk5BSL0OMwbtYvcfq2LaxXthfBfdxWDq', '89138182000175', 'Brasil', 'FREELANCER', 1),
+(2,'Leonardo', 'leo@hotmail.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '89138182000175', 'Brasil', 'FREELANCER', 1),
 (3,'Ana', 'ana@gmail.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '12345678901234', 'Brasil', 'FREELANCER', 1),
 (4,'Lucas', 'lucas@yahoo.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '98765432109876', 'Brasil', 'FREELANCER', 1),
 (5,'Mariana', 'mariana@hotmail.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '55555555555555', 'Brasil', 'FREELANCER', 1),
