@@ -195,8 +195,13 @@ public class ConversaService {
                             .orElseGet(() -> new ConversaDto(conversa));
 
                 })
+                .sorted(Comparator.comparing(conversaDto -> {
+                    LocalDateTime dtHora = conversaDto.getMensagem() != null ?
+                            conversaDto.getMensagem().dtHora() :
+                            LocalDateTime.MIN;
+                    return dtHora;
+                }, Comparator.reverseOrder()))
                 .toList();
-
 
         return conversas;
     }

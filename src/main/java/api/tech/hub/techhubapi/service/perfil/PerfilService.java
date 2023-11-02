@@ -83,7 +83,7 @@ public class PerfilService {
 
         return criarPerfilDetalhadoDto(idUsuario);
     }
-
+  
     public void atualizarArquivoPerfil(MultipartFile arquivo, TipoArquivo tipoArquivo) {
         Usuario usuarioLogado = this.autenticacaoService.getUsuarioFromUsuarioDetails();
 

@@ -47,13 +47,14 @@ public class PerfilController {
     public ResponseEntity<List<ReferenciaDetalhadoDto>> buscarReferenciasDoPerfilPorIdUsuario(@PathVariable Integer idUsuario){
         return ResponseEntity.ok(this.referenciaPerfilService.encontrarReferenciasPerfil(idUsuario));
     }
-
+  
     @PutMapping("/arquivo")
     public ResponseEntity<Void> atualizarArquivoPerfil(
             @RequestParam MultipartFile arquivo,
             @RequestParam TipoArquivo tipoArquivo
             ) {
         this.perfilService.atualizarArquivoPerfil(arquivo, tipoArquivo);
+
         return ResponseEntity.ok().build();
     }
 }

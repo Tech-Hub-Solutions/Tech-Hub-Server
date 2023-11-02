@@ -7,6 +7,8 @@ import java.util.List;
 
 public record UsuarioFiltroDto(
         @Nullable
+        String nome,
+        @Nullable
         String area,
         @Nullable
         List<Flag> tecnologias,
