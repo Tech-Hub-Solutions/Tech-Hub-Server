@@ -9,7 +9,6 @@ public record UsuarioDetalhadoDto(
         String nome,
         String email,
         String numeroCadastroPessoa,
-
         String pais,
         UsuarioFuncao funcao
 ) {
