@@ -43,10 +43,6 @@ public class AvaliacaoService {
 
         List<Avaliacao> listaAvaliacoes = this.avaliacaoRepository.findAvaliacaoByPerfil(perfil);
 
-        if(listaAvaliacoes.isEmpty()){
-            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Perfil não possui avaliações");
-        }
-
         return listaAvaliacoes.stream().map(mapper::dtoOf).toList();
     }
 
