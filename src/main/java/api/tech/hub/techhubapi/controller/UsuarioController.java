@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/usuarios")
@@ -83,9 +84,9 @@ public class UsuarioController {
     // Para utilizar a paginação, passar dois parâmetros na URL: page e size
     // Page é o número da página, começando em 0
     // Size é o tamanho da página
-    // Exemplo: http://localhost:8080/usuarios?page=0&size=10
+    // Exemplo: http://localhost:8080/usuarios/filtro?page=3&size=1
     // Para ordernar, passar o parâmetro sort na URL
-    // Exemplo: http://localhost:8080/usuarios?page=0&size=10&sort=nome,asc
+    // Exemplo: http://localhost:8080/usuarios/filtro?page=0&size=10&sort=nome,asc
     @PostMapping("/filtro")
     public ResponseEntity<Page<UsuarioBuscaDto>> listarPor(
             @RequestBody UsuarioFiltroDto usuarioFiltroDto,
@@ -94,6 +95,19 @@ public class UsuarioController {
         Page<UsuarioBuscaDto> usuarios = this.usuarioService.listarPor(usuarioFiltroDto, paginacao);
 
         if (usuarios.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok(usuarios);
+    }
+
+    @GetMapping("/favoritos")
+    public ResponseEntity<Page<UsuarioFavoritoDto>> listarFavoritos(
+            Pageable pageable
+    ) {
+        Page<UsuarioFavoritoDto> usuarios = this.usuarioService.listarFavoritos(pageable);
+
+        if(usuarios.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
 

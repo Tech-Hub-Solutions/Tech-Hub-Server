@@ -56,10 +56,27 @@ VALUES
 ('Comunicação', null, 'soft-skill');
 
 -- Lista de perfis
-INSERT
-    INTO Perfil (sobre_mim, experiencia, descricao, preco_medio, nome_github, link_github, link_linkedin)
-VALUES
-    ('Sou um Cientista de Dados', 'Com mais de 5 anos de experiência em análise de dados', 'Interessado em projetos que envolvem análise de dados e aprendizado de máquina.', 450.0, 'meugithubusuario', 'https://github.com/meugithubusuario', 'https://www.linkedin.com/in/meulinkedinusuario'), ('Desenvolvedor Front-End', 'Criando experiências de usuário incríveis', 'Dedicado a projetar e implementar interfaces de usuário atraentes e funcionais. Especializado em HTML, CSS, JavaScript e frameworks front-end.', 600.0, 'frontenddev123', 'https://github.com/frontenddev123', 'https://www.linkedin.com/in/frontenddev123'), ('Cientista de Dados', '5+ anos em análise de dados', 'Apaixonado por dados e análises. Experiente em Python, SQL e ferramentas de visualização de dados.', 600.0, 'cientistadedados1', 'https://github.com/cientistadedados1', 'https://www.linkedin.com/in/cientistadedados1'), ('Desenvolvedor Full Stack', '8+ anos em desenvolvimento web', 'Especialista em JavaScript, React, Node.js e muito mais. Construir aplicações web é minha paixão.', 700.0, 'fullstackdev', 'https://github.com/fullstackdev', 'https://www.linkedin.com/in/fullstackdev'), ('Designer UI/UX', 'Designer criativo com foco na experiência do usuário', 'Crio designs bonitos e amigáveis ao usuário. Proficiente em Figma e Adobe XD.', 500.0, 'uxdesigner123', 'https://github.com/uxdesigner123', 'https://www.linkedin.com/in/uxdesigner123'), ('Engenheiro de Dados', '6+ anos em engenharia de dados', 'Experiente em construir pipelines de dados e processos ETL. Proficiente em tecnologias de big data.', 650.0, 'engenheirodedados123', 'https://github.com/engenheirodedados123', 'https://www.linkedin.com/in/engenheirodedados123'), ('Desenvolvedor Android', 'Desenvolvedor de aplicativos móveis com paixão pelo Android', 'Criando aplicativos inovadores para Android usando Kotlin e Java. Amo o mundo do desenvolvimento de aplicativos móveis.', 600.0, 'androiddev567', 'https://github.com/androiddev567', 'https://www.linkedin.com/in/androiddev567'), ('Designer UI/UX', 'Entusiasta do design com mentalidade criativa', 'Projetando interfaces intuitivas e amigáveis ao usuário. Proficiente em Sketch e Adobe XD.', 550.0, 'designer456', 'https://github.com/designer456', 'https://www.linkedin.com/in/designer456'), ('Desenvolvedor Full Stack', '5+ anos de experiência em desenvolvimento web', 'Habilidoso em tecnologias de front-end e back-end. Construir soluções web é minha paixão.', 700.0, 'fullstackdev2', 'https://github.com/fullstackdev2', 'https://www.linkedin.com/in/fullstackdev2'), ('Engenheiro de Aprendizado de Máquina', 'Entusiasta de IA com foco em aprendizado de máquina', 'Desenvolvendo modelos e soluções de aprendizado de máquina de ponta. Proficiente em Python e TensorFlow.', 750.0, 'mlengineer77', 'https://github.com/mlengineer77', 'https://www.linkedin.com/in/mlengineer77'), ('Designer UI', 'Criando belas interfaces de usuário', 'Apaixonado por criar designs visualmente atraentes e amigáveis ao usuário.', 600.0, 'designerdeui123', 'https://github.com/designerdeui123', 'https://www.linkedin.com/in/designerdeui123'), ('Desenvolvedor de Backend', '7+ anos em desenvolvimento server-side', 'Especialista em construir sistemas de backend robustos e escaláveis usando Node.js e Python.', 700.0, 'backenddev', 'https://github.com/backenddev', 'https://www.linkedin.com/in/backenddev'), ('Gerente de Projeto', 'Experiente em gerenciamento de projetos', 'Habilidoso em liderar equipes multifuncionais e entregar projetos de sucesso no prazo.', 650.0, 'gerentedeprojeto456', 'https://github.com/gerentedeprojeto456', 'https://www.linkedin.com/in/gerentedeprojeto456'), ('Analista de Dados', 'Analisando dados para obter insights', 'Proficiente em ferramentas e técnicas de análise de dados. Transformando dados em insights acionáveis.', 550.0, 'analistadedados007', 'https://github.com/analistadedados007', 'https://www.linkedin.com/in/analistadedados007'), ('Engenheiro de QA', 'Garantindo a qualidade do software', 'Dedicado a testar e garantir a qualidade de aplicativos de software. Habilidoso em testes automatizados.', 600.0, 'engenheiroqa88', 'https://github.com/engenheiroqa88', 'https://www.linkedin.com/in/engenheiroqa88'), ('Desenvolvedor Front-End', 'Experiência em criação de interfaces incríveis', 'Dedicado a projetar e desenvolver interfaces de usuário atraentes e funcionais. Especializado em HTML, CSS, JavaScript e frameworks front-end.', 550.0, 'frontender123', 'https://github.com/frontender123', 'https://www.linkedin.com/in/frontender123'), ('Desenvolvedor de Backend', '10+ anos de experiência em desenvolvimento server-side', 'Especialista em construir sistemas de backend escaláveis e eficientes. Dominando Node.js, Python e SQL.', 750.0, 'backendninja', 'https://github.com/backendninja', 'https://www.linkedin.com/in/backendninja'), ('Designer Gráfico', 'Transformando conceitos em designs visuais', 'Apaixonado por criar gráficos atraentes e conceitos visuais. Proficiente em Adobe Creative Suite.', 500.0, 'graphicdesigner456', 'https://github.com/graphicdesigner456', 'https://www.linkedin.com/in/graphicdesigner456'), ('Analista de Segurança Cibernética', 'Protegendo sistemas e dados', 'Comprometido com a segurança de TI e a proteção de sistemas contra ameaças cibernéticas. Especializado em testes de penetração e análise de vulnerabilidades.', 700.0, 'cybersecuritypro', 'https://github.com/cybersecuritypro', 'https://www.linkedin.com/in/cybersecuritypro'), ('Desenvolvedor Mobile', 'Criando aplicativos móveis de ponta', 'Desenvolvendo aplicativos móveis inovadores para Android e iOS usando Kotlin, Java e Swift. Apaixonado pelo mundo da mobilidade.', 650.0, 'mobiledev567', 'https://github.com/mobiledev567', 'https://www.linkedin.com/in/mobiledev567');
+INSERT INTO Perfil (sobre_mim, experiencia, descricao, preco_medio, nome_github, link_github, link_linkedin) VALUES
+('Sou um Cientista de Dados', 'Com mais de 5 anos de experiência em análise de dados', 'Interessado em projetos que envolvem análise de dados e aprendizado de máquina.', 450.0, 'meugithubusuario', 'https://github.com/meugithubusuario', 'https://www.linkedin.com/in/meulinkedinusuario'),
+('Desenvolvedor Front-End', 'Criando experiências de usuário incríveis', 'Dedicado a projetar e implementar interfaces de usuário atraentes e funcionais. Especializado em HTML, CSS, JavaScript e frameworks front-end.', 600.0, 'frontenddev123', 'https://github.com/frontenddev123', 'https://www.linkedin.com/in/frontenddev123'),
+('Cientista de Dados', '5+ anos em análise de dados', 'Apaixonado por dados e análises. Experiente em Python, SQL e ferramentas de visualização de dados.', 600.0, 'cientistadedados1', 'https://github.com/cientistadedados1', 'https://www.linkedin.com/in/cientistadedados1'),
+('Desenvolvedor Full Stack', '8+ anos em desenvolvimento web', 'Especialista em JavaScript, React, Node.js e muito mais. Construir aplicações web é minha paixão.', 700.0, 'fullstackdev', 'https://github.com/fullstackdev', 'https://www.linkedin.com/in/fullstackdev'),
+('Designer UI/UX', 'Designer criativo com foco na experiência do usuário', 'Crio designs bonitos e amigáveis ao usuário. Proficiente em Figma e Adobe XD.', 500.0, 'uxdesigner123', 'https://github.com/uxdesigner123', 'https://www.linkedin.com/in/uxdesigner123'),
+('Engenheiro de Dados', '6+ anos em engenharia de dados', 'Experiente em construir pipelines de dados e processos ETL. Proficiente em tecnologias de big data.', 650.0, 'engenheirodedados123', 'https://github.com/engenheirodedados123', 'https://www.linkedin.com/in/engenheirodedados123'),
+('Desenvolvedor Android', 'Desenvolvedor de aplicativos móveis com paixão pelo Android', 'Criando aplicativos inovadores para Android usando Kotlin e Java. Amo o mundo do desenvolvimento de aplicativos móveis.', 600.0, 'androiddev567', 'https://github.com/androiddev567', 'https://www.linkedin.com/in/androiddev567'),
+('Designer UI/UX', 'Entusiasta do design com mentalidade criativa', 'Projetando interfaces intuitivas e amigáveis ao usuário. Proficiente em Sketch e Adobe XD.', 550.0, 'designer456', 'https://github.com/designer456', 'https://www.linkedin.com/in/designer456'),
+('Desenvolvedor Full Stack', '5+ anos de experiência em desenvolvimento web', 'Habilidoso em tecnologias de front-end e back-end. Construir soluções web é minha paixão.', 700.0, 'fullstackdev2', 'https://github.com/fullstackdev2', 'https://www.linkedin.com/in/fullstackdev2'),
+('Engenheiro de Aprendizado de Máquina', 'Entusiasta de IA com foco em aprendizado de máquina', 'Desenvolvendo modelos e soluções de aprendizado de máquina de ponta. Proficiente em Python e TensorFlow.', 750.0, 'mlengineer77', 'https://github.com/mlengineer77', 'https://www.linkedin.com/in/mlengineer77'),
+('Designer UI', 'Criando belas interfaces de usuário', 'Apaixonado por criar designs visualmente atraentes e amigáveis ao usuário.', 600.0, 'designerdeui123', 'https://github.com/designerdeui123', 'https://www.linkedin.com/in/designerdeui123'),
+('Desenvolvedor de Backend', '7+ anos em desenvolvimento server-side', 'Especialista em construir sistemas de backend robustos e escaláveis usando Node.js e Python.', 700.0, 'backenddev', 'https://github.com/backenddev', 'https://www.linkedin.com/in/backenddev'),
+('Gerente de Projeto', 'Experiente em gerenciamento de projetos', 'Habilidoso em liderar equipes multifuncionais e entregar projetos de sucesso no prazo.', 650.0, 'gerentedeprojeto456', 'https://github.com/gerentedeprojeto456', 'https://www.linkedin.com/in/gerentedeprojeto456'),
+('Analista de Dados', 'Analisando dados para obter insights', 'Proficiente em ferramentas e técnicas de análise de dados. Transformando dados em insights acionáveis.', 550.0, 'analistadedados007', 'https://github.com/analistadedados007', 'https://www.linkedin.com/in/analistadedados007'),
+('Engenheiro de QA', 'Garantindo a qualidade do software', 'Dedicado a testar e garantir a qualidade de aplicativos de software. Habilidoso em testes automatizados.', 600.0, 'engenheiroqa88', 'https://github.com/engenheiroqa88', 'https://www.linkedin.com/in/engenheiroqa88'),
+('Desenvolvedor Front-End', 'Experiência em criação de interfaces incríveis', 'Dedicado a projetar e desenvolver interfaces de usuário atraentes e funcionais. Especializado em HTML, CSS, JavaScript e frameworks front-end.', 550.0, 'frontender123', 'https://github.com/frontender123', 'https://www.linkedin.com/in/frontender123'),
+('Desenvolvedor de Backend', '10+ anos de experiência em desenvolvimento server-side', 'Especialista em construir sistemas de backend escaláveis e eficientes. Dominando Node.js, Python e SQL.', 750.0, 'backendninja', 'https://github.com/backendninja', 'https://www.linkedin.com/in/backendninja'),
+('Designer Gráfico', 'Transformando conceitos em designs visuais', 'Apaixonado por criar gráficos atraentes e conceitos visuais. Proficiente em Adobe Creative Suite.', 500.0, 'graphicdesigner456', 'https://github.com/graphicdesigner456', 'https://www.linkedin.com/in/graphicdesigner456'),
+('Analista de Segurança Cibernética', 'Protegendo sistemas e dados', 'Comprometido com a segurança de TI e a proteção de sistemas contra ameaças cibernéticas. Especializado em testes de penetração e análise de vulnerabilidades.', 700.0, 'cybersecuritypro', 'https://github.com/cybersecuritypro', 'https://www.linkedin.com/in/cybersecuritypro'),
+('Desenvolvedor Mobile', 'Criando aplicativos móveis de ponta', 'Desenvolvendo aplicativos móveis inovadores para Android e iOS usando Kotlin, Java e Swift. Apaixonado pelo mundo da mobilidade.', 650.0, 'mobiledev567', 'https://github.com/mobiledev567', 'https://www.linkedin.com/in/mobiledev567');
 
 -- Flags de cada perfil
 INSERT INTO Flag_Usuario (perfil_id, flag_id)
@@ -191,45 +208,65 @@ VALUES (1, 1),
 
 
 -- Lista de usuários
-INSERT INTO Usuario (perfil_id, nome, email, senha, numero_cadastro_pessoa, pais, funcao, is_ativo)
-VALUES (1, 'Murilo', 'murilo@hotmail.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq',
-        '26828654000100', 'Brasil', 'FREELANCER', 1),
-       (2, 'Leonardo', 'leo@hotmail.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq',
-        '89138182000175', 'Brasil', 'FREELANCER', 1),
-       (3, 'Ana', 'ana@gmail.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '12345678901234',
-        'Brasil', 'FREELANCER', 1),
-       (4, 'Lucas', 'lucas@yahoo.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '98765432109876',
-        'Brasil', 'FREELANCER', 1),
-       (5, 'Mariana', 'mariana@hotmail.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq',
-        '55555555555555', 'Brasil', 'FREELANCER', 1),
-       (6, 'Maria', 'maria@example.com', '$2a$10$AqwUTV.rKnb6ryDe.VVfDOV8N9cCBwzcsAOAnRLkXAI4Nqhx/k7Du',
-        '12345678901234', 'Brazil', 'FREELANCER', 1),
-       (7, 'Carlos', 'carlos@example.com', '$2a$10$AqwUTV.rKnb6ryDe.VVfDOV8N9cCBwzcsAOAnRLkXAI4Nqhx/k7Du',
-        '98765432109876', 'Brazil', 'FREELANCER', 1),
-       (8, 'Luisa', 'luisa@example.com', '$2a$10$AqwUTV.rKnb6ryDe.VVfDOV8N9cCBwzcsAOAnRLkXAI4Nqhx/k7Du',
-        '55555555555555', 'Brazil', 'FREELANCER', 1),
-       (9, 'Rafael', 'rafael@example.com', '$2a$10$AqwUTV.rKnb6ryDe.VVfDOV8N9cCBwzcsAOAnRLkXAI4Nqhx/k7Du',
-        '12345678901234', 'Brazil', 'FREELANCER', 1),
-       (10, 'Sofia', 'sofia@example.com', '$2a$10$AqwUTV.rKnb6ryDe.VVfDOV8N9cCBwzcsAOAnRLkXAI4Nqhx/k7Du',
-        '98765432109876', 'Brazil', 'FREELANCER', 1),
-       (11, 'Gabriel', 'gabriel@example.com', '$2a$10$AqwUTV.rKnb6ryDe.VVfDOV8N9cCBwzcsAOAnRLkXAI4Nqhx/k7Du',
-        '12345678901234', 'Brazil', 'FREELANCER', 1),
-       (12, 'Marta', 'marta@example.com', '$2a$10$AqwUTV.rKnb6ryDe.VVfDOV8N9cCBwzcsAOAnRLkXAI4Nqhx/k7Du',
-        '98765432109876', 'Brazil', 'FREELANCER', 1),
-       (13, 'Pedro', 'pedro@example.com', '$2a$10$AqwUTV.rKnb6ryDe.VVfDOV8N9cCBwzcsAOAnRLkXAI4Nqhx/k7Du',
-        '55555555555555', 'Brazil', 'FREELANCER', 1),
-       (14, 'Isabella', 'isabella@example.com', '$2a$10$AqwUTV.rKnb6ryDe.VVfDOV8N9cCBwzcsAOAnRLkXAI4Nqhx/k7Du',
-        '12345678901234', 'Brazil', 'FREELANCER', 1),
-       (15, 'Lucas', 'lucas@example.com', '$2a$10$AqwUTV.rKnb6ryDe.VVfDOV8N9cCBwzcsAOAnRLkXAI4Nqhx/k7Du',
-        '98765432109876', 'Brazil', 'FREELANCER', 1),
-       (16, 'Patricia', 'patricia@example.com', '$2a$10$AqwUTV.rKnb6ryDe.VVfDOV8N9cCBwzcsAOAnRLkXAI4Nqhx/k7Du',
-        '55555555555555', 'Brazil', 'FREELANCER', 1),
-       (17, 'Fernando', 'fernando@example.com', '$2a$10$AqwUTV.rKnb6ryDe.VVfDOV8N9cCBwzcsAOAnRLkXAI4Nqhx/k7Du',
-        '12345678901234', 'Brazil', 'FREELANCER', 1),
-       (18, 'Amanda', 'amanda@example.com', '$2a$10$AqwUTV.rKnb6ryDe.VVfDOV8N9cCBwzcsAOAnRLkXAI4Nqhx/k7Du',
-        '98765432109876', 'Brazil', 'FREELANCER', 1),
-       (19, 'Rodrigo', 'rodrigo@example.com', '$2a$10$AqwUTV.rKnb6ryDe.VVfDOV8N9cCBwzcsAOAnRLkXAI4Nqhx/k7Du',
-        '55555555555555', 'Brazil', 'FREELANCER', 1),
-       (20, 'Tatiana', 'tatiana@example.com', '$2a$10$AqwUTV.rKnb6ryDe.VVfDOV8N9cCBwzcsAOAnRLkXAI4Nqhx/k7Du',
-        '12345678901234', 'Brazil', 'FREELANCER', 1);
+INSERT INTO Usuario (perfil_id,nome, email, senha, numero_cadastro_pessoa, pais, funcao, is_ativo) VALUES
+(1,'Murilo', 'murilo@hotmail.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '26828654000100', 'Brasil', 1, true),
+(2,'Leonardo', 'leo@hotmail.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '89138182000175', 'Brasil', 0, true),
+(3,'Ana', 'ana@gmail.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '12345678901234', 'Brasil', 0, true),
+(4,'Lucas', 'lucas@yahoo.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '98765432109876', 'Brasil', 0, true),
+(5,'Mariana', 'mariana@hotmail.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '55555555555555', 'Brasil', 0, true),
+(6, 'Maria', 'maria@example.com', '$2a$10$AqwUTV.rKnb6ryDe.VVfDOV8N9cCBwzcsAOAnRLkXAI4Nqhx/k7Du', '12345678901234', 'Brazil', 0, true),
+(7, 'Carlos', 'carlos@example.com', '$2a$10$AqwUTV.rKnb6ryDe.VVfDOV8N9cCBwzcsAOAnRLkXAI4Nqhx/k7Du', '98765432109876', 'Brazil', 0, true),
+(8, 'Luisa', 'luisa@example.com', '$2a$10$AqwUTV.rKnb6ryDe.VVfDOV8N9cCBwzcsAOAnRLkXAI4Nqhx/k7Du', '55555555555555', 'Brazil', 0, true),
+(9, 'Rafael', 'rafael@example.com', '$2a$10$AqwUTV.rKnb6ryDe.VVfDOV8N9cCBwzcsAOAnRLkXAI4Nqhx/k7Du', '12345678901234', 'Brazil', 0, true),
+(10, 'Sofia', 'sofia@example.com', '$2a$10$AqwUTV.rKnb6ryDe.VVfDOV8N9cCBwzcsAOAnRLkXAI4Nqhx/k7Du', '98765432109876', 'Brazil', 0, true),
+(11, 'Gabriel', 'gabriel@example.com', '$2a$10$AqwUTV.rKnb6ryDe.VVfDOV8N9cCBwzcsAOAnRLkXAI4Nqhx/k7Du', '12345678901234', 'Brazil', 0, true),
+(12, 'Marta', 'marta@example.com', '$2a$10$AqwUTV.rKnb6ryDe.VVfDOV8N9cCBwzcsAOAnRLkXAI4Nqhx/k7Du', '98765432109876', 'Brazil', 0, true),
+(13, 'Pedro', 'pedro@example.com', '$2a$10$AqwUTV.rKnb6ryDe.VVfDOV8N9cCBwzcsAOAnRLkXAI4Nqhx/k7Du', '55555555555555', 'Brazil', 0, true),
+(14, 'Isabella', 'isabella@example.com', '$2a$10$AqwUTV.rKnb6ryDe.VVfDOV8N9cCBwzcsAOAnRLkXAI4Nqhx/k7Du', '12345678901234', 'Brazil', 0, true),
+(15, 'Lucas', 'lucas@example.com', '$2a$10$AqwUTV.rKnb6ryDe.VVfDOV8N9cCBwzcsAOAnRLkXAI4Nqhx/k7Du', '98765432109876', 'Brazil', 0, true),
+(16, 'Patricia', 'patricia@example.com', '$2a$10$AqwUTV.rKnb6ryDe.VVfDOV8N9cCBwzcsAOAnRLkXAI4Nqhx/k7Du', '55555555555555', 'Brazil', 0, true),
+(17, 'Fernando', 'fernando@example.com', '$2a$10$AqwUTV.rKnb6ryDe.VVfDOV8N9cCBwzcsAOAnRLkXAI4Nqhx/k7Du', '12345678901234', 'Brazil', 0, true),
+(18, 'Amanda', 'amanda@example.com', '$2a$10$AqwUTV.rKnb6ryDe.VVfDOV8N9cCBwzcsAOAnRLkXAI4Nqhx/k7Du', '98765432109876', 'Brazil', 0, true),
+(19, 'Rodrigo', 'rodrigo@example.com', '$2a$10$AqwUTV.rKnb6ryDe.VVfDOV8N9cCBwzcsAOAnRLkXAI4Nqhx/k7Du', '55555555555555', 'Brazil', 0, true),
+(20, 'Tatiana', 'tatiana@example.com', '$2a$10$AqwUTV.rKnb6ryDe.VVfDOV8N9cCBwzcsAOAnRLkXAI4Nqhx/k7Du', '12345678901234', 'Brazil', 0, true);
 
+-- Referencias
+INSERT INTO Referencia_Perfil (avaliador_id, avaliado_id, is_favorito,is_recomendado) VALUES
+(1,2, true, true),
+(1,3, true, true),
+(1,4, true, true),
+(1,5, true, true),
+(1,6, true, true),
+(1,7, true, true),
+(1,8, true, true),
+(1,9, true, true),
+(1,10,true, true);
+
+-- Avaliacoes
+INSERT INTO Avaliacao (perfil_id, comentario, qtd_estrela) VALUES
+(1, 'Esse desenvolvedor é muito bom, me ajudou muito!', 5),
+(1, 'Adorei o trabalho desse designer, super criativo!', 4),
+(1, 'O serviço desse restaurante é excelente, recomendo.', 5),
+(1, 'O atendimento na loja foi péssimo, nunca mais volto.', 1),
+(1, 'O professor é muito dedicado, a aula foi ótima.', 5),
+(1, 'A entrega foi atrasada, não fiquei satisfeito.', 2),
+(1, 'A qualidade do produto é surpreendente, 5 estrelas!', 5),
+(1, 'O filme foi incrível, recomendo a todos!', 4),
+(1, 'O concerto da banda foi fenomenal, amei!', 5),
+(1,  'O livro é entediante, não consegui terminar de ler.', 2),
+(1,  'O app é prático e fácil de usar, nota 5!', 5),
+(1,  'O show foi um desastre, péssima experiência.', 1),
+(1,  'O artista é talentoso, adorei a exposição.', 4),
+(1,  'A comida estava deliciosa, voltarei em breve.', 5),
+(1,  'O serviço de entrega foi rápido e confiável, 5 estrelas!', 5),
+(1,  'O suporte ao cliente foi péssimo, demoraram para resolver o problema.', 1),
+(1, 'A qualidade do produto é surpreendente, 5 estrelas!', 5),
+(1, 'O filme foi incrível, recomendo a todos!', 4),
+(1, 'O concerto da banda foi fenomenal, amei!', 5),
+(1,  'O livro é entediante, não consegui terminar de ler.', 2),
+(1,  'O app é prático e fácil de usar, nota 5!', 5),
+(1,  'O show foi um desastre, péssima experiência.', 1),
+(1,  'O artista é talentoso, adorei a exposição.', 4),
+(1,  'A comida estava deliciosa, voltarei em breve.', 5),
+(1,  'O serviço de entrega foi rápido e confiável, 5 estrelas!', 5),
+(1,  'O suporte ao cliente foi péssimo, demoraram para resolver o problema.', 1);
