@@ -4,13 +4,21 @@ import api.tech.hub.techhubapi.configuration.security.jwt.GerenciadorTokenJwt;
 import api.tech.hub.techhubapi.entity.Arquivo;
 import api.tech.hub.techhubapi.entity.ListaObj;
 import api.tech.hub.techhubapi.entity.perfil.Perfil;
+import api.tech.hub.techhubapi.entity.perfil.ReferenciaPerfil;
+import api.tech.hub.techhubapi.entity.perfil.flag.Flag;
 import api.tech.hub.techhubapi.entity.usuario.Usuario;
+import api.tech.hub.techhubapi.entity.usuario.UsuarioFuncao;
+import api.tech.hub.techhubapi.repository.FlagRepository;
 import api.tech.hub.techhubapi.repository.PerfilRepository;
 import api.tech.hub.techhubapi.repository.UsuarioRepository;
 import api.tech.hub.techhubapi.service.arquivo.TipoArquivo;
 import api.tech.hub.techhubapi.service.conversa.dto.UsuarioConversaDto;
+import api.tech.hub.techhubapi.service.flag.dto.FlagDto;
+import api.tech.hub.techhubapi.service.referencia.ReferenciaPerfilService;
+import api.tech.hub.techhubapi.service.usuario.autenticacao.AutenticacaoService;
 import api.tech.hub.techhubapi.service.usuario.dto.*;
 import api.tech.hub.techhubapi.service.usuario.specification.UsuarioSpecification;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,19 +37,17 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class UsuarioService {
-    @Autowired
-    private UsuarioRepository usuarioRepository;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-    @Autowired
-    private GerenciadorTokenJwt gerenciadorTokenJwt;
-    @Autowired
-    private AuthenticationManager authenticationManager;
-    @Autowired
-    private UsuarioMapper usuarioMapper;
-    @Autowired
-    private PerfilRepository perfilRepository;
+    private final UsuarioRepository usuarioRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final GerenciadorTokenJwt gerenciadorTokenJwt;
+    private final AuthenticationManager authenticationManager;
+    private final AutenticacaoService autenticacaoService;
+    private final UsuarioMapper usuarioMapper;
+    private final PerfilRepository perfilRepository;
+    private final ReferenciaPerfilService referenciaPerfilService;
+    private final FlagRepository flagRepository;
 
     public UsuarioTokenDto autenticar(UsuarioLoginDto usuarioLoginDto) {
         final UsernamePasswordAuthenticationToken credentials = new UsernamePasswordAuthenticationToken(
@@ -175,12 +181,14 @@ public class UsuarioService {
     }
 
     public Page<UsuarioBuscaDto> listarPor(UsuarioFiltroDto usuarioFiltroDto, Pageable pageable) {
+        List<Flag> flags = this.flagRepository.findByIdIn(usuarioFiltroDto.tecnologiasIds());
+
         Specification<Usuario> specification = Specification
                 .allOf(
                         UsuarioSpecification.hasNome(usuarioFiltroDto.nome()),
                         UsuarioSpecification.hasArea(usuarioFiltroDto.area()),
                         UsuarioSpecification.hasPrecoBetween(usuarioFiltroDto.precoMin(), usuarioFiltroDto.precoMax()),
-                        UsuarioSpecification.hasFlags(usuarioFiltroDto.tecnologias())
+                        UsuarioSpecification.hasFlags(flags)
                 );
 
         return usuarioRepository.findAll(specification, pageable)
@@ -188,4 +196,18 @@ public class UsuarioService {
     }
 
 
+    public Page<UsuarioFavoritoDto> listarFavoritos(Pageable pageable) {
+        Usuario usuarioLogado = this.autenticacaoService.getUsuarioFromUsuarioDetails();
+
+        if(usuarioLogado.getFuncao().equals(UsuarioFuncao.FREELANCER)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Freelancer não pode ter favoritos");
+        }
+
+        Page<ReferenciaPerfil> referenciasDoUsuario = this.referenciaPerfilService.listarFavoritos(usuarioLogado, pageable);
+
+        Page<Perfil> favoritos = referenciasDoUsuario.map(ReferenciaPerfil::getAvaliado);
+
+        return favoritos.map(UsuarioFavoritoDto::new);
+
+    }
 }

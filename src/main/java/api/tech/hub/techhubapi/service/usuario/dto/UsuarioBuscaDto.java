@@ -10,6 +10,7 @@ import java.util.List;
 public record UsuarioBuscaDto(
         Integer id,
         String nome,
+        String descricao,
         Double qtdEstrela,
         Double precoMedio,
         String urlFotoPerfil
@@ -18,6 +19,7 @@ public record UsuarioBuscaDto(
         this(
                 usuario.getId(),
                 usuario.getNome(),
+                usuario.getPerfil().getDescricao(),
                 calcularEstrelasMedia(usuario.getPerfil().getAvaliacaoList()),
                 usuario.getPerfil().getPrecoMedio(),
                 ArquivoService.criarUrlFoto(usuario.getPerfil(), TipoArquivo.PERFIL)
