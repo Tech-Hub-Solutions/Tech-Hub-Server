@@ -51,7 +51,6 @@ public class PerfilMapper {
         dto.setAvaliacoes(this.avaliacaoMapper.retornarListaAvaliacoesDto(perfil.getAvaliacaoList()));
         dto.setReferencias(this.referenciaPerfilMapper.retornarListaReferenciasDto(perfil.getReferenciaPerfilList()));
 
-
         return dto;
     }
 }

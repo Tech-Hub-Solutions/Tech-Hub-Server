@@ -1,7 +1,6 @@
 package api.tech.hub.techhubapi.service.usuario;
 
 import api.tech.hub.techhubapi.configuration.security.jwt.GerenciadorTokenJwt;
-import api.tech.hub.techhubapi.entity.Arquivo;
 import api.tech.hub.techhubapi.entity.ListaObj;
 import api.tech.hub.techhubapi.entity.perfil.Perfil;
 import api.tech.hub.techhubapi.entity.perfil.ReferenciaPerfil;
@@ -11,15 +10,14 @@ import api.tech.hub.techhubapi.entity.usuario.UsuarioFuncao;
 import api.tech.hub.techhubapi.repository.FlagRepository;
 import api.tech.hub.techhubapi.repository.PerfilRepository;
 import api.tech.hub.techhubapi.repository.UsuarioRepository;
-import api.tech.hub.techhubapi.service.arquivo.TipoArquivo;
 import api.tech.hub.techhubapi.service.conversa.dto.UsuarioConversaDto;
-import api.tech.hub.techhubapi.service.flag.dto.FlagDto;
+import api.tech.hub.techhubapi.service.perfil.PerfilService;
+import api.tech.hub.techhubapi.service.perfil.dto.PerfilDetalhadoDto;
 import api.tech.hub.techhubapi.service.referencia.ReferenciaPerfilService;
 import api.tech.hub.techhubapi.service.usuario.autenticacao.AutenticacaoService;
 import api.tech.hub.techhubapi.service.usuario.dto.*;
 import api.tech.hub.techhubapi.service.usuario.specification.UsuarioSpecification;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -48,6 +46,7 @@ public class UsuarioService {
     private final PerfilRepository perfilRepository;
     private final ReferenciaPerfilService referenciaPerfilService;
     private final FlagRepository flagRepository;
+    private final PerfilService perfilService;
 
     public UsuarioTokenDto autenticar(UsuarioLoginDto usuarioLoginDto) {
         final UsernamePasswordAuthenticationToken credentials = new UsernamePasswordAuthenticationToken(
@@ -95,12 +94,14 @@ public class UsuarioService {
         );
     }
 
-    public UsuarioDetalhadoDto buscarPorId(Integer id) {
-        return usuarioMapper.dtoOf(
-                this.usuarioRepository.findUsuarioByIdAndIsAtivoTrue(id).orElseThrow(
-                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado")
-                )
+    public UsuarioGeralDto buscarPorId(Integer id) {
+        Usuario usuario = this.usuarioRepository.findUsuarioByIdAndIsAtivoTrue(id).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado")
         );
+
+        PerfilDetalhadoDto perfil = perfilService.buscarPerfilDetalhadoPorIdUsuario(usuario.getId());
+
+        return this.usuarioMapper.usuarioGeralDtoOf(usuario,perfil);
     }
 
     public void deletarUsuario(Integer id) {
@@ -199,7 +200,7 @@ public class UsuarioService {
     public Page<UsuarioFavoritoDto> listarFavoritos(Pageable pageable) {
         Usuario usuarioLogado = this.autenticacaoService.getUsuarioFromUsuarioDetails();
 
-        if(usuarioLogado.getFuncao().equals(UsuarioFuncao.FREELANCER)) {
+        if (usuarioLogado.getFuncao().equals(UsuarioFuncao.FREELANCER)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Freelancer não pode ter favoritos");
         }
 

@@ -35,7 +35,7 @@ public class Perfil {
     @OneToMany(mappedBy = "perfil")
     private List<Avaliacao> avaliacaoList;
 
-    @OneToMany(mappedBy = "avaliado")
+    @OneToMany(mappedBy = "avaliador")
     private List<ReferenciaPerfil> referenciaPerfilList;
 
     @OneToMany(mappedBy = "perfil")

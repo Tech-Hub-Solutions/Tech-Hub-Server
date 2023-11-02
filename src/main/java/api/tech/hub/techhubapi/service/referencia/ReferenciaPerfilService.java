@@ -6,7 +6,7 @@ import api.tech.hub.techhubapi.entity.usuario.Usuario;
 import api.tech.hub.techhubapi.repository.PerfilRepository;
 import api.tech.hub.techhubapi.repository.ReferenciaPerfilRepository;
 import api.tech.hub.techhubapi.service.referencia.dto.ReferenciaDetalhadoDto;
-import api.tech.hub.techhubapi.service.referencia.dto.ReferenciaPerfilCriacaoDto;
+import api.tech.hub.techhubapi.service.usuario.autenticacao.AutenticacaoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,43 +23,82 @@ public class ReferenciaPerfilService {
     private final ReferenciaPerfilRepository referenciaPerfilRepository;
     private final PerfilRepository perfilRepository;
     private final ReferenciaPerfilMapper referenciaPerfilMapper;
+    private final AutenticacaoService autenticacaoService;
 
-    public ReferenciaDetalhadoDto criarReferenciaPerfil(Integer idAvaliador, ReferenciaPerfilCriacaoDto dto) {
+    public ReferenciaDetalhadoDto favoritarTerceiro(Integer idAvaliado) {
+        Usuario usuarioLogado = this.autenticacaoService.getUsuarioFromUsuarioDetails();
 
-        ReferenciaPerfil referenciaPerfil = this.referenciaPerfilMapper.of(dto);
-
-        Perfil avaliado = this.perfilRepository.findById(dto.avaliado().getId()).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Perfil de avaliado não encontrado")
-        );
-
-        Perfil avaliador = this.perfilRepository.findById(dto.avaliador().getId()).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Perfil de avaliador não encontrado")
-        );
-
-        referenciaPerfil.setAvaliado(avaliado);
-        referenciaPerfil.setAvaliador(avaliador);
-
-        ReferenciaPerfil referenciaPerfilSalvo = this.referenciaPerfilRepository.save(referenciaPerfil);
-
-        return this.referenciaPerfilMapper.dtoOf(referenciaPerfilSalvo);
-    }
-
-    public List<ReferenciaDetalhadoDto> encontrarReferenciasPerfil(Integer idUsuario) {
-        Perfil perfil = this.perfilRepository.encontrarPerfilPorIdUsuario(idUsuario).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Perfil não encontrado")
-        );
-
-        List<ReferenciaPerfil> listaReferenciaPerfil = this.referenciaPerfilRepository
-                .findByAvaliado(perfil);
-
-        if(listaReferenciaPerfil.isEmpty()){
-            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Perfil não possui referencias");
+        if (usuarioLogado.getId().equals(idAvaliado)){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,"O usuário não pode se favoritar!");
         }
 
-        return listaReferenciaPerfil.stream().map(referenciaPerfilMapper::dtoOf).toList();
+        Perfil avaliado = this.perfilRepository.encontrarPerfilPorIdUsuario(idAvaliado)
+                .orElseThrow(
+                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Perfil a ser avaliado não existe!")
+                );
+
+
+        if (!this.referenciaPerfilRepository.existsByAvaliadoAndAvaliador(avaliado, usuarioLogado.getPerfil())) {
+            criarReferenciaPerfil(usuarioLogado.getPerfil(), avaliado);
+        }
+
+        ReferenciaPerfil referenciaPerfil = this.referenciaPerfilRepository.findReferenciaPerfilByAvaliadoAndAvaliador(avaliado,usuarioLogado.getPerfil());
+
+        referenciaPerfil.setFavorito(!referenciaPerfil.isFavorito());
+
+        ReferenciaPerfil referenciaPerfilSalva = this.referenciaPerfilRepository.save(referenciaPerfil);
+
+        return this.referenciaPerfilMapper.dtoOf(referenciaPerfilSalva);
+    }
+
+    public void criarReferenciaPerfil(Perfil avaliador, Perfil avaliado) {
+        ReferenciaPerfil referenciaPerfil = new ReferenciaPerfil();
+
+        referenciaPerfil.setAvaliador(avaliador);
+        referenciaPerfil.setAvaliado(avaliado);
+        referenciaPerfil.setFavorito(false);
+        referenciaPerfil.setRecomendado(false);
+
+        ReferenciaPerfil ref = this.referenciaPerfilRepository.save(referenciaPerfil);
+        System.out.println("Referencia foi criada!");
+        System.out.println(ref);
+    }
+
+    public ReferenciaDetalhadoDto recomendarTerceiro(Integer idAvaliado) {
+        Usuario usuarioLogado = this.autenticacaoService.getUsuarioFromUsuarioDetails();
+
+        if (usuarioLogado.getId().equals(idAvaliado)){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,"O usuário não pode se recomendar!");
+        }
+
+        Perfil avaliado = this.perfilRepository.encontrarPerfilPorIdUsuario(idAvaliado)
+                .orElseThrow(
+                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Perfil a ser avaliado não existe!")
+                );
+
+        if (!this.referenciaPerfilRepository.existsByAvaliadoAndAvaliador(avaliado, usuarioLogado.getPerfil())) {
+            criarReferenciaPerfil(usuarioLogado.getPerfil(), avaliado);
+        }
+
+        ReferenciaPerfil referenciaPerfil = this.referenciaPerfilRepository.findReferenciaPerfilByAvaliadoAndAvaliador(avaliado,usuarioLogado.getPerfil());
+
+        referenciaPerfil.setRecomendado(!referenciaPerfil.isRecomendado());
+
+        ReferenciaPerfil referenciaPerfilSalva = this.referenciaPerfilRepository.save(referenciaPerfil);
+
+        return this.referenciaPerfilMapper.dtoOf(referenciaPerfilSalva);
+    }
+
+    public List<ReferenciaPerfil> encontrarReferenciasPerfil() {
+        Usuario usuarioLogado = this.autenticacaoService.getUsuarioFromUsuarioDetails();
+
+        return this.referenciaPerfilRepository.findByAvaliador(usuarioLogado.getPerfil());
     }
 
     public Page<ReferenciaPerfil> listarFavoritos(Usuario usuarioLogado, Pageable pageable) {
         return this.referenciaPerfilRepository.findByAvaliador(usuarioLogado.getPerfil(), pageable);
     }
+
+
+
 }

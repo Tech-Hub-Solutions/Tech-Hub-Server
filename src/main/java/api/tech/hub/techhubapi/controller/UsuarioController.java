@@ -3,7 +3,11 @@ package api.tech.hub.techhubapi.controller;
 import api.tech.hub.techhubapi.entity.ListaObj;
 import api.tech.hub.techhubapi.entity.perfil.Perfil;
 import api.tech.hub.techhubapi.entity.usuario.Usuario;
+import api.tech.hub.techhubapi.service.arquivo.TipoArquivo;
 import api.tech.hub.techhubapi.service.conversa.dto.UsuarioConversaDto;
+import api.tech.hub.techhubapi.service.perfil.PerfilService;
+import api.tech.hub.techhubapi.service.perfil.dto.PerfilCadastroDto;
+import api.tech.hub.techhubapi.service.perfil.dto.PerfilDetalhadoDto;
 import api.tech.hub.techhubapi.service.usuario.dto.UsuarioBuscaDto;
 import api.tech.hub.techhubapi.service.usuario.UsuarioService;
 import api.tech.hub.techhubapi.service.usuario.dto.*;
@@ -13,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
@@ -64,7 +69,7 @@ public class UsuarioController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UsuarioDetalhadoDto> buscarUsuario(@PathVariable Integer id) {
+    public ResponseEntity<UsuarioGeralDto> buscarUsuario(@PathVariable Integer id) {
         return ResponseEntity.ok(this.usuarioService.buscarPorId(id));
     }
 
@@ -79,7 +84,6 @@ public class UsuarioController {
         usuarioService.deletarUsuario(id);
         return ResponseEntity.noContent().build();
     }
-
 
     // Para utilizar a paginação, passar dois parâmetros na URL: page e size
     // Page é o número da página, começando em 0
@@ -113,4 +117,6 @@ public class UsuarioController {
 
         return ResponseEntity.ok(usuarios);
     }
+
+
 }

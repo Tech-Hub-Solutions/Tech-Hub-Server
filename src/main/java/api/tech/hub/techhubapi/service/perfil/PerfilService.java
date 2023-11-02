@@ -49,18 +49,10 @@ public class PerfilService {
         return perfil;
     }
 
-    public PerfilDetalhadoDto atualizarPerfil(int idUsuario, PerfilCadastroDto dto) {
-        if (!this.usuarioRepository.existsById(idUsuario)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado");
-        }
-
+    public PerfilDetalhadoDto atualizarPerfil(PerfilCadastroDto dto) {
         Usuario usuarioLogado = this.autenticacaoService.getUsuarioFromUsuarioDetails();
 
-        if (usuarioLogado.getId() != idUsuario) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "O usuário não possui permissão para atualizar esse perfil");
-        }
-
-        Perfil perfil = this.perfilRepository.encontrarPerfilPorIdUsuario(idUsuario).get();
+        Perfil perfil = this.perfilRepository.encontrarPerfilPorIdUsuario(usuarioLogado.getId()).get();
 
         perfil = this.perfilMapper.of(perfil, dto);
 
@@ -68,7 +60,7 @@ public class PerfilService {
 
         flagUsuarioService.salvarFlagUsuario(perfil, dto.flagList());
 
-        return criarPerfilDetalhadoDto(idUsuario);
+        return criarPerfilDetalhadoDto(usuarioLogado.getId());
     }
 
     private PerfilDetalhadoDto criarPerfilDetalhadoDto(int idUsuario) {
