@@ -16,6 +16,7 @@ import api.tech.hub.techhubapi.service.flag.FlagService;
 import api.tech.hub.techhubapi.service.flag.FlagUsuarioService;
 import api.tech.hub.techhubapi.service.perfil.dto.PerfilCadastroDto;
 import api.tech.hub.techhubapi.service.perfil.dto.PerfilDetalhadoDto;
+import api.tech.hub.techhubapi.service.usuario.autenticacao.AutenticacaoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -32,8 +33,8 @@ public class PerfilService {
     private final UsuarioRepository usuarioRepository;
     private final PerfilMapper perfilMapper;
     private final FlagUsuarioService flagUsuarioService;
-    private final FlagService flagService;
     private final ArquivoService arquivoService;
+    private final AutenticacaoService autenticacaoService;
 
     public Perfil buscarPerfilPorIdUsuario(Integer idUsuario) {
         if (!this.usuarioRepository.existsById(idUsuario)) {
@@ -53,16 +54,19 @@ public class PerfilService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado");
         }
 
+        Usuario usuarioLogado = this.autenticacaoService.getUsuarioFromUsuarioDetails();
+
+        if (usuarioLogado.getId() != idUsuario) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "O usuário não possui permissão para atualizar esse perfil");
+        }
+
         Perfil perfil = this.perfilRepository.encontrarPerfilPorIdUsuario(idUsuario).get();
 
         perfil = this.perfilMapper.of(perfil, dto);
 
         this.perfilRepository.save(perfil);
 
-
-        if (!dto.flagList().isEmpty()) {
-            flagUsuarioService.salvarFlagUsuario(perfil, dto.flagList());
-        }
+        flagUsuarioService.salvarFlagUsuario(perfil, dto.flagList());
 
         return criarPerfilDetalhadoDto(idUsuario);
     }
@@ -79,11 +83,12 @@ public class PerfilService {
 
         return criarPerfilDetalhadoDto(idUsuario);
     }
+  
+    public void atualizarArquivoPerfil(MultipartFile arquivo, TipoArquivo tipoArquivo) {
+        Usuario usuarioLogado = this.autenticacaoService.getUsuarioFromUsuarioDetails();
 
-    public void atualizarArquivoPerfil(Integer idUsuario, MultipartFile arquivo, TipoArquivo tipoArquivo) {
-        Perfil perfil = this.usuarioRepository.findById(idUsuario)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado"))
-                .getPerfil();
+        Perfil perfil = this.perfilRepository.findById(usuarioLogado.getPerfil().getId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Perfil não encontrado"));
 
         if (!tipoArquivo.equals(TipoArquivo.PERFIL) && !tipoArquivo.equals(TipoArquivo.WALLPAPER)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tipo de arquivo inválido");
