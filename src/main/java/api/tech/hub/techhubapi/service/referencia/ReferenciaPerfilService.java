@@ -2,11 +2,14 @@ package api.tech.hub.techhubapi.service.referencia;
 
 import api.tech.hub.techhubapi.entity.perfil.Perfil;
 import api.tech.hub.techhubapi.entity.perfil.ReferenciaPerfil;
+import api.tech.hub.techhubapi.entity.usuario.Usuario;
 import api.tech.hub.techhubapi.repository.PerfilRepository;
 import api.tech.hub.techhubapi.repository.ReferenciaPerfilRepository;
 import api.tech.hub.techhubapi.service.referencia.dto.ReferenciaDetalhadoDto;
 import api.tech.hub.techhubapi.service.referencia.dto.ReferenciaPerfilCriacaoDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
@@ -54,5 +57,9 @@ public class ReferenciaPerfilService {
         }
 
         return listaReferenciaPerfil.stream().map(referenciaPerfilMapper::dtoOf).toList();
+    }
+
+    public Page<ReferenciaPerfil> listarFavoritos(Usuario usuarioLogado, Pageable pageable) {
+        return this.referenciaPerfilRepository.findByAvaliador(usuarioLogado.getPerfil(), pageable);
     }
 }

@@ -1,11 +1,15 @@
 package api.tech.hub.techhubapi.service.usuario.dto;
 
 import api.tech.hub.techhubapi.entity.usuario.Usuario;
+import api.tech.hub.techhubapi.entity.usuario.UsuarioFuncao;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 
 public record UsuarioTokenDto (
         Integer id,
         String nome,
-        String funcao,
+        @Enumerated(EnumType.STRING)
+        UsuarioFuncao funcao,
         String token
 ){
     public UsuarioTokenDto(Usuario usuario, String token){

@@ -1,5 +1,6 @@
 package api.tech.hub.techhubapi.service.usuario.dto;
 
+import api.tech.hub.techhubapi.entity.usuario.UsuarioFuncao;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -23,7 +24,7 @@ public record UsuarioCriacaoDto(
         String pais,
 
         @NotBlank
-        String funcao
+        UsuarioFuncao funcao
 
 
         // Possivelmente vai ter que criar uma anotação aqui
