@@ -22,5 +22,5 @@ public interface ReferenciaPerfilRepository extends JpaRepository<ReferenciaPerf
 
     List<ReferenciaPerfil> findByAvaliador(Perfil perfil);
 
-    Page<ReferenciaPerfil> findByAvaliador(Perfil perfil, Pageable pageable);
+    Page<ReferenciaPerfil> findByAvaliadorAndIsFavoritoTrue(Perfil perfil, Pageable pageable);
 }
