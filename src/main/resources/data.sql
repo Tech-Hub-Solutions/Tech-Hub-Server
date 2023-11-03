@@ -223,7 +223,7 @@ INSERT INTO Usuario (perfil_id,nome, email, senha, numero_cadastro_pessoa, pais,
 (12, 'Marta', 'marta@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '98765432109876', 'Brazil', 0, true),
 (13, 'Pedro', 'pedro@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '55555555555555', 'Brazil', 0, true),
 (14, 'Isabella', 'isabella@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '12345678901234', 'Brazil', 0, true),
-(15, 'Lucas', 'lucas@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '98765432109876', 'Brazil', 0, true),
+(15, 'Mateus', 'lucas@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '98765432109876', 'Brazil', 0, true),
 (16, 'Patricia', 'patricia@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '55555555555555', 'Brazil', 0, true),
 (17, 'Fernando', 'fernando@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '12345678901234', 'Brazil', 0, true),
 (18, 'Amanda', 'amanda@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '98765432109876', 'Brazil', 0, true),
@@ -284,6 +284,13 @@ INSERT INTO Arquivo (data_upload, perfil_id, tipo_arquivo, nome_arquivo_original
 ('2023-11-03',8, 0, '8-luisa.jpg','44b45e2b-a862-46a0-ad2a-8484581b6071_8-luisa.jpg'),
 ('2023-11-03',9, 0, '9-rafael.jpg','df84190f-50a0-4f3d-8494-7979de2a4d4b_9-rafael.jpg'),
 ('2023-11-03',10, 0, '10-sofia.jpg','ed169e08-f74f-432e-9c19-763be3adad4b_10-sofia.jpg'),
+('2023-11-03',11, 0, '11-gabriel.jpg','d184e259-4929-459b-a99c-c4619048eda1_11-gabriel.jpg'),
+('2023-11-03',12, 0, '12-marta.jpg','d39ac45f-f04f-4519-978e-1f22f88098f4_12-marta.jpg'),
+('2023-11-03',13, 0, '13-pedro.jpg','665f2c6f-cea9-4002-9adc-085aba323820_13-pedro.jpg'),
+('2023-11-03',14, 0, '14-isabela.jpg','ce149d4a-df23-4936-ae6d-401a375e87af_14-isabela.jpg'),
+('2023-11-03',15, 0, '15-mateus.jpg','827a8af9-5fb4-45de-865f-4916f58e2439_15-Mateus.jpg'),
+('2023-11-03',16, 0, '16-patricia.jpg','530af636-d576-45a0-bdad-35c9fa5aa472_16-patricia.jpg'),
+('2023-11-03',17, 0, '17-fernando.jpg','153b45cf-c629-49db-8395-f593b145866e_17-fernando.jpg'),
 -- Wallpaper
 ('2023-11-03',1, 1, '1-b-murilo.jpg','cab545fc-85d1-41e2-92d8-74f16119e5c4_1-b-murilo.jpg'),
 ('2023-11-03',2, 1, '2-b-leo.jpg','bdd49348-c0e0-48f9-947f-a8fc653a367b_2-b-leo.jpg'),
@@ -294,7 +301,14 @@ INSERT INTO Arquivo (data_upload, perfil_id, tipo_arquivo, nome_arquivo_original
 ('2023-11-03',7, 1, '7-b-carlos.jpg','7673e740-d8f6-4faa-8735-2418281166ad_7-b-carlos.jpg'),
 ('2023-11-03',8, 1, '8-b-luisa.jpg','54ff219a-af35-4e84-b808-a88699203cb6_8-b-luisa.jpg'),
 ('2023-11-03',9, 1, '9-b-rafael.jpg','f21bb411-828e-4b03-9108-21caee6e3894_9-b-rafael.jpg'),
-('2023-11-03',10,1, '10-b-sofia.jpg','01769f9a-2f4f-4bf2-b32f-1b64e79f34e5_10-b-sofia.jpg');
+('2023-11-03',10,1, '10-b-sofia.jpg','01769f9a-2f4f-4bf2-b32f-1b64e79f34e5_10-b-sofia.jpg'),
+('2023-11-03',11,1, '11-b-gabriel.jpg','041ad24c-46ae-4dfd-a98a-c103ea47412c_11-b-gabriel.jpg'),
+('2023-11-03',12,1, '12-b-marta.jpg','ab6c26df-ac71-46c7-a33e-5bbc50b7f8e1_12-b-marta.jpg'),
+('2023-11-03',13,1, '13-b-pedro.jpg','1835c96b-37c5-4db4-9249-f9bdbf6456a3_13-b-pedro.jpg'),
+('2023-11-03',14,1, '14-b-isabela.jpg','9a2f3ff3-ba32-4b98-9595-89daa99c8643_14-b-isabela.jpg'),
+('2023-11-03',15,1, '15-b-mateus.jpg','08a4f5fd-17b1-4f82-9e8c-302e4cf8313d_15-b-mateus.jpg'),
+('2023-11-03',16,1, '16-b-patricia.jpg','8b8f244e-610a-4674-a916-3251d7bf6244_16-b-patricia.jpg'),
+('2023-11-03',17,1, '17-b-fernando.jpg','bce96dd1-ccad-4ec0-8718-60445ae18a6c_17-b-fernando.jpg');
 
 
 
