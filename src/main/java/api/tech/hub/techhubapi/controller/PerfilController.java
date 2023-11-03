@@ -16,6 +16,8 @@ import api.tech.hub.techhubapi.service.referencia.ReferenciaPerfilService;
 import api.tech.hub.techhubapi.service.referencia.dto.ReferenciaDetalhadoDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -65,8 +67,11 @@ public class PerfilController {
     }
 
     @GetMapping("/avaliacao/{idUsuario}")
-    public ResponseEntity<List<AvaliacaoDetalhadoDto>> buscarAvaliacoesDoPerfilPorIdUsuario(@PathVariable Integer idUsuario){
-        List<AvaliacaoDetalhadoDto> lista = this.avaliacaoService.encontrarAvaliacoesPerfil(idUsuario);
+    public ResponseEntity<Page<AvaliacaoDetalhadoDto>> buscarAvaliacoesDoPerfilPorIdUsuario(
+            @PathVariable Integer idUsuario,
+            Pageable pageable
+    ){
+        Page<AvaliacaoDetalhadoDto> lista = this.avaliacaoService.encontrarAvaliacoesPerfil(idUsuario, pageable);
 
         if (lista.isEmpty()) {
             return ResponseEntity.noContent().build();

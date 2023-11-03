@@ -10,6 +10,8 @@ import api.tech.hub.techhubapi.service.avaliacao.dto.AvaliacaoTotal;
 import api.tech.hub.techhubapi.service.avaliacao.dto.avaliacaoDto;
 import api.tech.hub.techhubapi.service.usuario.autenticacao.AutenticacaoService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -44,14 +46,14 @@ public class AvaliacaoService {
         return this.mapper.dtoOf(this.avaliacaoRepository.save(novaAvaliacao));
     }
 
-    public List<AvaliacaoDetalhadoDto> encontrarAvaliacoesPerfil(Integer idUsuario) {
+    public Page<AvaliacaoDetalhadoDto> encontrarAvaliacoesPerfil(Integer idUsuario, Pageable pageable) {
         Perfil perfil = this.perfilRepository.encontrarPerfilPorIdUsuario(idUsuario).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Perfil não encontrado")
         );
 
-        List<Avaliacao> listaAvaliacoes = this.avaliacaoRepository.findAvaliacaoByPerfil(perfil);
+        Page<Avaliacao> listaAvaliacoes = this.avaliacaoRepository.findAvaliacaoByPerfil(perfil, pageable);
 
-        return listaAvaliacoes.stream().map(mapper::dtoOf).toList();
+        return listaAvaliacoes.map(mapper::dtoOf);
     }
 
     public List<AvaliacaoTotal> buscarAvaliacaoGeral(Integer idUsuario) {
