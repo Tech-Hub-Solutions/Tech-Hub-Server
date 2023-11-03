@@ -11,6 +11,7 @@ import api.tech.hub.techhubapi.service.conversa.ConversaService;
 import api.tech.hub.techhubapi.service.perfil.PerfilService;
 import api.tech.hub.techhubapi.service.perfil.dto.PerfilCadastroDto;
 import api.tech.hub.techhubapi.service.perfil.dto.PerfilDetalhadoDto;
+import api.tech.hub.techhubapi.service.perfil.dto.PerfilGeralDetalhadoDto;
 import api.tech.hub.techhubapi.service.referencia.ReferenciaPerfilService;
 import api.tech.hub.techhubapi.service.referencia.dto.ReferenciaDetalhadoDto;
 import jakarta.validation.Valid;
@@ -32,6 +33,14 @@ public class PerfilController {
     private final ReferenciaPerfilService referenciaPerfilService;
     private final AvaliacaoService avaliacaoService;
     private final ArquivoService arquivoService;
+
+
+
+    @GetMapping("/{idUsuario}")
+    public ResponseEntity<PerfilGeralDetalhadoDto> buscarPerfilGeral(@PathVariable Integer idUsuario){
+        return ResponseEntity.ok(this.perfilService.buscarPerfilGeralPorIdUsuario(idUsuario));
+    }
+
 
     @PutMapping
     public ResponseEntity<PerfilDetalhadoDto> atualizarPerfil(

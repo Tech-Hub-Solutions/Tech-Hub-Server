@@ -5,11 +5,13 @@ import api.tech.hub.techhubapi.entity.perfil.Perfil;
 import api.tech.hub.techhubapi.entity.perfil.ReferenciaPerfil;
 import api.tech.hub.techhubapi.entity.perfil.flag.Flag;
 import api.tech.hub.techhubapi.entity.perfil.flag.FlagUsuario;
+import api.tech.hub.techhubapi.entity.usuario.Usuario;
 import api.tech.hub.techhubapi.service.avaliacao.AvaliacaoMapper;
 import api.tech.hub.techhubapi.service.flag.FlagUsuarioMapper;
 import api.tech.hub.techhubapi.service.flag.dto.FlagDto;
 import api.tech.hub.techhubapi.service.perfil.dto.PerfilCadastroDto;
 import api.tech.hub.techhubapi.service.perfil.dto.PerfilDetalhadoDto;
+import api.tech.hub.techhubapi.service.perfil.dto.PerfilGeralDetalhadoDto;
 import api.tech.hub.techhubapi.service.referencia.ReferenciaPerfilMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -52,5 +54,26 @@ public class PerfilMapper {
         dto.setReferencias(this.referenciaPerfilMapper.retornarListaReferenciasDto(perfil.getReferenciaPerfilList()));
 
         return dto;
+    }
+
+    public PerfilGeralDetalhadoDto perfilGeralDtoOf(Usuario usuario, Perfil perfil){
+        return new PerfilGeralDetalhadoDto(
+                usuario.getId(),
+                perfil.getId(),
+                usuario.getNome(),
+                usuario.getEmail(),
+                usuario.getPais(),
+                usuario.getFuncao(),
+                perfil.getSobreMim(),
+                perfil.getExperiencia(),
+                perfil.getDescricao(),
+                perfil.getPrecoMedio(),
+                perfil.getNomeGithub(),
+                perfil.getLinkGithub(),
+                perfil.getLinkLinkedin(),
+                this.flagUsuarioMapper.retornarFlagList(perfil.getFlagUsuarioList()).stream().map(FlagDto::new).toList(),
+                this.avaliacaoMapper.retornarListaAvaliacoesDto(perfil.getAvaliacaoList()),
+                this.referenciaPerfilMapper.retornarListaReferenciasDto(perfil.getReferenciaPerfilList())
+        );
     }
 }

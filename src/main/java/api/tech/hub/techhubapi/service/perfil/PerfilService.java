@@ -16,6 +16,7 @@ import api.tech.hub.techhubapi.service.flag.FlagService;
 import api.tech.hub.techhubapi.service.flag.FlagUsuarioService;
 import api.tech.hub.techhubapi.service.perfil.dto.PerfilCadastroDto;
 import api.tech.hub.techhubapi.service.perfil.dto.PerfilDetalhadoDto;
+import api.tech.hub.techhubapi.service.perfil.dto.PerfilGeralDetalhadoDto;
 import api.tech.hub.techhubapi.service.usuario.autenticacao.AutenticacaoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -36,17 +37,22 @@ public class PerfilService {
     private final ArquivoService arquivoService;
     private final AutenticacaoService autenticacaoService;
 
-    public Perfil buscarPerfilPorIdUsuario(Integer idUsuario) {
+    public PerfilGeralDetalhadoDto buscarPerfilGeralPorIdUsuario(Integer idUsuario) {
         if (!this.usuarioRepository.existsById(idUsuario)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado");
         }
+
+        Usuario usuario = this.usuarioRepository.findById(idUsuario)
+                .orElseThrow(
+                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado")
+                );
 
         Perfil perfil = this.perfilRepository.encontrarPerfilPorIdUsuario(idUsuario)
                 .orElseThrow(
                         () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Perfil não encontrado")
                 );
 
-        return perfil;
+        return this.perfilMapper.perfilGeralDtoOf(usuario,perfil);
     }
 
     public PerfilDetalhadoDto atualizarPerfil(PerfilCadastroDto dto) {
@@ -75,7 +81,7 @@ public class PerfilService {
 
         return criarPerfilDetalhadoDto(idUsuario);
     }
-  
+
     public void atualizarArquivoPerfil(MultipartFile arquivo, TipoArquivo tipoArquivo) {
         Usuario usuarioLogado = this.autenticacaoService.getUsuarioFromUsuarioDetails();
 
@@ -103,4 +109,5 @@ public class PerfilService {
         arquivoSalvo.setPerfil(perfil);
         this.arquivoService.salvarArquivo(arquivoSalvo);
     }
+
 }
