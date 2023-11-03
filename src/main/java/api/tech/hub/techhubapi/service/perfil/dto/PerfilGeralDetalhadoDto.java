@@ -10,6 +10,8 @@ import java.util.List;
 public record PerfilGeralDetalhadoDto(
         Integer idUsuario,
         Integer idPerfil,
+        String urlFotoPerfil,
+        String urlFotoWallpaper,
         String nome,
         String email,
         String pais,

@@ -64,6 +64,8 @@ public class PerfilMapper {
         return new PerfilGeralDetalhadoDto(
                 usuario.getId(),
                 perfil.getId(),
+                ArquivoService.criarUrlFoto(perfil, TipoArquivo.PERFIL),
+                ArquivoService.criarUrlFoto(perfil, TipoArquivo.WALLPAPER),
                 usuario.getNome(),
                 usuario.getEmail(),
                 usuario.getPais(),
