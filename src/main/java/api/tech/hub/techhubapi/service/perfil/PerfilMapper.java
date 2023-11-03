@@ -6,6 +6,8 @@ import api.tech.hub.techhubapi.entity.perfil.ReferenciaPerfil;
 import api.tech.hub.techhubapi.entity.perfil.flag.Flag;
 import api.tech.hub.techhubapi.entity.perfil.flag.FlagUsuario;
 import api.tech.hub.techhubapi.entity.usuario.Usuario;
+import api.tech.hub.techhubapi.service.arquivo.ArquivoService;
+import api.tech.hub.techhubapi.service.arquivo.TipoArquivo;
 import api.tech.hub.techhubapi.service.avaliacao.AvaliacaoMapper;
 import api.tech.hub.techhubapi.service.flag.FlagUsuarioMapper;
 import api.tech.hub.techhubapi.service.flag.dto.FlagDto;
@@ -42,6 +44,8 @@ public class PerfilMapper {
         PerfilDetalhadoDto dto = new PerfilDetalhadoDto();
 
         dto.setId(perfil.getId());
+        dto.setUrlFotoPerfil(ArquivoService.criarUrlFoto(perfil, TipoArquivo.PERFIL));
+        dto.setUrlFotoWallpaper(ArquivoService.criarUrlFoto(perfil, TipoArquivo.WALLPAPER));
         dto.setSobreMim(perfil.getSobreMim());
         dto.setExperiencia(perfil.getExperiencia());
         dto.setDescricao(perfil.getDescricao());

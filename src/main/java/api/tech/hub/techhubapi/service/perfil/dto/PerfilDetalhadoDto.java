@@ -18,6 +18,8 @@ import java.util.List;
 @NoArgsConstructor
 public class PerfilDetalhadoDto {
     private Integer id;
+    private String urlFotoPerfil;
+    private String urlFotoWallpaper;
     private String sobreMim;
     private String experiencia;
     private String descricao;

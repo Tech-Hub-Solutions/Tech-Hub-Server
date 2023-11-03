@@ -17,11 +17,13 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -143,10 +145,13 @@ public class ArquivoService {
     public static String criarUrlFoto(Perfil perfil, TipoArquivo tipoArquivo) {
         List<Arquivo> arquivos = perfil.getArquivos();
 
-        String url = String.format("http://localhost:8080/arquivos/usuario/%d?tipoArquivo=%s",
-                perfil.getUsuario().getId(),
-                tipoArquivo.name()
-        );
+        String url = ServletUriComponentsBuilder
+                .fromCurrentContextPath()
+                .path("/arquivos/usuario/{id}")
+                .queryParam("tipoArquivo", tipoArquivo)
+                .buildAndExpand(perfil.getUsuario().getId())
+                .toUri()
+                .toString();
 
         return arquivos.stream()
                 .filter(arquivo -> arquivo.getTipoArquivo().equals(TipoArquivo.PERFIL))

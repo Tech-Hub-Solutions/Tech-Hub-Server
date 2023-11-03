@@ -93,6 +93,22 @@ public class ArquivoController {
                 .body(resource);
     }
 
+    @GetMapping("/usuario/{id}")
+    public ResponseEntity<byte[]> getUsuarioPerfil(
+            @PathVariable Integer id,
+            @RequestParam TipoArquivo tipoArquivo
+    ) {
+
+        Arquivo arquivo = this.arquivoService.getArquivo(id, tipoArquivo);
+        byte[] imagem = this.arquivoService.getImage(arquivo.getNomeArquivoSalvo(), tipoArquivo);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.IMAGE_JPEG);
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=" + arquivo.getNomeArquivoOriginal());
+
+        return ResponseEntity.status(200).headers(headers).body(imagem);
+
+    }
 
 
 }

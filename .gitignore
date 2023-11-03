@@ -1,4 +1,6 @@
-arquivos/**
+arquivos/CSV
+arquivos/DOCUMENTO
+arquivos/IMAGEM
 
 HELP.md
 target/

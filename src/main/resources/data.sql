@@ -214,21 +214,21 @@ INSERT INTO Usuario (perfil_id,nome, email, senha, numero_cadastro_pessoa, pais,
 (3,'Ana', 'ana@gmail.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '12345678901234', 'Brasil', 0, true),
 (4,'Lucas', 'lucas@yahoo.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '98765432109876', 'Brasil', 0, true),
 (5,'Mariana', 'mariana@hotmail.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '55555555555555', 'Brasil', 0, true),
-(6, 'Maria', 'maria@example.com', '$2a$10$AqwUTV.rKnb6ryDe.VVfDOV8N9cCBwzcsAOAnRLkXAI4Nqhx/k7Du', '12345678901234', 'Brazil', 0, true),
-(7, 'Carlos', 'carlos@example.com', '$2a$10$AqwUTV.rKnb6ryDe.VVfDOV8N9cCBwzcsAOAnRLkXAI4Nqhx/k7Du', '98765432109876', 'Brazil', 0, true),
-(8, 'Luisa', 'luisa@example.com', '$2a$10$AqwUTV.rKnb6ryDe.VVfDOV8N9cCBwzcsAOAnRLkXAI4Nqhx/k7Du', '55555555555555', 'Brazil', 0, true),
-(9, 'Rafael', 'rafael@example.com', '$2a$10$AqwUTV.rKnb6ryDe.VVfDOV8N9cCBwzcsAOAnRLkXAI4Nqhx/k7Du', '12345678901234', 'Brazil', 0, true),
-(10, 'Sofia', 'sofia@example.com', '$2a$10$AqwUTV.rKnb6ryDe.VVfDOV8N9cCBwzcsAOAnRLkXAI4Nqhx/k7Du', '98765432109876', 'Brazil', 0, true),
-(11, 'Gabriel', 'gabriel@example.com', '$2a$10$AqwUTV.rKnb6ryDe.VVfDOV8N9cCBwzcsAOAnRLkXAI4Nqhx/k7Du', '12345678901234', 'Brazil', 0, true),
-(12, 'Marta', 'marta@example.com', '$2a$10$AqwUTV.rKnb6ryDe.VVfDOV8N9cCBwzcsAOAnRLkXAI4Nqhx/k7Du', '98765432109876', 'Brazil', 0, true),
-(13, 'Pedro', 'pedro@example.com', '$2a$10$AqwUTV.rKnb6ryDe.VVfDOV8N9cCBwzcsAOAnRLkXAI4Nqhx/k7Du', '55555555555555', 'Brazil', 0, true),
-(14, 'Isabella', 'isabella@example.com', '$2a$10$AqwUTV.rKnb6ryDe.VVfDOV8N9cCBwzcsAOAnRLkXAI4Nqhx/k7Du', '12345678901234', 'Brazil', 0, true),
-(15, 'Lucas', 'lucas@example.com', '$2a$10$AqwUTV.rKnb6ryDe.VVfDOV8N9cCBwzcsAOAnRLkXAI4Nqhx/k7Du', '98765432109876', 'Brazil', 0, true),
-(16, 'Patricia', 'patricia@example.com', '$2a$10$AqwUTV.rKnb6ryDe.VVfDOV8N9cCBwzcsAOAnRLkXAI4Nqhx/k7Du', '55555555555555', 'Brazil', 0, true),
-(17, 'Fernando', 'fernando@example.com', '$2a$10$AqwUTV.rKnb6ryDe.VVfDOV8N9cCBwzcsAOAnRLkXAI4Nqhx/k7Du', '12345678901234', 'Brazil', 0, true),
-(18, 'Amanda', 'amanda@example.com', '$2a$10$AqwUTV.rKnb6ryDe.VVfDOV8N9cCBwzcsAOAnRLkXAI4Nqhx/k7Du', '98765432109876', 'Brazil', 0, true),
-(19, 'Rodrigo', 'rodrigo@example.com', '$2a$10$AqwUTV.rKnb6ryDe.VVfDOV8N9cCBwzcsAOAnRLkXAI4Nqhx/k7Du', '55555555555555', 'Brazil', 0, true),
-(20, 'Tatiana', 'tatiana@example.com', '$2a$10$AqwUTV.rKnb6ryDe.VVfDOV8N9cCBwzcsAOAnRLkXAI4Nqhx/k7Du', '12345678901234', 'Brazil', 0, true);
+(6, 'Maria', 'maria@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '12345678901234', 'Brazil', 0, true),
+(7, 'Carlos', 'carlos@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '98765432109876', 'Brazil', 0, true),
+(8, 'Luisa', 'luisa@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '55555555555555', 'Brazil', 0, true),
+(9, 'Rafael', 'rafael@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '12345678901234', 'Brazil', 0, true),
+(10, 'Sofia', 'sofia@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '98765432109876', 'Brazil', 0, true),
+(11, 'Gabriel', 'gabriel@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '12345678901234', 'Brazil', 0, true),
+(12, 'Marta', 'marta@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '98765432109876', 'Brazil', 0, true),
+(13, 'Pedro', 'pedro@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '55555555555555', 'Brazil', 0, true),
+(14, 'Isabella', 'isabella@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '12345678901234', 'Brazil', 0, true),
+(15, 'Lucas', 'lucas@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '98765432109876', 'Brazil', 0, true),
+(16, 'Patricia', 'patricia@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '55555555555555', 'Brazil', 0, true),
+(17, 'Fernando', 'fernando@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '12345678901234', 'Brazil', 0, true),
+(18, 'Amanda', 'amanda@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '98765432109876', 'Brazil', 0, true),
+(19, 'Rodrigo', 'rodrigo@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '55555555555555', 'Brazil', 0, true),
+(20, 'Tatiana', 'tatiana@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '12345678901234', 'Brazil', 0, true);
 
 -- Referencias
 INSERT INTO Referencia_Perfil (avaliador_id, avaliado_id, is_favorito,is_recomendado) VALUES
@@ -270,3 +270,33 @@ INSERT INTO Avaliacao (perfil_id, comentario, qtd_estrela) VALUES
 (1,  'A comida estava deliciosa, voltarei em breve.', 5),
 (1,  'O serviço de entrega foi rápido e confiável, 5 estrelas!', 5),
 (1,  'O suporte ao cliente foi péssimo, demoraram para resolver o problema.', 1);
+
+
+INSERT INTO Arquivo (data_upload, perfil_id, tipo_arquivo, nome_arquivo_original, nome_arquivo_salvo) VALUES
+-- Perfil
+('2023-11-03',1, 0, '1-murilo.jpg','2e8470ce-854e-40fe-b829-e52112e5176b_1-murilo.jpg'),
+('2023-11-03',2, 0, '2-leo.jpg','0ca615d2-af0b-4777-ae4b-c7fd1f4cde53_2-leo.jpg'),
+('2023-11-03',3, 0, '3-ana.jpg','e9f2dca3-4b12-40f0-99cd-0bb70362b7b6_3-ana.jpg'),
+('2023-11-03',4, 0, '4-lucas.jpg','e7b65a8b-a87e-42e1-9e80-6001b2b35f41_4-lucas.jpg'),
+('2023-11-03',5, 0, '5-mariana.jpg','c0c1c90d-920c-4607-8f1b-a5a353d4a426_5-mariana.jpg'),
+('2023-11-03',6, 0, '6-maria.jpg','a88c123c-8905-47b0-bc35-2034ee071123_6-maria.jpg'),
+('2023-11-03',7, 0, '7-carlos.jpg','79981474-1a47-464e-b05a-d4b8a43402f4_7-carlos.jpg'),
+('2023-11-03',8, 0, '8-luisa.jpg','44b45e2b-a862-46a0-ad2a-8484581b6071_8-luisa.jpg'),
+('2023-11-03',9, 0, '9-rafael.jpg','df84190f-50a0-4f3d-8494-7979de2a4d4b_9-rafael.jpg'),
+('2023-11-03',10, 0, '10-sofia.jpg','ed169e08-f74f-432e-9c19-763be3adad4b_10-sofia.jpg'),
+-- Wallpaper
+('2023-11-03',1, 1, '1-b-murilo.jpg','cab545fc-85d1-41e2-92d8-74f16119e5c4_1-b-murilo.jpg'),
+('2023-11-03',2, 1, '2-b-leo.jpg','bdd49348-c0e0-48f9-947f-a8fc653a367b_2-b-leo.jpg'),
+('2023-11-03',3, 1, '3-b-ana.jpg','e01d642b-5c0a-4056-ae5b-69bffc197820_3-b-ana.jpg'),
+('2023-11-03',4, 1, '4-b-lucas.jpg','beb0d4d6-43d3-4a19-aa9f-0478af9db77d_4-b-lucas.jpg'),
+('2023-11-03',5, 1, '5-b-mariana.jpg','ca925051-d140-4fe5-93e9-b6a82e01c540_5-b-mariana.jpg'),
+('2023-11-03',6, 1, '6-b-maria.jpg','0761d11e-0094-4c6f-ab0c-6aa9193c8d3f_6-b-maria.jpg'),
+('2023-11-03',7, 1, '7-b-carlos.jpg','7673e740-d8f6-4faa-8735-2418281166ad_7-b-carlos.jpg'),
+('2023-11-03',8, 1, '8-b-luisa.jpg','54ff219a-af35-4e84-b808-a88699203cb6_8-b-luisa.jpg'),
+('2023-11-03',9, 1, '9-b-rafael.jpg','f21bb411-828e-4b03-9108-21caee6e3894_9-b-rafael.jpg'),
+('2023-11-03',10,1, '10-b-sofia.jpg','01769f9a-2f4f-4bf2-b32f-1b64e79f34e5_10-b-sofia.jpg');
+
+
+
+
+
