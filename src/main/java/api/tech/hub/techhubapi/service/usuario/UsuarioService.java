@@ -20,6 +20,7 @@ import api.tech.hub.techhubapi.service.usuario.specification.UsuarioSpecificatio
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -101,7 +102,7 @@ public class UsuarioService {
 
         PerfilDetalhadoDto perfil = perfilService.buscarPerfilDetalhadoPorIdUsuario(usuario.getId());
 
-        return this.usuarioMapper.usuarioGeralDtoOf(usuario,perfil);
+        return this.usuarioMapper.usuarioGeralDtoOf(usuario, perfil);
     }
 
     public void deletarUsuario(Integer id) {
@@ -181,32 +182,41 @@ public class UsuarioService {
         return usuarios;
     }
 
-    public Page<UsuarioBuscaDto> listarPor(UsuarioFiltroDto usuarioFiltroDto, Pageable pageable) {
-        List<Flag> flags = this.flagRepository.findByIdIn(usuarioFiltroDto.tecnologiasIds());
+    public Page<UsuarioBuscaDto> listarPor(UsuarioFiltroDto usuarioFiltroDto, Pageable pageable, String sort) {
+
+        List<Flag> flags = null;
+        if (usuarioFiltroDto.tecnologiasIds() != null && usuarioFiltroDto.tecnologiasIds().isEmpty()) {
+            flags = this.flagRepository.findByIdIn(usuarioFiltroDto.tecnologiasIds());
+        }
 
         Specification<Usuario> specification = Specification
                 .allOf(
                         UsuarioSpecification.hasNome(usuarioFiltroDto.nome()),
                         UsuarioSpecification.hasArea(usuarioFiltroDto.area()),
                         UsuarioSpecification.hasPrecoBetween(usuarioFiltroDto.precoMin(), usuarioFiltroDto.precoMax()),
-                        UsuarioSpecification.hasFlags(flags)
+                        UsuarioSpecification.hasFlags(flags),
+                        UsuarioSpecification.sort(sort)
                 );
 
-        return usuarioRepository.findAll(specification, pageable)
+        return this.usuarioRepository.findAll(specification, pageable)
                 .map(UsuarioBuscaDto::new);
     }
 
 
-    public Page<UsuarioFavoritoDto> listarFavoritos(Pageable pageable) {
+    public Page<UsuarioFavoritoDto> listarFavoritos(Pageable pageable, String ordem) {
         Usuario usuarioLogado = this.autenticacaoService.getUsuarioFromUsuarioDetails();
 
         if (usuarioLogado.getFuncao().equals(UsuarioFuncao.FREELANCER)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Freelancer não pode ter favoritos");
         }
 
-        Page<ReferenciaPerfil> referenciasDoUsuario = this.referenciaPerfilService.listarFavoritos(usuarioLogado, pageable);
+        Specification<Usuario> specification = Specification.allOf(
+                UsuarioSpecification.getFavoritos(usuarioLogado.getPerfil()),
+                UsuarioSpecification.sort(ordem)
+        );
 
-        Page<Perfil> favoritos = referenciasDoUsuario.map(ReferenciaPerfil::getAvaliado);
+        Page<Usuario> usuarios = this.usuarioRepository.findAll(specification, pageable);
+        Page<Perfil> favoritos = usuarios.map(Usuario::getPerfil);
 
         return favoritos.map(UsuarioFavoritoDto::new);
 

@@ -94,9 +94,10 @@ public class UsuarioController {
     @PostMapping("/filtro")
     public ResponseEntity<Page<UsuarioBuscaDto>> listarPor(
             @RequestBody UsuarioFiltroDto usuarioFiltroDto,
+            @RequestParam(required = false) String ordem,
             Pageable paginacao
     ) {
-        Page<UsuarioBuscaDto> usuarios = this.usuarioService.listarPor(usuarioFiltroDto, paginacao);
+        Page<UsuarioBuscaDto> usuarios = this.usuarioService.listarPor(usuarioFiltroDto, paginacao, ordem);
 
         if (usuarios.isEmpty()) {
             return ResponseEntity.noContent().build();
@@ -107,9 +108,10 @@ public class UsuarioController {
 
     @GetMapping("/favoritos")
     public ResponseEntity<Page<UsuarioFavoritoDto>> listarFavoritos(
-            Pageable pageable
+            Pageable pageable,
+            @RequestParam(required = false) String ordem
     ) {
-        Page<UsuarioFavoritoDto> usuarios = this.usuarioService.listarFavoritos(pageable);
+        Page<UsuarioFavoritoDto> usuarios = this.usuarioService.listarFavoritos(pageable, ordem);
 
         if(usuarios.isEmpty()) {
             return ResponseEntity.noContent().build();

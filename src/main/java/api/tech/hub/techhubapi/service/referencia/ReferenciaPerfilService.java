@@ -95,10 +95,4 @@ public class ReferenciaPerfilService {
         return this.referenciaPerfilRepository.findByAvaliador(usuarioLogado.getPerfil());
     }
 
-    public Page<ReferenciaPerfil> listarFavoritos(Usuario usuarioLogado, Pageable pageable) {
-        return this.referenciaPerfilRepository.findByAvaliadorAndIsFavoritoTrue(usuarioLogado.getPerfil(), pageable);
-    }
-
-
-
 }
