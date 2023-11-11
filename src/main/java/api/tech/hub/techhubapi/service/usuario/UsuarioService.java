@@ -30,6 +30,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -84,14 +86,14 @@ public class UsuarioService {
         return usuarioSalvo;
     }
 
-    public UsuarioDetalhadoDto atualizarInformacaoUsuarioPorId( UsuarioAtualizacaoDto dto) {
+    public UsuarioDetalhadoDto atualizarInformacaoUsuarioPorId(UsuarioAtualizacaoDto dto) {
         Usuario usuario = this.autenticacaoService.getUsuarioFromUsuarioDetails();
 
         Usuario usuarioValidado = usuarioMapper.of(usuario, dto);
 
         if (this.usuarioRepository.existsByEmail(usuarioValidado.getEmail())) {
             throw new ResponseStatusException(
-                    HttpStatus.CONFLICT,"Este email já esta em uso!"
+                    HttpStatus.CONFLICT, "Este email já esta em uso!"
             );
         }
 
@@ -102,14 +104,10 @@ public class UsuarioService {
         );
     }
 
-    public UsuarioGeralDto buscarPorId(Integer id) {
-        Usuario usuario = this.usuarioRepository.findUsuarioByIdAndIsAtivoTrue(id).orElseThrow(
+    public Usuario buscarPorId(Integer id) {
+        return this.usuarioRepository.findUsuarioByIdAndIsAtivoTrue(id).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado")
         );
-
-        PerfilDetalhadoDto perfil = perfilService.buscarPerfilDetalhadoPorIdUsuario(usuario.getId());
-
-        return this.usuarioMapper.usuarioGeralDtoOf(usuario, perfil);
     }
 
     public void deletarUsuario(Integer id) {
