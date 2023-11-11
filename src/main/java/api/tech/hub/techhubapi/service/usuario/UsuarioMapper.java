@@ -35,7 +35,7 @@ public class UsuarioMapper {
 
         usuario.setNome(dto.nome());
         usuario.setEmail(dto.email());
-        usuario.setPais(dto.pais());
+        usuario.setPais(passwordEncoder.encode(dto.senha()));
 
         return usuario;
     }

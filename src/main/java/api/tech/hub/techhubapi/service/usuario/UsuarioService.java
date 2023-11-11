@@ -84,9 +84,8 @@ public class UsuarioService {
         return usuarioSalvo;
     }
 
-    public UsuarioDetalhadoDto atualizarInformacaoUsuarioPorId(Integer id, UsuarioAtualizacaoDto dto) {
-        Usuario usuario = usuarioRepository.findUsuarioByIdAndIsAtivoTrue(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado!"));
+    public UsuarioDetalhadoDto atualizarInformacaoUsuarioPorId( UsuarioAtualizacaoDto dto) {
+        Usuario usuario = this.autenticacaoService.getUsuarioFromUsuarioDetails();
 
         return usuarioMapper.dtoOf(
                 this.usuarioRepository.save(

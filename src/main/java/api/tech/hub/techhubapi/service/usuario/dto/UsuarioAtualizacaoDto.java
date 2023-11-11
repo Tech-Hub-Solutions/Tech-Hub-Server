@@ -14,6 +14,6 @@ public record UsuarioAtualizacaoDto(
         String email,
 
         @NotBlank
-        String pais
+        String senha
 ) {
 }

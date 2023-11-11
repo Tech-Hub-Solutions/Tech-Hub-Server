@@ -73,10 +73,10 @@ public class UsuarioController {
         return ResponseEntity.ok(this.usuarioService.buscarPorId(id));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<UsuarioDetalhadoDto> atualizarUsuarioPorId(@PathVariable Integer id,
+    @PutMapping
+    public ResponseEntity<UsuarioDetalhadoDto> atualizarUsuarioPorId(
                                                                      @RequestBody UsuarioAtualizacaoDto dto) {
-        return ResponseEntity.ok(this.usuarioService.atualizarInformacaoUsuarioPorId(id, dto));
+        return ResponseEntity.ok(this.usuarioService.atualizarInformacaoUsuarioPorId(dto));
     }
 
     @DeleteMapping("/{id}")
