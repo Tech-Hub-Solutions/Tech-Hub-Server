@@ -183,26 +183,26 @@ INSERT INTO Flag_Usuario (perfil_id, flag_id) VALUES
 
 -- Lista de usuários
 INSERT INTO Usuario (perfil_id,nome, email, senha, numero_cadastro_pessoa, pais, funcao, is_ativo) VALUES
-(1,'Murilo', 'murilo@hotmail.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '26828654000100', 'Brasil', 1, true),
-(2,'Leonardo', 'leo@hotmail.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '89138182000175', 'Brasil', 0, true),
-(3,'Ana', 'ana@gmail.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '12345678901234', 'Brasil', 0, true),
-(4,'Lucas', 'lucas@yahoo.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '98765432109876', 'Brasil', 0, true),
-(5,'Mariana', 'mariana@hotmail.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '55555555555555', 'Brasil', 0, true),
-(6, 'Maria', 'maria@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '12345678901234', 'Brazil', 0, true),
-(7, 'Carlos', 'carlos@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '98765432109876', 'Brazil', 0, true),
-(8, 'Luisa', 'luisa@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '55555555555555', 'Brazil', 0, true),
-(9, 'Rafael', 'rafael@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '12345678901234', 'Brazil', 0, true),
-(10, 'Sofia', 'sofia@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '98765432109876', 'Brazil', 0, true),
-(11, 'Gabriel', 'gabriel@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '12345678901234', 'Brazil', 0, true),
-(12, 'Marta', 'marta@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '98765432109876', 'Brazil', 0, true),
-(13, 'Pedro', 'pedro@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '55555555555555', 'Brazil', 0, true),
-(14, 'Isabella', 'isabella@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '12345678901234', 'Brazil', 0, true),
-(15, 'Mateus', 'lucas@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '98765432109876', 'Brazil', 0, true),
-(16, 'Patricia', 'patricia@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '55555555555555', 'Brazil', 0, true),
-(17, 'Fernando', 'fernando@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '12345678901234', 'Brazil', 0, true),
-(18, 'Amanda', 'amanda@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '98765432109876', 'Brazil', 0, true),
-(19, 'Rodrigo', 'rodrigo@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '55555555555555', 'Brazil', 0, true),
-(20, 'Tatiana', 'tatiana@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '12345678901234', 'Brazil', 0, true);
+(1,'Murilo', 'murilo@hotmail.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '26828654000100', 'BR', 1, true),
+(2,'Leonardo', 'leo@hotmail.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '89138182000175', 'BR', 0, true),
+(3,'Ana', 'ana@gmail.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '12345678901234', 'FR', 0, true),
+(4,'Lucas', 'lucas@yahoo.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '98765432109876', 'FR', 0, true),
+(5,'Mariana', 'mariana@hotmail.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '55555555555555', 'FR', 0, true),
+(6, 'Maria', 'maria@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '12345678901234', 'DE', 0, true),
+(7, 'Carlos', 'carlos@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '98765432109876', 'DE', 0, true),
+(8, 'Luisa', 'luisa@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '55555555555555', 'PT', 0, true),
+(9, 'Rafael', 'rafael@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '12345678901234', 'PT', 0, true),
+(10, 'Sofia', 'sofia@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '98765432109876', 'PT', 0, true),
+(11, 'Gabriel', 'gabriel@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '12345678901234', 'AR', 0, true),
+(12, 'Marta', 'marta@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '98765432109876', 'AR', 0, true),
+(13, 'Pedro', 'pedro@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '55555555555555', 'AR', 0, true),
+(14, 'Isabella', 'isabella@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '12345678901234', 'ES', 0, true),
+(15, 'Mateus', 'lucas@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '98765432109876', 'ES', 0, true),
+(16, 'Patricia', 'patricia@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '55555555555555', 'IN', 0, true),
+(17, 'Fernando', 'fernando@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '12345678901234', 'IN', 0, true),
+(18, 'Amanda', 'amanda@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '98765432109876', 'US', 0, true),
+(19, 'Rodrigo', 'rodrigo@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '55555555555555', 'US', 0, true),
+(20, 'Tatiana', 'tatiana@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '12345678901234', 'US', 0, true);
 
 -- Referencias
 INSERT INTO Referencia_Perfil (avaliador_id, avaliado_id, is_favorito,is_recomendado) VALUES
