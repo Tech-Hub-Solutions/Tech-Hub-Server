@@ -8,6 +8,7 @@ import api.tech.hub.techhubapi.service.conversa.dto.UsuarioConversaDto;
 import api.tech.hub.techhubapi.service.perfil.PerfilService;
 import api.tech.hub.techhubapi.service.perfil.dto.PerfilCadastroDto;
 import api.tech.hub.techhubapi.service.perfil.dto.PerfilDetalhadoDto;
+import api.tech.hub.techhubapi.service.usuario.UsuarioMapper;
 import api.tech.hub.techhubapi.service.usuario.dto.UsuarioBuscaDto;
 import api.tech.hub.techhubapi.service.usuario.UsuarioService;
 import api.tech.hub.techhubapi.service.usuario.dto.*;
@@ -15,9 +16,11 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
@@ -29,6 +32,8 @@ import java.util.List;
 public class UsuarioController {
 
     private final UsuarioService usuarioService;
+    private final PerfilService perfilService;
+    private final UsuarioMapper usuarioMapper;
 
     @PostMapping("/login")
     public ResponseEntity<UsuarioTokenDto> login(@RequestBody UsuarioLoginDto usuarioLoginDto) {
@@ -70,12 +75,24 @@ public class UsuarioController {
 
     @GetMapping("/{id}")
     public ResponseEntity<UsuarioGeralDto> buscarUsuario(@PathVariable Integer id) {
-        return ResponseEntity.ok(this.usuarioService.buscarPorId(id));
+        Usuario usuario = this.usuarioService.buscarPorId(id);
+
+        PerfilDetalhadoDto perfil = perfilService.buscarPerfilDetalhadoPorIdUsuario(usuario.getId());
+
+        return ResponseEntity.ok(usuarioMapper.usuarioGeralDtoOf(usuario, perfil));
     }
+
+    @GetMapping("/simple/{id}")
+    public ResponseEntity<UsuarioSimpleDto> buscarSimpleUsuario(@PathVariable Integer id) {
+        Usuario usuario = this.usuarioService.buscarPorId(id);
+
+        return ResponseEntity.ok(new UsuarioSimpleDto(usuario));
+    }
+
 
     @PutMapping
     public ResponseEntity<UsuarioDetalhadoDto> atualizarUsuarioPorId(
-                                                                     @RequestBody UsuarioAtualizacaoDto dto) {
+            @RequestBody UsuarioAtualizacaoDto dto) {
         return ResponseEntity.ok(this.usuarioService.atualizarInformacaoUsuarioPorId(dto));
     }
 
@@ -113,7 +130,7 @@ public class UsuarioController {
     ) {
         Page<UsuarioFavoritoDto> usuarios = this.usuarioService.listarFavoritos(pageable, ordem);
 
-        if(usuarios.isEmpty()) {
+        if (usuarios.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
 
