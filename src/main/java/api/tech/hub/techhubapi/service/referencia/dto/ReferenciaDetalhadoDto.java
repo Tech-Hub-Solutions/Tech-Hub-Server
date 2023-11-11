@@ -6,7 +6,7 @@ public record ReferenciaDetalhadoDto(Integer idReferencia, String nomeAvaliador,
                                      Boolean isFavoritado, Boolean isRecomendado) {
 
     public ReferenciaDetalhadoDto (ReferenciaPerfil referenciaPerfil){
-        this(referenciaPerfil.getId(),referenciaPerfil.getAvaliador().getNomeGithub(),
-                referenciaPerfil.getAvaliado().getNomeGithub(),referenciaPerfil.isFavorito(),referenciaPerfil.isRecomendado());
+        this(referenciaPerfil.getId(),referenciaPerfil.getAvaliador().getUsuario().getNome(),
+                referenciaPerfil.getAvaliado().getUsuario().getNome(),referenciaPerfil.isFavorito(),referenciaPerfil.isRecomendado());
     }
 }
