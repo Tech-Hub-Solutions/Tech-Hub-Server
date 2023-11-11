@@ -2,11 +2,13 @@ package api.tech.hub.techhubapi.service.avaliacao;
 
 import api.tech.hub.techhubapi.entity.perfil.Avaliacao;
 import api.tech.hub.techhubapi.entity.perfil.Perfil;
+import api.tech.hub.techhubapi.entity.usuario.Usuario;
 import api.tech.hub.techhubapi.repository.AvaliacaoRepository;
 import api.tech.hub.techhubapi.repository.PerfilRepository;
 import api.tech.hub.techhubapi.service.avaliacao.dto.AvaliacaoDetalhadoDto;
 import api.tech.hub.techhubapi.service.avaliacao.dto.AvaliacaoTotal;
 import api.tech.hub.techhubapi.service.avaliacao.dto.avaliacaoDto;
+import api.tech.hub.techhubapi.service.usuario.autenticacao.AutenticacaoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -22,10 +24,16 @@ public class AvaliacaoService {
     private final AvaliacaoMapper mapper;
     private final AvaliacaoRepository avaliacaoRepository;
     private final PerfilRepository perfilRepository;
-
+    private final AutenticacaoService autenticacaoService;
 
     public AvaliacaoDetalhadoDto avaliar(avaliacaoDto dto, Integer idUsuario) {
         Avaliacao novaAvaliacao = this.mapper.of(dto);
+
+        Usuario usuarioLogado = this.autenticacaoService.getUsuarioFromUsuarioDetails();
+
+        if (usuarioLogado.getId().equals(idUsuario)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "O usuário não pode se avaliar!");
+        }
 
         Perfil perfil = this.perfilRepository.encontrarPerfilPorIdUsuario(idUsuario).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Perfil não encontrado")

@@ -1,6 +1,7 @@
 package api.tech.hub.techhubapi.service.perfil.dto;
 
 import api.tech.hub.techhubapi.entity.Arquivo;
+import api.tech.hub.techhubapi.entity.perfil.Perfil;
 import api.tech.hub.techhubapi.entity.perfil.flag.Flag;
 import api.tech.hub.techhubapi.service.avaliacao.dto.AvaliacaoDetalhadoDto;
 import api.tech.hub.techhubapi.service.flag.dto.FlagDto;
@@ -17,6 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PerfilDetalhadoDto {
+
     private Integer id;
     private String sobreMim;
     private String experiencia;
@@ -28,4 +30,8 @@ public class PerfilDetalhadoDto {
     private List<FlagDto> flags;
     private List<AvaliacaoDetalhadoDto> avaliacoes;
     private List<ReferenciaDetalhadoDto> referencias;
+
+    public Integer getQtdRecomendacoes(){
+        return referencias.stream().mapToInt(x -> x.isRecomendado() ? 1:0).sum();
+    }
 }
