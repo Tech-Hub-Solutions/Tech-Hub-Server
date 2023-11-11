@@ -12,16 +12,18 @@ public record UsuarioTokenDto (
         String nome,
         @Enumerated(EnumType.STRING)
         UsuarioFuncao funcao,
-        String token,
-        String urlFotoPerfil
+        String pais,
+        String urlFotoPerfil,
+        String token
 ){
     public UsuarioTokenDto(Usuario usuario, String token){
         this(
                 usuario.getId(),
                 usuario.getNome(),
                 usuario.getFuncao(),
-                token,
-                ArquivoService.criarUrlFoto(usuario.getPerfil(), TipoArquivo.PERFIL)
+                usuario.getPais(),
+                ArquivoService.criarUrlFoto(usuario.getPerfil(), TipoArquivo.PERFIL),
+                token
         );
     }
 }
