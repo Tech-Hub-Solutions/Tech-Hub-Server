@@ -42,6 +42,7 @@ public class AvaliacaoService {
         Avaliacao novaAvaliacao = this.mapper.of(dto);
 
         novaAvaliacao.setPerfil(perfil);
+        novaAvaliacao.setAvaliador(usuarioLogado.getPerfil());
 
         return this.mapper.dtoOf(this.avaliacaoRepository.save(novaAvaliacao));
     }

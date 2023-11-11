@@ -15,7 +15,8 @@ public class Avaliacao {
     private int id;
     @ManyToOne
     private Perfil perfil;
-
+    @ManyToOne
+    private Perfil avaliador;
     private String comentario;
     private Integer qtdEstrela;
 }

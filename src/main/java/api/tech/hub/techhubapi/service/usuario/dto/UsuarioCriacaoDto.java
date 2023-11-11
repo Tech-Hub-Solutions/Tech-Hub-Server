@@ -23,7 +23,7 @@ public record UsuarioCriacaoDto(
         @NotBlank
         String pais,
 
-        @NotBlank
+        @NotNull
         UsuarioFuncao funcao
 
 
