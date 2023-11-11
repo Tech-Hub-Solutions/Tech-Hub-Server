@@ -87,9 +87,17 @@ public class UsuarioService {
     public UsuarioDetalhadoDto atualizarInformacaoUsuarioPorId( UsuarioAtualizacaoDto dto) {
         Usuario usuario = this.autenticacaoService.getUsuarioFromUsuarioDetails();
 
+        Usuario usuarioValidado = usuarioMapper.of(usuario, dto);
+
+        if (this.usuarioRepository.existsByEmail(usuarioValidado.getEmail())) {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,"Este email já esta em uso!"
+            );
+        }
+
         return usuarioMapper.dtoOf(
                 this.usuarioRepository.save(
-                        usuarioMapper.of(usuario, dto)
+                        usuarioValidado
                 )
         );
     }
