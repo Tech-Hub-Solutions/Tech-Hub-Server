@@ -37,6 +37,12 @@ public class AvaliacaoService {
 
         Avaliacao novaAvaliacao = this.mapper.of(dto);
 
+        Usuario usuarioLogado = this.autenticacaoService.getUsuarioFromUsuarioDetails();
+
+        if (usuarioLogado.getId().equals(idUsuario)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "O usuário não pode se avaliar!");
+        }
+
         Perfil perfil = this.perfilRepository.encontrarPerfilPorIdUsuario(idUsuario).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Perfil não encontrado")
         );
