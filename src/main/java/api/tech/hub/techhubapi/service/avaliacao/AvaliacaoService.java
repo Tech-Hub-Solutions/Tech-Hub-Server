@@ -31,14 +31,6 @@ public class AvaliacaoService {
     public AvaliacaoDetalhadoDto avaliar(avaliacaoDto dto, Integer idUsuario) {
         Usuario usuarioLogado = this.autenticacaoService.getUsuarioFromUsuarioDetails();
 
-        if (idUsuario.equals(usuarioLogado.getId())) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "O usuário não pode se avalidar!");
-        }
-
-        Avaliacao novaAvaliacao = this.mapper.of(dto);
-
-        Usuario usuarioLogado = this.autenticacaoService.getUsuarioFromUsuarioDetails();
-
         if (usuarioLogado.getId().equals(idUsuario)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "O usuário não pode se avaliar!");
         }
@@ -46,6 +38,8 @@ public class AvaliacaoService {
         Perfil perfil = this.perfilRepository.encontrarPerfilPorIdUsuario(idUsuario).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Perfil não encontrado")
         );
+
+        Avaliacao novaAvaliacao = this.mapper.of(dto);
 
         novaAvaliacao.setPerfil(perfil);
 
