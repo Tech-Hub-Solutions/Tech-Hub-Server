@@ -42,6 +42,7 @@ public class PerfilService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado");
         }
 
+
         Usuario usuario = this.usuarioRepository.findById(idUsuario)
                 .orElseThrow(
                         () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado")
@@ -52,7 +53,9 @@ public class PerfilService {
                         () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Perfil não encontrado")
                 );
 
-        return this.perfilMapper.perfilGeralDtoOf(usuario,perfil);
+        Usuario usuarioLogado = this.autenticacaoService.getUsuarioFromUsuarioDetails();
+
+        return this.perfilMapper.perfilGeralDtoOf(usuarioLogado,perfil);
     }
 
     public PerfilDetalhadoDto atualizarPerfil(PerfilCadastroDto dto) {

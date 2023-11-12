@@ -24,8 +24,4 @@ public class AvaliacaoMapper {
     public AvaliacaoDetalhadoDto dtoOf(Avaliacao avaliacao) {
         return new AvaliacaoDetalhadoDto(avaliacao);
     }
-
-    public List<AvaliacaoDetalhadoDto> retornarListaAvaliacoesDto(List<Avaliacao> lista){
-        return lista.stream().map(AvaliacaoDetalhadoDto::new).toList();
-    }
 }

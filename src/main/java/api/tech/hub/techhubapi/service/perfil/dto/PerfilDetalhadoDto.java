@@ -1,11 +1,6 @@
 package api.tech.hub.techhubapi.service.perfil.dto;
 
-import api.tech.hub.techhubapi.entity.Arquivo;
-import api.tech.hub.techhubapi.entity.perfil.Perfil;
-import api.tech.hub.techhubapi.entity.perfil.flag.Flag;
-import api.tech.hub.techhubapi.service.avaliacao.dto.AvaliacaoDetalhadoDto;
 import api.tech.hub.techhubapi.service.flag.dto.FlagDto;
-import api.tech.hub.techhubapi.service.referencia.dto.ReferenciaDetalhadoDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,8 +15,6 @@ import java.util.List;
 public class PerfilDetalhadoDto {
 
     private Integer id;
-    private String urlFotoPerfil;
-    private String urlFotoWallpaper;
     private String sobreMim;
     private String experiencia;
     private String descricao;
@@ -30,10 +23,4 @@ public class PerfilDetalhadoDto {
     private String linkGithub;
     private String linkLinkedin;
     private List<FlagDto> flags;
-    private List<AvaliacaoDetalhadoDto> avaliacoes;
-    private List<ReferenciaDetalhadoDto> referencias;
-
-    public Integer getQtdRecomendacoes(){
-        return referencias.stream().mapToInt(x -> x.isRecomendado() ? 1:0).sum();
-    }
 }

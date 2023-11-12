@@ -24,7 +24,9 @@ public record PerfilGeralDetalhadoDto(
         String linkGithub,
         String linkLinkedin,
         List<FlagDto> flags,
-        List<AvaliacaoDetalhadoDto> avaliacoes,
-        List<ReferenciaDetalhadoDto> referencias
+        Boolean isFavorito,
+        long qtdFavoritos,
+        Boolean isRecomendado,
+        long qtdRecomendacoes
 ) {
 }
