@@ -41,15 +41,12 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UsuarioService {
     private final UsuarioRepository usuarioRepository;
-    private final PasswordEncoder passwordEncoder;
     private final GerenciadorTokenJwt gerenciadorTokenJwt;
     private final AuthenticationManager authenticationManager;
     private final AutenticacaoService autenticacaoService;
     private final UsuarioMapper usuarioMapper;
     private final PerfilRepository perfilRepository;
-    private final ReferenciaPerfilService referenciaPerfilService;
     private final FlagRepository flagRepository;
-    private final PerfilService perfilService;
 
     public UsuarioTokenDto autenticar(UsuarioLoginDto usuarioLoginDto) {
         final UsernamePasswordAuthenticationToken credentials = new UsernamePasswordAuthenticationToken(
@@ -91,7 +88,7 @@ public class UsuarioService {
 
         Usuario usuarioValidado = usuarioMapper.of(usuario, dto);
 
-        if (this.usuarioRepository.existsByEmail(usuarioValidado.getEmail())) {
+        if (this.usuarioRepository.existsByEmailAndIdNot(usuarioValidado.getEmail(), usuario.getId())) {
             throw new ResponseStatusException(
                     HttpStatus.CONFLICT, "Este email já esta em uso!"
             );

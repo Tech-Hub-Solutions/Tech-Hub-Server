@@ -21,7 +21,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer>, JpaS
 
     Optional<Usuario> findUsuarioByEmailAndNumeroCadastroPessoa(String email, String numeroCadastroPessoa);
 
-    Boolean existsByEmail(String email);
+    Boolean existsByEmailAndIdNot(String email, Integer usuarioId);
 
     List<Usuario> findByIdIn(List<Integer> ids);
 
