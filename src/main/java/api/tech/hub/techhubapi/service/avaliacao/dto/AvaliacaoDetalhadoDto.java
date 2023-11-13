@@ -9,6 +9,7 @@ import jakarta.persistence.ManyToOne;
 public record AvaliacaoDetalhadoDto(
         int id,
         String nomePerfil,
+        Integer idAvaliador,
         String avaliador,
         String urlFotoPerfil,
         String pais,
@@ -20,6 +21,7 @@ public record AvaliacaoDetalhadoDto(
         this(
                 avaliacao.getId(),
                 avaliacao.getPerfil().getUsuario().getNome(),
+                avaliacao.getAvaliador().getId(),
                 avaliacao.getAvaliador().getUsuario().getNome(),
                 ArquivoService.criarUrlFoto(avaliacao.getAvaliador(), TipoArquivo.PERFIL),
                 avaliacao.getAvaliador().getUsuario().getPais(),
