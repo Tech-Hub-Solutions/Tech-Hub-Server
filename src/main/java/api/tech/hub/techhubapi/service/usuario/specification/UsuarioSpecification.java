@@ -21,7 +21,7 @@ public final class UsuarioSpecification {
             }
 
             Expression<String> nomeExp = criteriaBuilder.lower(root.get("nome"));
-            String nomePattern = "%" + nome + "%";
+            String nomePattern = "%" + nome.toLowerCase() + "%";
 
             return criteriaBuilder.like(nomeExp, nomePattern);
         });

@@ -184,7 +184,7 @@ public class UsuarioService {
         return usuarios;
     }
 
-    public Page<UsuarioBuscaDto> listarPor(UsuarioFiltroDto usuarioFiltroDto, Pageable pageable, String sort) {
+    public Page<UsuarioBuscaDto> listarPor(UsuarioFiltroDto usuarioFiltroDto, Pageable pageable, String ordem) {
 
         List<Flag> flags = null;
         if (usuarioFiltroDto.tecnologiasIds() != null && usuarioFiltroDto.tecnologiasIds().isEmpty()) {
@@ -197,7 +197,7 @@ public class UsuarioService {
                         UsuarioSpecification.hasArea(usuarioFiltroDto.area()),
                         UsuarioSpecification.hasPrecoBetween(usuarioFiltroDto.precoMin(), usuarioFiltroDto.precoMax()),
                         UsuarioSpecification.hasFlags(flags),
-                        UsuarioSpecification.sort(sort)
+                        UsuarioSpecification.sort(ordem)
                 );
 
         return this.usuarioRepository.findAll(specification, pageable)
