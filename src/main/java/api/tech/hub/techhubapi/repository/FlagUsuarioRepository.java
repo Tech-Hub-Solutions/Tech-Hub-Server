@@ -20,4 +20,6 @@ public interface FlagUsuarioRepository extends JpaRepository<FlagUsuario,Integer
     @Transactional
     @Modifying
     void deleteFlagUsuarioByPerfil(Perfil perfil);
+
+    List<FlagUsuario> findByPerfilAndFlagIn(Perfil perfilValidado, List<Flag> flags);
 }

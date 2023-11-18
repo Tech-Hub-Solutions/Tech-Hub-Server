@@ -20,24 +20,21 @@ public class FlagUsuarioService {
     private final FlagUsuarioRepository flagUsuarioRepository;
     private final FlagRepository flagRepository;
 
-    public void salvarFlagUsuario(Perfil perfilValidado, List<Flag> list) {
+    public void salvarFlagUsuario(Perfil perfilValidado, List<Integer> flagsId) {
         this.flagUsuarioRepository.deleteFlagUsuarioByPerfil(perfilValidado);
 
-        if (!list.isEmpty()) {
+        if (flagsId != null && !flagsId.isEmpty()) {
 
             List<FlagUsuario> flagUsuarioList = new ArrayList<>();
 
-            for (Flag f : list) {
+            List<Flag> flags = this.flagRepository.findByIdIn(flagsId);
+
+
+            for (Flag flag : flags) {
                 FlagUsuario flagUsuario = new FlagUsuario();
                 flagUsuario.setPerfil(perfilValidado);
+                flagUsuario.setFlag(flag);
 
-                Flag flag = this.flagRepository.getReferenceById(f.getId());
-
-                if (flag != null) {
-                    flagUsuario.setFlag(flag);
-                } else {
-                    throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Flag não encontrada!");
-                }
                 flagUsuarioList.add(flagUsuario);
             }
 
