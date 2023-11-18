@@ -52,6 +52,19 @@ public class ArquivoTxtService {
     }
 
     public Resource exportarTxt() {
+        try {
+            File arquivo = new File("Flags.txt");
+
+            if (arquivo.delete()) {
+                System.out.println("Arquivo excluído com sucesso.");
+            } else {
+                throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Falha ao excluir o arquivo");
+            }
+        } catch (SecurityException e) {
+            System.err.println("Erro de segurança ao excluir o arquivo: " + e.getMessage());
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Sem autorização para excluir o arquivo");
+        }
+
         List<Flag> lista = this.flagRepository.findAll();
 
         int contaRegDadosGravados = 0;
