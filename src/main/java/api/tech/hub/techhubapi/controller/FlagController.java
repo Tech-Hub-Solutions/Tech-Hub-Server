@@ -66,6 +66,7 @@ public class FlagController {
     @PostMapping("/txt/agenda-adicionar")
     public ResponseEntity<FlagDto> agendarCadastroDeFlag(@RequestBody FlagRequestDto dto){
         Flag flag = FlagMapper.of(dto);
+
         this.arquivoTxtService.adicionarFlagNaAgenda(flag);
 
         return ResponseEntity.ok(FlagMapper.dtoOf(flag));
@@ -75,7 +76,7 @@ public class FlagController {
     public ResponseEntity<List<FlagDto>> executarAgendaDeFlags(){
         List<Flag> flags = this.arquivoTxtService.executarAgendaDeFlags();
 
-        if (!flags.isEmpty()) {
+        if (flags.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
 

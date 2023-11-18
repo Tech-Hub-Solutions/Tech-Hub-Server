@@ -27,8 +27,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ArquivoTxtService {
     private Path diretorioBase = Path.of(System.getProperty("user.dir"));
-    private PilhaObj<Integer> pilhaObj = new PilhaObj<>(10);
-    private FilaObj<Flag> filaObj = new FilaObj<>(10);
+    private final PilhaObj<Integer> pilhaObj = new PilhaObj<>(10);
+    private final FilaObj<Flag> filaObj = new FilaObj<>(10);
     private final FlagRepository flagRepository;
 
     public void gravaRegistro(String registro, String nomeArq) {
@@ -58,7 +58,11 @@ public class ArquivoTxtService {
             if (arquivo.delete()) {
                 System.out.println("Arquivo excluído com sucesso.");
             } else {
-                throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Falha ao excluir o arquivo");
+                try {
+                    new BufferedWriter(new FileWriter("Flags.txt", true));
+                } catch (IOException erro) {
+                    throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Erro ao criar o arquivo");
+                }
             }
         } catch (SecurityException e) {
             System.err.println("Erro de segurança ao excluir o arquivo: " + e.getMessage());
@@ -240,24 +244,23 @@ public class ArquivoTxtService {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Fila de execução esta cheia");
         }
         this.filaObj.insert(flag);
-        this.pilhaObj.push(flag.getId());
     }
 
     public List<Flag> executarAgendaDeFlags() {
-
         if (this.filaObj.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Não há itens na agenda de execução");
         }
+
         List<Flag> flagsExecutadas = new ArrayList<>();
 
         while (!filaObj.isEmpty()) {
             Flag flagAtual = this.filaObj.poll();
 
             if (!this.flagRepository.existsFlagByNomeIgnoreCase(flagAtual.getNome())) {
-                this.flagRepository.save(flagAtual);
+                Flag flagSalva = this.flagRepository.save(flagAtual);
+                flagsExecutadas.add(flagSalva);
+                this.pilhaObj.push(flagSalva.getId());
             }
-
-            flagsExecutadas.add(flagAtual);
         }
 
         return flagsExecutadas;
