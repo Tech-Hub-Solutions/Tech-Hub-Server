@@ -71,7 +71,7 @@ public class FlagController {
     }
 
 
-    @PostMapping("/txt/agenda-adicionar")
+    @PostMapping("/agenda-adicionar")
     public ResponseEntity<FlagDto> agendarCadastroDeFlag(@RequestBody FlagRequestDto dto){
         Flag flag = FlagMapper.of(dto);
 
@@ -80,7 +80,7 @@ public class FlagController {
         return ResponseEntity.ok(FlagMapper.dtoOf(flag));
     }
 
-    @PostMapping("/txt/agenda-executar")
+    @PostMapping("/agenda-executar")
     public ResponseEntity<List<FlagDto>> executarAgendaDeFlags(){
         List<Flag> flags = this.arquivoTxtService.executarAgendaDeFlags();
 
@@ -91,7 +91,21 @@ public class FlagController {
         return ResponseEntity.ok(flags.stream().map(FlagDto::new).toList());
     }
 
-    @DeleteMapping("/txt/agenda-desfazer-ultimo")
+    @DeleteMapping("/agenda-limpar")
+    public ResponseEntity<Void> limparAgendaDeFlags(){
+        this.arquivoTxtService.limparAgendaDeFlags();
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/limpar-refazer")
+    public ResponseEntity<Void> limparAgendaDeFlagsERefazer(){
+        this.arquivoTxtService.limparRefazer();
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/agenda-desfazer-ultimo")
     public ResponseEntity<Void> desfazerUltimoCadastro(){
         this.arquivoTxtService.desfazerUltimoCadastro();
 

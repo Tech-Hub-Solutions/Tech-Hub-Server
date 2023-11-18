@@ -222,24 +222,7 @@ public class ArquivoTxtService {
                     "Arquivo com problemas de leitura");
         }
 
-        // Aqui tb seria possível enviar toda a lista para o BD
-        // repository.saveAll(listaLida);
-
         this.flagRepository.saveAll(listaLida);
-
-//        try {
-//            File arquivo = new File("Flags.txt");
-//
-//            if (arquivo.delete()) {
-//                System.out.println("Arquivo excluído com sucesso.");
-//            } else {
-//                throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Falha ao excluir o arquivo");
-//            }
-//        } catch (SecurityException e) {
-//            System.err.println("Erro de segurança ao excluir o arquivo: " + e.getMessage());
-//            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Sem autorização para excluir o arquivo");
-//        }
-
     }
 
     public String getContentType(Resource resource) {
@@ -252,7 +235,7 @@ public class ArquivoTxtService {
 
     public void adicionarFlagNaAgenda(Flag flag) {
         if (this.filaObj.isFull()) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Fila de execução esta cheia");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Fila de execução esta cheia");
         }
 
         if (this.flagRepository.existsFlagByNomeIgnoreCase(flag.getNome())) {
@@ -264,7 +247,7 @@ public class ArquivoTxtService {
 
     public List<Flag> executarAgendaDeFlags() {
         if (this.filaObj.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Não há itens na agenda de execução");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Não há itens na agenda de execução");
         }
 
         List<Flag> flagsExecutadas = new ArrayList<>();
@@ -280,7 +263,7 @@ public class ArquivoTxtService {
 
     public void desfazerUltimoCadastro() {
         if (this.pilhaObj.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Não há itens para serem revertidos");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Não há itens para desfazer");
         }
 
         this.flagRepository.deleteById(this.pilhaObj.pop());
@@ -295,5 +278,17 @@ public class ArquivoTxtService {
         this.pilhaObj.push(flagSalva.getId());
 
         return flagSalva;
+    }
+
+    public void limparAgendaDeFlags() {
+        while (!this.filaObj.isEmpty()) {
+            this.filaObj.poll();
+        }
+    }
+
+    public void limparRefazer() {
+        while (!this.pilhaObj.isEmpty()) {
+            this.pilhaObj.pop();
+        }
     }
 }
