@@ -25,6 +25,13 @@ public class FlagController {
     private final FlagService flagService;
     private final ArquivoTxtService arquivoTxtService;
 
+    @PostMapping
+    public ResponseEntity<FlagDto> cadastrarFlag(@RequestBody FlagRequestDto dto){
+        Flag flag = FlagMapper.of(dto);
+
+        return ResponseEntity.ok(FlagMapper.dtoOf(this.arquivoTxtService.cadastrarFlag(flag)));
+    }
+
     @GetMapping
     public ResponseEntity<List<FlagDto>> listarTodasAsFlags(){
         List<Flag> flags = this.flagService.listarTodasAsFlags();
@@ -62,6 +69,7 @@ public class FlagController {
                 .header(HttpHeaders.CONTENT_LENGTH, String.valueOf(fileSize)) // Adding size to the headers
                 .body(resource);
     }
+
 
     @PostMapping("/txt/agenda-adicionar")
     public ResponseEntity<FlagDto> agendarCadastroDeFlag(@RequestBody FlagRequestDto dto){

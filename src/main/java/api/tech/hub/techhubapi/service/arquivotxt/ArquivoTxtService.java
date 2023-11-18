@@ -243,6 +243,11 @@ public class ArquivoTxtService {
         if (this.filaObj.isFull()) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Fila de execução esta cheia");
         }
+
+        if (this.flagRepository.existsFlagByNomeIgnoreCase(flag.getNome())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Flag já existe cadastrada!");
+        }
+
         this.filaObj.insert(flag);
     }
 
@@ -254,13 +259,9 @@ public class ArquivoTxtService {
         List<Flag> flagsExecutadas = new ArrayList<>();
 
         while (!filaObj.isEmpty()) {
-            Flag flagAtual = this.filaObj.poll();
-
-            if (!this.flagRepository.existsFlagByNomeIgnoreCase(flagAtual.getNome())) {
-                Flag flagSalva = this.flagRepository.save(flagAtual);
-                flagsExecutadas.add(flagSalva);
-                this.pilhaObj.push(flagSalva.getId());
-            }
+            Flag flagSalva = this.flagRepository.save(this.filaObj.poll());
+            flagsExecutadas.add(flagSalva);
+            this.pilhaObj.push(flagSalva.getId());
         }
 
         return flagsExecutadas;
@@ -272,5 +273,13 @@ public class ArquivoTxtService {
         }
 
         this.flagRepository.deleteById(this.pilhaObj.pop());
+    }
+
+    public Flag cadastrarFlag(Flag flag) {
+        if (this.flagRepository.existsFlagByNomeIgnoreCase(flag.getNome())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Essa flag já existe!");
+        }
+
+        return this.flagRepository.save(flag);
     }
 }
