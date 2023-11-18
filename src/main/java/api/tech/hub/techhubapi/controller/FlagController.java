@@ -2,8 +2,10 @@ package api.tech.hub.techhubapi.controller;
 
 import api.tech.hub.techhubapi.entity.perfil.flag.Flag;
 import api.tech.hub.techhubapi.service.arquivotxt.ArquivoTxtService;
+import api.tech.hub.techhubapi.service.flag.FlagMapper;
 import api.tech.hub.techhubapi.service.flag.FlagService;
 import api.tech.hub.techhubapi.service.flag.dto.FlagDto;
+import api.tech.hub.techhubapi.service.flag.dto.FlagRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -61,4 +63,29 @@ public class FlagController {
                 .body(resource);
     }
 
+    @PostMapping("/txt/agenda-adicionar")
+    public ResponseEntity<FlagDto> agendarCadastroDeFlag(@RequestBody FlagRequestDto dto){
+        Flag flag = FlagMapper.of(dto);
+        this.arquivoTxtService.adicionarFlagNaAgenda(flag);
+
+        return ResponseEntity.ok(FlagMapper.dtoOf(flag));
+    }
+
+    @PostMapping("/txt/agenda-executar")
+    public ResponseEntity<List<FlagDto>> executarAgendaDeFlags(){
+        List<Flag> flags = this.arquivoTxtService.executarAgendaDeFlags();
+
+        if (!flags.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok(flags.stream().map(FlagDto::new).toList());
+    }
+
+    @DeleteMapping("/txt/agenda-desfazer-ultimo")
+    public ResponseEntity<Void> desfazerUltimoCadastro(){
+        this.arquivoTxtService.desfazerUltimoCadastro();
+
+        return ResponseEntity.noContent().build();
+    }
 }

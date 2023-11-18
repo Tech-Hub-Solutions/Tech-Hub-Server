@@ -1,5 +1,7 @@
 package api.tech.hub.techhubapi.service.arquivotxt;
 
+import api.tech.hub.techhubapi.entity.FilaObj;
+import api.tech.hub.techhubapi.entity.PilhaObj;
 import api.tech.hub.techhubapi.entity.perfil.flag.Flag;
 import api.tech.hub.techhubapi.repository.FlagRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,15 +27,17 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ArquivoTxtService {
     private Path diretorioBase = Path.of(System.getProperty("user.dir"));
+    private PilhaObj<Integer> pilhaObj = new PilhaObj<>(10);
+    private FilaObj<Flag> filaObj = new FilaObj<>(10);
     private final FlagRepository flagRepository;
+
     public void gravaRegistro(String registro, String nomeArq) {
         BufferedWriter saida = null;
 
         // Bloco try-catch para abrir o arquivo
         try {
             saida = new BufferedWriter(new FileWriter(nomeArq, true));
-        }
-        catch (IOException erro) {
+        } catch (IOException erro) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Erro ao abrir o arquivo");
         }
 
@@ -41,8 +45,7 @@ public class ArquivoTxtService {
         try {
             saida.append(registro + "\n");
             saida.close();
-        }
-        catch (IOException erro) {
+        } catch (IOException erro) {
             erro.printStackTrace();
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Erro ao gravar o arquivo");
         }
@@ -88,7 +91,7 @@ public class ArquivoTxtService {
         }
     }
 
-    public void importarArquivoTxt(MultipartFile arquivo){
+    public void importarArquivoTxt(MultipartFile arquivo) {
         if (arquivo == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
@@ -119,10 +122,9 @@ public class ArquivoTxtService {
         // Bloco try-catch para abrir o arquivo
         try {
             entrada = new BufferedReader(new FileReader(nomeArq));
-        }
-        catch (IOException erro) {
+        } catch (IOException erro) {
             System.out.println("Erro ao abrir o arquivo");
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY,"Erro ao abrir a leitura");
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Erro ao abrir a leitura");
         }
 
         // Bloco try-catch para ler o arquivo
@@ -132,26 +134,23 @@ public class ArquivoTxtService {
 
             while (registro != null) {
 
-                tipoRegistro = registro.substring(0,2);
+                tipoRegistro = registro.substring(0, 2);
                 if (tipoRegistro.equals("00")) {
                     System.out.println("Inicio do registro do tipo Header");
                     System.out.println("Tipo de arquivo: " + registro.substring(2, 6));
                     System.out.println("Data e hora de gravação do arquivo: " + registro.substring(6, 25));
                     System.out.println("Versão do documento: " + registro.substring(25, 27));
-                }
-                else if (tipoRegistro.equals("01")) {
+                } else if (tipoRegistro.equals("01")) {
                     System.out.println("Inicio do registro do tipo trailer");
                     qtdRegDadosGravados = Integer.parseInt(registro.substring(2, 7));
                     if (qtdRegDadosGravados == contaRegDadosLidos) {
                         System.out.println("Quantidade de reg de dados gravados é compatível com a " +
                                 "quantidade de reg de dados lidos");
-                    }
-                    else {
+                    } else {
                         System.out.println("Quantidade de reg de dados gravados é incompatível com a " +
                                 "quantidade de reg de dados lidos");
                     }
-                }
-                else if (tipoRegistro.equals("02")) {
+                } else if (tipoRegistro.equals("02")) {
                     System.out.println("Inicio do registro de corpo");
                     nome = registro.substring(2, 52).trim();
                     area = registro.substring(52, 102).trim();
@@ -175,8 +174,7 @@ public class ArquivoTxtService {
                         listaLida.add(f);
                     }
 
-                }
-                else {
+                } else {
                     System.out.println("Registro inválido!");
                     throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY,
                             "Arquivo com problemas na composição");
@@ -212,7 +210,7 @@ public class ArquivoTxtService {
             }
         } catch (SecurityException e) {
             System.err.println("Erro de segurança ao excluir o arquivo: " + e.getMessage());
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"Sem autorização para excluir o arquivo");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Sem autorização para excluir o arquivo");
         }
     }
 
@@ -222,5 +220,41 @@ public class ArquivoTxtService {
         } catch (IOException e) {
             throw new ResponseStatusException(HttpStatusCode.valueOf(422), "Erro ao determinar o tipo de arquivo");
         }
+    }
+
+    public void adicionarFlagNaAgenda(Flag flag) {
+        if (this.filaObj.isFull()) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Fila de execução esta cheia");
+        }
+        this.filaObj.insert(flag);
+        this.pilhaObj.push(flag.getId());
+    }
+
+    public List<Flag> executarAgendaDeFlags() {
+
+        if (this.filaObj.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Não há itens na agenda de execução");
+        }
+        List<Flag> flagsExecutadas = new ArrayList<>();
+
+        while (!filaObj.isEmpty()) {
+            Flag flagAtual = this.filaObj.poll();
+
+            if (!this.flagRepository.existsFlagByNomeIgnoreCase(flagAtual.getNome())) {
+                this.flagRepository.save(flagAtual);
+            }
+
+            flagsExecutadas.add(flagAtual);
+        }
+
+        return flagsExecutadas;
+    }
+
+    public void desfazerUltimoCadastro() {
+        if (this.pilhaObj.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Não há itens para serem revertidos");
+        }
+
+        this.flagRepository.deleteById(this.pilhaObj.pop());
     }
 }
