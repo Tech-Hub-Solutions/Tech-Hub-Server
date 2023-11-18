@@ -14,7 +14,7 @@ VALUES
 ('Django', 'back-end', 'hard-skill'),
 ('Ruby on Rails', 'back-end', 'hard-skill'),
 ('ASP.NET', 'back-end', 'hard-skill'),
-('Python', 'back-end', 'hard-skill'),
+('PHP', 'back-end', 'hard-skill'),
 -- Mobile -13
 ('Kotlin (Android)', 'mobile', 'hard-skill'),
 ('Swift (iOS)', 'mobile', 'hard-skill'),
@@ -139,7 +139,6 @@ INSERT INTO Perfil (sobre_mim, experiencia, descricao, preco_medio, nome_github,
 -- Flags de cada perfil
 INSERT INTO Flag_Usuario (perfil_id, flag_id) VALUES
         -- hard skills
-       (1, 1),(1, 5),(1, 7),(1, 10),(1, 12),(1, 16),(1, 18),(1, 23),(1, 43),(1, 44),(1, 45),
        (2, 3),(2, 9),(2, 11),(2, 14),(2, 19),(2, 24),
        (3, 1),(3, 4),(3, 8),(3, 13),(3, 17),(3, 25),
        (4, 2),(4, 6),(4, 7),(4, 11),(4, 15),(4, 26),
