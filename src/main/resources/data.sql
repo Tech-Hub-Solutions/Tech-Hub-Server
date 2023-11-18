@@ -202,7 +202,8 @@ INSERT INTO Usuario (perfil_id,nome, email, senha, numero_cadastro_pessoa, pais,
 (17, 'Fernando', 'fernando@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '12345678901234', 'IN', 0, true),
 (18, 'Amanda', 'amanda@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '98765432109876', 'US', 0, true),
 (19, 'Rodrigo', 'rodrigo@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '55555555555555', 'US', 0, true),
-(20, 'Tatiana', 'tatiana@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '12345678901234', 'US', 0, true);
+(20, 'Tatiana', 'tatiana@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '12345678901234', 'US', 0, true),
+(null, 'Admin', 'admin@admin', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '12345678901234', 'BR', 2, true);
 
 -- Referencias
 INSERT INTO Referencia_Perfil (avaliador_id, avaliado_id, is_favorito,is_recomendado) VALUES

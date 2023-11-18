@@ -143,6 +143,10 @@ public class ArquivoService {
     }
 
     public static String criarUrlFoto(Perfil perfil, TipoArquivo tipoArquivo) {
+        if(perfil == null) {
+            return null;
+        }
+
         List<Arquivo> arquivos = perfil.getArquivos();
 
         String url = ServletUriComponentsBuilder

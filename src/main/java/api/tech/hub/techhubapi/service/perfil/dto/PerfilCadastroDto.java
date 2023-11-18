@@ -24,7 +24,7 @@ public record PerfilCadastroDto(
         String linkGithub,
         @Nullable
         String linkLinkedin,
-        List<Flag> flagList
+        List<Integer> flagsId
 ) {
 }
 

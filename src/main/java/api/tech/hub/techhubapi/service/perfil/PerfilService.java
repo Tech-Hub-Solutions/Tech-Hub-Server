@@ -67,7 +67,7 @@ public class PerfilService {
 
         this.perfilRepository.save(perfil);
 
-        flagUsuarioService.salvarFlagUsuario(perfil, dto.flagList());
+        flagUsuarioService.salvarFlagUsuario(perfil, dto.flagsId());
 
         return criarPerfilDetalhadoDto(usuarioLogado.getId());
     }
