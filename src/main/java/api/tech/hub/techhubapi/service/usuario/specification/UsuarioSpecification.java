@@ -70,16 +70,33 @@ public final class UsuarioSpecification {
                 return criteriaBuilder.conjunction(); // Always true
             }
 
-            Join<Usuario, Perfil> perfilJoin = root.join("perfil");
-            Join<Perfil, FlagUsuario> flagUsuarioJoin = perfilJoin.join("flagUsuarioList");
-            Join<FlagUsuario, Flag> flagJoin = flagUsuarioJoin.join("flag");
-
-            Predicate predicate = flagJoin.in(flags);
-
+            // Ensure distinct results
             query.distinct(true);
-            return predicate;
+
+            // Array to hold all the subqueries
+            Predicate[] predicates = new Predicate[flags.size()];
+            int index = 0;
+
+            for (Flag flag : flags) {
+                Subquery<FlagUsuario> flagSubquery = query.subquery(FlagUsuario.class);
+                Root<FlagUsuario> flagSubqueryRoot = flagSubquery.from(FlagUsuario.class);
+
+                // Constructing each subquery
+                flagSubquery.select(flagSubqueryRoot)
+                        .where(criteriaBuilder.and(
+                                criteriaBuilder.equal(flagSubqueryRoot.get("flag").get("id"), flag.getId()),
+                                criteriaBuilder.equal(flagSubqueryRoot.get("perfil"), root.get("perfil"))
+                        ));
+
+                // Checking for the existence of each subquery
+                predicates[index++] = criteriaBuilder.exists(flagSubquery);
+            }
+
+            // Combine all predicates with AND
+            return criteriaBuilder.and(predicates);
         };
     }
+
 
     public static Specification<Usuario> sort(String sort) {
         return (root, query, criteriaBuilder) -> {

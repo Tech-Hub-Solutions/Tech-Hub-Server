@@ -187,7 +187,7 @@ public class UsuarioService {
     public Page<UsuarioBuscaDto> listarPor(UsuarioFiltroDto usuarioFiltroDto, Pageable pageable, String ordem) {
 
         List<Flag> flags = null;
-        if (usuarioFiltroDto.tecnologiasIds() != null && usuarioFiltroDto.tecnologiasIds().isEmpty()) {
+        if (usuarioFiltroDto.tecnologiasIds() != null && !usuarioFiltroDto.tecnologiasIds().isEmpty()) {
             flags = this.flagRepository.findByIdIn(usuarioFiltroDto.tecnologiasIds());
         }
 
