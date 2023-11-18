@@ -25,6 +25,13 @@ public class FlagController {
     private final FlagService flagService;
     private final ArquivoTxtService arquivoTxtService;
 
+    @PostMapping
+    public ResponseEntity<FlagDto> cadastrarFlag(@RequestBody FlagRequestDto dto){
+        Flag flag = FlagMapper.of(dto);
+
+        return ResponseEntity.ok(FlagMapper.dtoOf(this.arquivoTxtService.cadastrarFlag(flag)));
+    }
+
     @GetMapping
     public ResponseEntity<List<FlagDto>> listarTodasAsFlags(){
         List<Flag> flags = this.flagService.listarTodasAsFlags();
@@ -37,7 +44,7 @@ public class FlagController {
     }
 
     @PostMapping("/txt/importar")
-    public ResponseEntity<Void> importarTxtFlags(@RequestParam MultipartFile arquivo){
+    public ResponseEntity<Void> importarTxtFlags(@RequestPart("file") MultipartFile arquivo){
         this.arquivoTxtService.importarArquivoTxt(arquivo);
         return ResponseEntity.ok().build();
     }
@@ -63,9 +70,11 @@ public class FlagController {
                 .body(resource);
     }
 
+
     @PostMapping("/txt/agenda-adicionar")
     public ResponseEntity<FlagDto> agendarCadastroDeFlag(@RequestBody FlagRequestDto dto){
         Flag flag = FlagMapper.of(dto);
+
         this.arquivoTxtService.adicionarFlagNaAgenda(flag);
 
         return ResponseEntity.ok(FlagMapper.dtoOf(flag));
@@ -75,7 +84,7 @@ public class FlagController {
     public ResponseEntity<List<FlagDto>> executarAgendaDeFlags(){
         List<Flag> flags = this.arquivoTxtService.executarAgendaDeFlags();
 
-        if (!flags.isEmpty()) {
+        if (flags.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
 

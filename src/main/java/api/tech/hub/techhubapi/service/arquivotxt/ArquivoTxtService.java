@@ -27,8 +27,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ArquivoTxtService {
     private Path diretorioBase = Path.of(System.getProperty("user.dir"));
-    private PilhaObj<Integer> pilhaObj = new PilhaObj<>(10);
-    private FilaObj<Flag> filaObj = new FilaObj<>(10);
+    private final PilhaObj<Integer> pilhaObj = new PilhaObj<>(50);
+    private final FilaObj<Flag> filaObj = new FilaObj<>(50);
     private final FlagRepository flagRepository;
 
     public void gravaRegistro(String registro, String nomeArq) {
@@ -58,7 +58,11 @@ public class ArquivoTxtService {
             if (arquivo.delete()) {
                 System.out.println("Arquivo excluído com sucesso.");
             } else {
-                throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Falha ao excluir o arquivo");
+                try {
+                    new BufferedWriter(new FileWriter("Flags.txt", true));
+                } catch (IOException erro) {
+                    throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Erro ao criar o arquivo");
+                }
             }
         } catch (SecurityException e) {
             System.err.println("Erro de segurança ao excluir o arquivo: " + e.getMessage());
@@ -112,10 +116,20 @@ public class ArquivoTxtService {
         File destino = new File("Flags.txt");
 
         try {
-            arquivo.transferTo(destino);
+            // Cria os arquivos se não existirem
+            if (!destino.exists()) {
+                destino.createNewFile();
+            }
         } catch (IOException e) {
             e.printStackTrace();
-            throw new ResponseStatusException(422, "Não foi possível salvar o arquivo", null);
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Não foi possível criar ou salvar o arquivo", null);
+        }
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(this.diretorioBase + "/" + "Flags.txt"))) {
+            writer.write(new String(arquivo.getBytes()));
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Não foi possível salvar o conteúdo em formato de texto", null);
         }
 
         salvarConteudoTxt();
@@ -213,18 +227,19 @@ public class ArquivoTxtService {
 
         this.flagRepository.saveAll(listaLida);
 
-        try {
-            File arquivo = new File("Flags.txt");
+//        try {
+//            File arquivo = new File("Flags.txt");
+//
+//            if (arquivo.delete()) {
+//                System.out.println("Arquivo excluído com sucesso.");
+//            } else {
+//                throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Falha ao excluir o arquivo");
+//            }
+//        } catch (SecurityException e) {
+//            System.err.println("Erro de segurança ao excluir o arquivo: " + e.getMessage());
+//            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Sem autorização para excluir o arquivo");
+//        }
 
-            if (arquivo.delete()) {
-                System.out.println("Arquivo excluído com sucesso.");
-            } else {
-                throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Falha ao excluir o arquivo");
-            }
-        } catch (SecurityException e) {
-            System.err.println("Erro de segurança ao excluir o arquivo: " + e.getMessage());
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Sem autorização para excluir o arquivo");
-        }
     }
 
     public String getContentType(Resource resource) {
@@ -239,25 +254,25 @@ public class ArquivoTxtService {
         if (this.filaObj.isFull()) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Fila de execução esta cheia");
         }
+
+        if (this.flagRepository.existsFlagByNomeIgnoreCase(flag.getNome())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Flag já existe cadastrada!");
+        }
+
         this.filaObj.insert(flag);
-        this.pilhaObj.push(flag.getId());
     }
 
     public List<Flag> executarAgendaDeFlags() {
-
         if (this.filaObj.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Não há itens na agenda de execução");
         }
+
         List<Flag> flagsExecutadas = new ArrayList<>();
 
         while (!filaObj.isEmpty()) {
-            Flag flagAtual = this.filaObj.poll();
-
-            if (!this.flagRepository.existsFlagByNomeIgnoreCase(flagAtual.getNome())) {
-                this.flagRepository.save(flagAtual);
-            }
-
-            flagsExecutadas.add(flagAtual);
+            Flag flagSalva = this.flagRepository.save(this.filaObj.poll());
+            flagsExecutadas.add(flagSalva);
+            this.pilhaObj.push(flagSalva.getId());
         }
 
         return flagsExecutadas;
@@ -269,5 +284,16 @@ public class ArquivoTxtService {
         }
 
         this.flagRepository.deleteById(this.pilhaObj.pop());
+    }
+
+    public Flag cadastrarFlag(Flag flag) {
+        if (this.flagRepository.existsFlagByNomeIgnoreCase(flag.getNome())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Essa flag já existe!");
+        }
+
+        Flag flagSalva = this.flagRepository.save(flag);
+        this.pilhaObj.push(flagSalva.getId());
+
+        return flagSalva;
     }
 }
