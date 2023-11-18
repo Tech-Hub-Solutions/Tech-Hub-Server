@@ -44,7 +44,7 @@ public class FlagController {
     }
 
     @PostMapping("/txt/importar")
-    public ResponseEntity<Void> importarTxtFlags(@RequestParam MultipartFile arquivo){
+    public ResponseEntity<Void> importarTxtFlags(@RequestPart("file") MultipartFile arquivo){
         this.arquivoTxtService.importarArquivoTxt(arquivo);
         return ResponseEntity.ok().build();
     }
