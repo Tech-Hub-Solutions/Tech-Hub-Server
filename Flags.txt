@@ -1,0 +1,202 @@
+00FLAG17-11-2023 23:33:1401
+02HTML/CSS                                          front-end                                         hard-skill                                        
+02JavaScript                                        front-end                                         hard-skill                                        
+02React                                             front-end                                         hard-skill                                        
+02Angular                                           front-end                                         hard-skill                                        
+02Vue.js                                            front-end                                         hard-skill                                        
+02SASS/SCSS                                         front-end                                         hard-skill                                        
+02Node.js                                           back-end                                          hard-skill                                        
+02Express.js                                        back-end                                          hard-skill                                        
+02Django                                            back-end                                          hard-skill                                        
+02Ruby on Rails                                     back-end                                          hard-skill                                        
+02ASP.NET                                           back-end                                          hard-skill                                        
+02Python                                            back-end                                          hard-skill                                        
+02Kotlin (Android)                                  mobile                                            hard-skill                                        
+02Swift (iOS)                                       mobile                                            hard-skill                                        
+02Xamarin                                           mobile                                            hard-skill                                        
+02Java (Android)                                    mobile                                            hard-skill                                        
+02Objective-C (iOS)                                 mobile                                            hard-skill                                        
+02Flutter                                           mobile                                            hard-skill                                        
+02MySQL                                             banco de dados                                    hard-skill                                        
+02PostgreSQL                                        banco de dados                                    hard-skill                                        
+02MongoDB                                           banco de dados                                    hard-skill                                        
+02SQLite                                            banco de dados                                    hard-skill                                        
+02Microsoft SQL Server                              banco de dados                                    hard-skill                                        
+02Oracle Database                                   banco de dados                                    hard-skill                                        
+02Jest                                              testes                                            hard-skill                                        
+02Selenium                                          testes                                            hard-skill                                        
+02JUnit                                             testes                                            hard-skill                                        
+02Pytest                                            testes                                            hard-skill                                        
+02Cypress                                           testes                                            hard-skill                                        
+02Mocha                                             testes                                            hard-skill                                        
+02Python                                            análise de dados                                  hard-skill                                        
+02R                                                 análise de dados                                  hard-skill                                        
+02SQL                                               análise de dados                                  hard-skill                                        
+02Jupyter Notebook                                  análise de dados                                  hard-skill                                        
+02Tableau                                           análise de dados                                  hard-skill                                        
+02Power BI                                          análise de dados                                  hard-skill                                        
+02Docker                                            devops                                            hard-skill                                        
+02Kubernetes                                        devops                                            hard-skill                                        
+02Jenkins                                           devops                                            hard-skill                                        
+02Git                                               devops                                            hard-skill                                        
+02Ansible                                           devops                                            hard-skill                                        
+02Terraform                                         devops                                            hard-skill                                        
+02TensorFlow                                        I.A.                                              hard-skill                                        
+02PyTorch                                           I.A.                                              hard-skill                                        
+02scikit-learn                                      I.A.                                              hard-skill                                        
+02Keras                                             I.A.                                              hard-skill                                        
+02Redes Neurais                                     I.A.                                              hard-skill                                        
+02Linguagem Natural                                 I.A.                                              hard-skill                                        
+02Visão Computacional                               I.A.                                              hard-skill                                        
+02Aprendizado de Máquina                            I.A.                                              hard-skill                                        
+02Deep Learning                                     I.A.                                              hard-skill                                        
+02Firewalls                                         Segurança                                         hard-skill                                        
+02Antivírus                                         Segurança                                         hard-skill                                        
+02Criptografia                                      Segurança                                         hard-skill                                        
+02Autenticação de Dois Fatores                      Segurança                                         hard-skill                                        
+02IDS/IPS                                           Segurança                                         hard-skill                                        
+02Web Application Firewall                          Segurança                                         hard-skill                                        
+02VPN                                               Segurança                                         hard-skill                                        
+02DLP                                               Segurança                                         hard-skill                                        
+02Adaptabilidade                                    Soft-skills                                       soft-skill                                        
+02Aprendizado Contínuo                              Soft-skills                                       soft-skill                                        
+02Altruísmo                                         Soft-skills                                       soft-skill                                        
+02Ambição                                           Soft-skills                                       soft-skill                                        
+02Atenção aos Detalhes                              Soft-skills                                       soft-skill                                        
+02Autodisciplina                                    Soft-skills                                       soft-skill                                        
+02Cidadania Corporativa                             Soft-skills                                       soft-skill                                        
+02Colaboração                                       Soft-skills                                       soft-skill                                        
+02Comunicação                                       Soft-skills                                       soft-skill                                        
+02Comprometimento                                   Soft-skills                                       soft-skill                                        
+02Confiança                                         Soft-skills                                       soft-skill                                        
+02Criatividade                                      Soft-skills                                       soft-skill                                        
+02Diversidade e Inclusão                            Soft-skills                                       soft-skill                                        
+02Ética de Trabalho                                 Soft-skills                                       soft-skill                                        
+02Empatia                                           Soft-skills                                       soft-skill                                        
+02Entusiasmo                                        Soft-skills                                       soft-skill                                        
+02Equilíbrio Trabalho-Vida                          Soft-skills                                       soft-skill                                        
+02Foco em Resultados                                Soft-skills                                       soft-skill                                        
+02Foco no Cliente                                   Soft-skills                                       soft-skill                                        
+02Gestão do Tempo                                   Soft-skills                                       soft-skill                                        
+02Habilidade Analítica                              Soft-skills                                       soft-skill                                        
+02Habilidade de Negociação                          Soft-skills                                       soft-skill                                        
+02Humildade                                         Soft-skills                                       soft-skill                                        
+02Inovação                                          Soft-skills                                       soft-skill                                        
+02Integridade                                       Soft-skills                                       soft-skill                                        
+02Justiça                                           Soft-skills                                       soft-skill                                        
+02Liderança                                         Soft-skills                                       soft-skill                                        
+02Liderança Servidora                               Soft-skills                                       soft-skill                                        
+02Mente Aberta                                      Soft-skills                                       soft-skill                                        
+02Motivação Intrínseca                              Soft-skills                                       soft-skill                                        
+02Otimismo                                          Soft-skills                                       soft-skill                                        
+02Organização                                       Soft-skills                                       soft-skill                                        
+02Paciência                                         Soft-skills                                       soft-skill                                        
+02Pensamento Crítico                                Soft-skills                                       soft-skill                                        
+02Resiliência                                       Soft-skills                                       soft-skill                                        
+02Resolução de Conflitos                            Soft-skills                                       soft-skill                                        
+02Resolução Proativa de Problemas                   Soft-skills                                       soft-skill                                        
+02Responsabilidade                                  Soft-skills                                       soft-skill                                        
+02Respeito                                          Soft-skills                                       soft-skill                                        
+02Sustentabilidade                                  Soft-skills                                       soft-skill                                        
+010000000099
+00FLAG17-11-2023 23:38:1901
+02HTML/CSS                                          front-end                                         hard-skill                                        
+02JavaScript                                        front-end                                         hard-skill                                        
+02React                                             front-end                                         hard-skill                                        
+02Angular                                           front-end                                         hard-skill                                        
+02Vue.js                                            front-end                                         hard-skill                                        
+02SASS/SCSS                                         front-end                                         hard-skill                                        
+02Node.js                                           back-end                                          hard-skill                                        
+02Express.js                                        back-end                                          hard-skill                                        
+02Django                                            back-end                                          hard-skill                                        
+02Ruby on Rails                                     back-end                                          hard-skill                                        
+02ASP.NET                                           back-end                                          hard-skill                                        
+02Python                                            back-end                                          hard-skill                                        
+02Kotlin (Android)                                  mobile                                            hard-skill                                        
+02Swift (iOS)                                       mobile                                            hard-skill                                        
+02Xamarin                                           mobile                                            hard-skill                                        
+02Java (Android)                                    mobile                                            hard-skill                                        
+02Objective-C (iOS)                                 mobile                                            hard-skill                                        
+02Flutter                                           mobile                                            hard-skill                                        
+02MySQL                                             banco de dados                                    hard-skill                                        
+02PostgreSQL                                        banco de dados                                    hard-skill                                        
+02MongoDB                                           banco de dados                                    hard-skill                                        
+02SQLite                                            banco de dados                                    hard-skill                                        
+02Microsoft SQL Server                              banco de dados                                    hard-skill                                        
+02Oracle Database                                   banco de dados                                    hard-skill                                        
+02Jest                                              testes                                            hard-skill                                        
+02Selenium                                          testes                                            hard-skill                                        
+02JUnit                                             testes                                            hard-skill                                        
+02Pytest                                            testes                                            hard-skill                                        
+02Cypress                                           testes                                            hard-skill                                        
+02Mocha                                             testes                                            hard-skill                                        
+02Python                                            análise de dados                                  hard-skill                                        
+02R                                                 análise de dados                                  hard-skill                                        
+02SQL                                               análise de dados                                  hard-skill                                        
+02Jupyter Notebook                                  análise de dados                                  hard-skill                                        
+02Tableau                                           análise de dados                                  hard-skill                                        
+02Power BI                                          análise de dados                                  hard-skill                                        
+02Docker                                            devops                                            hard-skill                                        
+02Kubernetes                                        devops                                            hard-skill                                        
+02Jenkins                                           devops                                            hard-skill                                        
+02Git                                               devops                                            hard-skill                                        
+02Ansible                                           devops                                            hard-skill                                        
+02Terraform                                         devops                                            hard-skill                                        
+02TensorFlow                                        I.A.                                              hard-skill                                        
+02PyTorch                                           I.A.                                              hard-skill                                        
+02scikit-learn                                      I.A.                                              hard-skill                                        
+02Keras                                             I.A.                                              hard-skill                                        
+02Redes Neurais                                     I.A.                                              hard-skill                                        
+02Linguagem Natural                                 I.A.                                              hard-skill                                        
+02Visão Computacional                               I.A.                                              hard-skill                                        
+02Aprendizado de Máquina                            I.A.                                              hard-skill                                        
+02Deep Learning                                     I.A.                                              hard-skill                                        
+02Firewalls                                         Segurança                                         hard-skill                                        
+02Antivírus                                         Segurança                                         hard-skill                                        
+02Criptografia                                      Segurança                                         hard-skill                                        
+02Autenticação de Dois Fatores                      Segurança                                         hard-skill                                        
+02IDS/IPS                                           Segurança                                         hard-skill                                        
+02Web Application Firewall                          Segurança                                         hard-skill                                        
+02VPN                                               Segurança                                         hard-skill                                        
+02DLP                                               Segurança                                         hard-skill                                        
+02Adaptabilidade                                    Soft-skills                                       soft-skill                                        
+02Aprendizado Contínuo                              Soft-skills                                       soft-skill                                        
+02Altruísmo                                         Soft-skills                                       soft-skill                                        
+02Ambição                                           Soft-skills                                       soft-skill                                        
+02Atenção aos Detalhes                              Soft-skills                                       soft-skill                                        
+02Autodisciplina                                    Soft-skills                                       soft-skill                                        
+02Cidadania Corporativa                             Soft-skills                                       soft-skill                                        
+02Colaboração                                       Soft-skills                                       soft-skill                                        
+02Comunicação                                       Soft-skills                                       soft-skill                                        
+02Comprometimento                                   Soft-skills                                       soft-skill                                        
+02Confiança                                         Soft-skills                                       soft-skill                                        
+02Criatividade                                      Soft-skills                                       soft-skill                                        
+02Diversidade e Inclusão                            Soft-skills                                       soft-skill                                        
+02Ética de Trabalho                                 Soft-skills                                       soft-skill                                        
+02Empatia                                           Soft-skills                                       soft-skill                                        
+02Entusiasmo                                        Soft-skills                                       soft-skill                                        
+02Equilíbrio Trabalho-Vida                          Soft-skills                                       soft-skill                                        
+02Foco em Resultados                                Soft-skills                                       soft-skill                                        
+02Foco no Cliente                                   Soft-skills                                       soft-skill                                        
+02Gestão do Tempo                                   Soft-skills                                       soft-skill                                        
+02Habilidade Analítica                              Soft-skills                                       soft-skill                                        
+02Habilidade de Negociação                          Soft-skills                                       soft-skill                                        
+02Humildade                                         Soft-skills                                       soft-skill                                        
+02Inovação                                          Soft-skills                                       soft-skill                                        
+02Integridade                                       Soft-skills                                       soft-skill                                        
+02Justiça                                           Soft-skills                                       soft-skill                                        
+02Liderança                                         Soft-skills                                       soft-skill                                        
+02Liderança Servidora                               Soft-skills                                       soft-skill                                        
+02Mente Aberta                                      Soft-skills                                       soft-skill                                        
+02Motivação Intrínseca                              Soft-skills                                       soft-skill                                        
+02Otimismo                                          Soft-skills                                       soft-skill                                        
+02Organização                                       Soft-skills                                       soft-skill                                        
+02Paciência                                         Soft-skills                                       soft-skill                                        
+02Pensamento Crítico                                Soft-skills                                       soft-skill                                        
+02Resiliência                                       Soft-skills                                       soft-skill                                        
+02Resolução de Conflitos                            Soft-skills                                       soft-skill                                        
+02Resolução Proativa de Problemas                   Soft-skills                                       soft-skill                                        
+02Responsabilidade                                  Soft-skills                                       soft-skill                                        
+02Respeito                                          Soft-skills                                       soft-skill                                        
+02Sustentabilidade                                  Soft-skills                                       soft-skill                                        
+010000000099
