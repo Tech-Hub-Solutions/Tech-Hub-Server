@@ -47,7 +47,7 @@ public class ArquivoController {
     @GetMapping("/file/{id}")
     public ResponseEntity<Resource> getFile(@PathVariable Integer id) {
         Arquivo arquivo = this.arquivoService.getArquivo(id);
-        Resource resource = this.arquivoService.getFile(arquivo.getNomeArquivoSalvo());
+        Resource resource = this.arquivoService.getFile(arquivo);
         String contentType = this.arquivoService.getContentType(resource);
         long fileSize;
         // Getting file size
@@ -94,7 +94,31 @@ public class ArquivoController {
     }
 
     @GetMapping("/usuario/{id}")
-    public ResponseEntity<byte[]> getUsuarioPerfil(
+    public ResponseEntity<Resource> arquivosUsuario(
+            @PathVariable Integer id,
+            @RequestParam TipoArquivo tipoArquivo
+    ) {
+        Arquivo arquivo = this.arquivoService.getArquivo(id, tipoArquivo);
+        Resource resource = this.arquivoService.getFile(arquivo);
+        String contentType = this.arquivoService.getContentType(resource);
+        long fileSize;
+        // Getting file size
+        try {
+            fileSize = resource.contentLength(); // It's important that resource should be able to provide this info
+        } catch (IOException e) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(contentType))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\""
+                        + arquivo.getNomeArquivoOriginal() + "\"")
+                .header(HttpHeaders.CONTENT_LENGTH, String.valueOf(fileSize)) // Adding size to the headers
+                .body(resource);
+    }
+
+    @GetMapping("/usuario/{id}/imagem")
+    public ResponseEntity<byte[]> imagensUsuario(
             @PathVariable Integer id,
             @RequestParam TipoArquivo tipoArquivo
     ) {

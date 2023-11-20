@@ -5,9 +5,7 @@ import api.tech.hub.techhubapi.entity.conversa.Mensagem;
 import api.tech.hub.techhubapi.entity.perfil.Perfil;
 import api.tech.hub.techhubapi.entity.usuario.Usuario;
 import api.tech.hub.techhubapi.repository.ArquivoRepository;
-import api.tech.hub.techhubapi.repository.PerfilRepository;
 import api.tech.hub.techhubapi.repository.UsuarioRepository;
-import api.tech.hub.techhubapi.service.conversa.dto.MensagemASerEnviadaDto;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -23,7 +21,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -89,7 +86,7 @@ public class ArquivoService {
     }
 
     public Arquivo getArquivo(Integer idUsuario, TipoArquivo tipoArquivo) {
-        Usuario usuario =  this.usuarioRepository.findById(idUsuario)
+        Usuario usuario = this.usuarioRepository.findById(idUsuario)
                 .orElseThrow(
                         () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado")
                 );
@@ -107,6 +104,7 @@ public class ArquivoService {
                         () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Arquivo não encontrado")
                 );
     }
+
     public byte[] getImage(String nomeArquivo, TipoArquivo tipoArquivo) {
         try {
             Path path = Path.of(this.diretorioBase + "/" + tipoArquivo.toString());
@@ -119,10 +117,10 @@ public class ArquivoService {
         }
     }
 
-    public Resource getFile(String fileName) {
+    public Resource getFile(Arquivo arquivo) {
         try {
-            Path path = Path.of(this.diretorioBase + "/DOCUMENTO");
-            Path filePath = Paths.get(path.toString(), fileName);
+            Path path = Path.of(this.diretorioBase + "/" + arquivo.getTipoArquivo().toString());
+            Path filePath = Paths.get(path.toString(), arquivo.getNomeArquivoSalvo());
             return new UrlResource(filePath.toUri());
         } catch (MalformedURLException e) {
             throw new ResponseStatusException(HttpStatusCode.valueOf(422), "Erro ao ler o arquivo");
@@ -142,25 +140,37 @@ public class ArquivoService {
         return this.arquivoRepository.save(arquivo);
     }
 
-    public static String criarUrlFoto(Perfil perfil, TipoArquivo tipoArquivo) {
-        if(perfil == null) {
+    public static String criarUrlArquivo(Perfil perfil, TipoArquivo tipoArquivo) {
+        if (perfil == null) {
             return null;
         }
 
         List<Arquivo> arquivos = perfil.getArquivos();
 
+        String pathUrl = tipoArquivo.equals(TipoArquivo.CURRICULO) ? "/arquivos/usuario/{id}" : "/arquivos/usuario/{id}/imagem";
+
+        boolean existeCurriculo = perfil.getArquivos().stream().anyMatch(
+                arquivo -> arquivo.getTipoArquivo().equals(TipoArquivo.CURRICULO)
+        );
+
         String url = ServletUriComponentsBuilder
                 .fromCurrentContextPath()
-                .path("/arquivos/usuario/{id}")
+                .path(pathUrl)
                 .queryParam("tipoArquivo", tipoArquivo)
                 .buildAndExpand(perfil.getUsuario().getId())
                 .toUri()
                 .toString();
 
+        if (tipoArquivo.equals(TipoArquivo.CURRICULO) && !existeCurriculo) {
+            url = "";
+        }
+
+        String finalUrl = url;
+
         return arquivos.stream()
                 .filter(arquivo -> arquivo.getTipoArquivo().equals(TipoArquivo.PERFIL))
                 .findFirst()
-                .map(arquivo -> url)
+                .map(arquivo -> finalUrl)
                 .orElse("");
     }
 

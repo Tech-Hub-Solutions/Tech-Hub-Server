@@ -1,10 +1,7 @@
 package api.tech.hub.techhubapi.service.perfil;
 
-import api.tech.hub.techhubapi.entity.perfil.Avaliacao;
 import api.tech.hub.techhubapi.entity.perfil.Perfil;
 import api.tech.hub.techhubapi.entity.perfil.ReferenciaPerfil;
-import api.tech.hub.techhubapi.entity.perfil.flag.Flag;
-import api.tech.hub.techhubapi.entity.perfil.flag.FlagUsuario;
 import api.tech.hub.techhubapi.entity.usuario.Usuario;
 import api.tech.hub.techhubapi.service.arquivo.ArquivoService;
 import api.tech.hub.techhubapi.service.arquivo.TipoArquivo;
@@ -62,8 +59,9 @@ public class PerfilMapper {
         return new PerfilGeralDetalhadoDto(
                 usuario.getId(),
                 perfil.getId(),
-                ArquivoService.criarUrlFoto(perfil, TipoArquivo.PERFIL),
-                ArquivoService.criarUrlFoto(perfil, TipoArquivo.WALLPAPER),
+                ArquivoService.criarUrlArquivo(perfil, TipoArquivo.PERFIL),
+                ArquivoService.criarUrlArquivo(perfil, TipoArquivo.WALLPAPER),
+                ArquivoService.criarUrlArquivo(perfil, TipoArquivo.CURRICULO),
                 usuario.getNome(),
                 usuario.getEmail(),
                 usuario.getPais(),

@@ -1,10 +1,8 @@
 package api.tech.hub.techhubapi.service.avaliacao.dto;
 
 import api.tech.hub.techhubapi.entity.perfil.Avaliacao;
-import api.tech.hub.techhubapi.entity.perfil.Perfil;
 import api.tech.hub.techhubapi.service.arquivo.ArquivoService;
 import api.tech.hub.techhubapi.service.arquivo.TipoArquivo;
-import jakarta.persistence.ManyToOne;
 
 public record AvaliacaoDetalhadoDto(
         int id,
@@ -23,7 +21,7 @@ public record AvaliacaoDetalhadoDto(
                 avaliacao.getPerfil().getUsuario().getNome(),
                 avaliacao.getAvaliador().getId(),
                 avaliacao.getAvaliador().getUsuario().getNome(),
-                ArquivoService.criarUrlFoto(avaliacao.getAvaliador(), TipoArquivo.PERFIL),
+                ArquivoService.criarUrlArquivo(avaliacao.getAvaliador(), TipoArquivo.PERFIL),
                 avaliacao.getAvaliador().getUsuario().getPais(),
                 avaliacao.getComentario(), avaliacao.getQtdEstrela());
     }

@@ -12,6 +12,7 @@ public record PerfilGeralDetalhadoDto(
         Integer idPerfil,
         String urlFotoPerfil,
         String urlFotoWallpaper,
+        String urlCurriculo,
         String nome,
         String email,
         String pais,

@@ -3,7 +3,6 @@ package api.tech.hub.techhubapi.service.usuario.dto;
 import api.tech.hub.techhubapi.entity.perfil.Avaliacao;
 import api.tech.hub.techhubapi.entity.perfil.Perfil;
 import api.tech.hub.techhubapi.entity.perfil.flag.FlagUsuario;
-import api.tech.hub.techhubapi.entity.usuario.Usuario;
 import api.tech.hub.techhubapi.service.arquivo.ArquivoService;
 import api.tech.hub.techhubapi.service.arquivo.TipoArquivo;
 import api.tech.hub.techhubapi.service.flag.dto.FlagDto;
@@ -27,7 +26,7 @@ public record UsuarioFavoritoDto(
                 perfil.getDescricao(),
                 calcularEstrelasMedia(perfil.getAvaliacaoList()),
                 perfil.getPrecoMedio(),
-                ArquivoService.criarUrlFoto(perfil, TipoArquivo.PERFIL),
+                ArquivoService.criarUrlArquivo(perfil, TipoArquivo.PERFIL),
                 criarListaFlags(perfil.getFlagUsuarioList())
         );
     }

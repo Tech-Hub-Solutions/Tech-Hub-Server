@@ -22,7 +22,7 @@ public record UsuarioTokenDto (
                 usuario.getNome(),
                 usuario.getFuncao(),
                 usuario.getPais(),
-                ArquivoService.criarUrlFoto(usuario.getPerfil(), TipoArquivo.PERFIL),
+                ArquivoService.criarUrlArquivo(usuario.getPerfil(), TipoArquivo.PERFIL),
                 token
         );
     }

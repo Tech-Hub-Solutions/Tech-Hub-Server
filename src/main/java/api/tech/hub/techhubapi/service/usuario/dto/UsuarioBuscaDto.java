@@ -22,7 +22,7 @@ public record UsuarioBuscaDto(
                 usuario.getPerfil().getDescricao(),
                 calcularEstrelasMedia(usuario.getPerfil().getAvaliacaoList()),
                 usuario.getPerfil().getPrecoMedio(),
-                ArquivoService.criarUrlFoto(usuario.getPerfil(), TipoArquivo.PERFIL)
+                ArquivoService.criarUrlArquivo(usuario.getPerfil(), TipoArquivo.PERFIL)
         );
     }
 

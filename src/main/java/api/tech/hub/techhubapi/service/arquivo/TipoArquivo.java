@@ -9,5 +9,5 @@ public enum TipoArquivo {
     WALLPAPER,
     IMAGEM,
     DOCUMENTO,
-    CSV
+    CURRICULO
 }

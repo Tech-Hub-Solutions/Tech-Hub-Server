@@ -91,7 +91,8 @@ public class PerfilService {
         Perfil perfil = this.perfilRepository.findById(usuarioLogado.getPerfil().getId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Perfil não encontrado"));
 
-        if (!tipoArquivo.equals(TipoArquivo.PERFIL) && !tipoArquivo.equals(TipoArquivo.WALLPAPER)) {
+        if (!tipoArquivo.equals(TipoArquivo.PERFIL) && !tipoArquivo.equals(TipoArquivo.WALLPAPER)
+                && !tipoArquivo.equals(TipoArquivo.CURRICULO)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tipo de arquivo inválido");
         }
 
