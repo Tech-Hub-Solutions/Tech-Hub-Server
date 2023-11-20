@@ -31,6 +31,7 @@ public class PerfilMapper {
         perfil.setDescricao(dto.descricao());
         perfil.setPrecoMedio(dto.precoMedio());
         perfil.setLinkGithub(dto.linkGithub());
+        perfil.setNomeGithub(dto.nomeGithub());
         perfil.setLinkLinkedin(dto.linkLinkedin());
 
         return perfil;
