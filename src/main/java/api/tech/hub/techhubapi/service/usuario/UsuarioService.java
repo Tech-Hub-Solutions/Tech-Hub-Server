@@ -193,6 +193,7 @@ public class UsuarioService {
 
         Specification<Usuario> specification = Specification
                 .allOf(
+                        UsuarioSpecification.hasFuncao(UsuarioFuncao.FREELANCER),
                         UsuarioSpecification.hasNome(usuarioFiltroDto.nome()),
                         UsuarioSpecification.hasArea(usuarioFiltroDto.area()),
                         UsuarioSpecification.hasPrecoBetween(usuarioFiltroDto.precoMin(), usuarioFiltroDto.precoMax()),

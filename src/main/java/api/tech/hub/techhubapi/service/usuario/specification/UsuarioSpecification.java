@@ -6,6 +6,7 @@ import api.tech.hub.techhubapi.entity.perfil.ReferenciaPerfil;
 import api.tech.hub.techhubapi.entity.perfil.flag.Flag;
 import api.tech.hub.techhubapi.entity.perfil.flag.FlagUsuario;
 import api.tech.hub.techhubapi.entity.usuario.Usuario;
+import api.tech.hub.techhubapi.entity.usuario.UsuarioFuncao;
 import jakarta.persistence.criteria.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,17 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
 public final class UsuarioSpecification {
+
+    public static Specification<Usuario> hasFuncao(UsuarioFuncao usuarioFuncao) {
+        return ((root, query, criteriaBuilder) -> {
+            if (usuarioFuncao == null) {
+                return criteriaBuilder.conjunction();
+            }
+
+            return criteriaBuilder.equal(root.get("funcao"), usuarioFuncao);
+        });
+    }
+
     public static Specification<Usuario> hasNome(String nome) {
         return ((root, query, criteriaBuilder) -> {
             if (nome == null || nome.isBlank()) {
@@ -170,4 +182,5 @@ public final class UsuarioSpecification {
 
         });
     }
+
 }
