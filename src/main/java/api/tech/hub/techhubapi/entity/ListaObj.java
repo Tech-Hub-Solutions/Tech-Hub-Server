@@ -50,6 +50,10 @@ public class ListaObj<T> {
         return true;
     }
 
+    public boolean isEmpty(){
+        return this.getTamanho() == 0;
+    }
+
 
     public int getTamanho() {
         return nroElem;
