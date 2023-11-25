@@ -114,9 +114,9 @@ VALUES
 ('Sustentabilidade', 'Soft-skills', 'soft-skill');
 
 -- Lista de perfis
-INSERT INTO Perfil (sobre_mim, experiencia, descricao, preco_medio, nome_github, link_github, link_linkedin) VALUES
-('Sou um Cientista de Dados', 'Com mais de 5 anos de experiência em análise de dados', 'Interessado em projetos que envolvem análise de dados e aprendizado de máquina.', 450.0, 'meugithubusuario', 'https://github.com/meugithubusuario', 'https://www.linkedin.com/in/meulinkedinusuario'),
-('Desenvolvedor Front-End', 'Criando experiências de usuário incríveis', 'Dedicado a projetar e implementar interfaces de usuário atraentes e funcionais. Especializado em HTML, CSS, JavaScript e frameworks front-end.', 600.0, 'frontenddev123', 'https://github.com/frontenddev123', 'https://www.linkedin.com/in/frontenddev123'),
+INSERT INTO Perfil (descricao, experiencia, sobre_mim, preco_medio, nome_github, link_github, link_linkedin) VALUES
+('Empresa especializada em inovação, oferecendo soluções de análise de dados e aprendizado de máquina.', 'Com mais de 5 anos de experiência no desenvolvimento de soluções avançadas em análise de dados e aprendizado de máquina','Estamos em busca de profissionais apaixonados por tecnologia e inovação', null, 'nossogithubempresa', 'https://github.com/nossogithubempresa', 'https://www.linkedin.com/company/nossolinkedinempresa'),
+('Desenvolvedor Front-End', 'Trabalhei em mais de 20 projetos de front-end. Sou um profissional sênior.', 'Dedicado a projetar e implementar interfaces de usuário atraentes e funcionais. Especializado em HTML, CSS, JavaScript e frameworks front-end.', 600.0, 'frontenddev123', 'https://github.com/frontenddev123', 'https://www.linkedin.com/in/frontenddev123'),
 ('Cientista de Dados', '5+ anos em análise de dados', 'Apaixonado por dados e análises. Experiente em Python, SQL e ferramentas de visualização de dados.', 600.0, 'cientistadedados1', 'https://github.com/cientistadedados1', 'https://www.linkedin.com/in/cientistadedados1'),
 ('Desenvolvedor Full Stack', '8+ anos em desenvolvimento web', 'Especialista em JavaScript, React, Node.js e muito mais. Construir aplicações web é minha paixão.', 700.0, 'fullstackdev', 'https://github.com/fullstackdev', 'https://www.linkedin.com/in/fullstackdev'),
 ('Designer UI/UX', 'Designer criativo com foco na experiência do usuário', 'Crio designs bonitos e amigáveis ao usuário. Proficiente em Figma e Adobe XD.', 500.0, 'uxdesigner123', 'https://github.com/uxdesigner123', 'https://www.linkedin.com/in/uxdesigner123'),
@@ -182,7 +182,7 @@ INSERT INTO Flag_Usuario (perfil_id, flag_id) VALUES
 
 -- Lista de usuários
 INSERT INTO Usuario (perfil_id,nome, email, senha, numero_cadastro_pessoa, pais, funcao, is_ativo) VALUES
-(1,'Murilo', 'murilo@hotmail.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '26828654000100', 'BR', 1, true),
+(1,'DataInnovate Solutions', 'datainnovate@hotmail.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '26828654000100', 'BR', 1, true),
 (2,'Leonardo', 'leo@hotmail.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '89138182000175', 'BR', 0, true),
 (3,'Ana', 'ana@gmail.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '12345678901234', 'FR', 0, true),
 (4,'Lucas', 'lucas@yahoo.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '98765432109876', 'FR', 0, true),
@@ -218,37 +218,32 @@ INSERT INTO Referencia_Perfil (avaliador_id, avaliado_id, is_favorito,is_recomen
 
 -- Avaliacoes
 INSERT INTO Avaliacao (perfil_id, avaliador_id, comentario, qtd_estrela) VALUES
-(1, 2, 'Esse desenvolvedor é muito bom, me ajudou muito!', 5),
-(1, 3,'Adorei o trabalho desse designer, super criativo!', 4),
-(1, 5,'O serviço desse restaurante é excelente, recomendo.', 5),
-(1, 6,'O atendimento na loja foi péssimo, nunca mais volto.', 1),
-(1, 5,'O professor é muito dedicado, a aula foi ótima.', 5),
-(1, 4,'A entrega foi atrasada, não fiquei satisfeito.', 2),
-(1, 5,'A qualidade do produto é surpreendente, 5 estrelas!', 5),
-(1, 3,'O filme foi incrível, recomendo a todos!', 4),
-(1, 4,'O concerto da banda foi fenomenal, amei!', 5),
-(1, 2, 'O livro é entediante, não consegui terminar de ler.', 2),
-(1, 3, 'O app é prático e fácil de usar, nota 5!', 5),
-(1, 4, 'O show foi um desastre, péssima experiência.', 1),
-(1, 6, 'O artista é talentoso, adorei a exposição.', 4),
-(1, 5, 'A comida estava deliciosa, voltarei em breve.', 5),
-(1, 4, 'O serviço de entrega foi rápido e confiável, 5 estrelas!', 5),
-(1, 3, 'O suporte ao cliente foi péssimo, demoraram para resolver o problema.', 1),
-(1, 5,'A qualidade do produto é surpreendente, 5 estrelas!', 5),
-(1, 2,'O filme foi incrível, recomendo a todos!', 4),
-(1, 3,'O concerto da banda foi fenomenal, amei!', 5),
-(1, 4, 'O livro é entediante, não consegui terminar de ler.', 2),
-(1, 5, 'O app é prático e fácil de usar, nota 5!', 5),
-(1, 2, 'O show foi um desastre, péssima experiência.', 1),
-(1, 3, 'O artista é talentoso, adorei a exposição.', 4),
-(1, 2, 'A comida estava deliciosa, voltarei em breve.', 5),
-(1, 4, 'O serviço de entrega foi rápido e confiável, 5 estrelas!', 5),
-(1, 7, 'O suporte ao cliente foi péssimo, demoraram para resolver o problema.', 1);
+(1, 2, 'Trabalhar com essa empresa foi incrível, o projeto fluiu muito bem!', 5),
+(1, 3, 'A empresa apresentou ideias inovadoras, o que tornou o trabalho mais interessante.', 4),
+(1, 5, 'A parceria com essa empresa foi excelente, recomendo para outros freelancers.', 5),
+(1, 6, 'A comunicação e o entendimento durante o projeto foram difíceis, não recomendo.', 1),
+(1, 5, 'Colaborar com essa empresa foi ótimo, são muito dedicados aos objetivos.', 5),
+(1, 4, 'Infelizmente, houve atraso no pagamento, o que impactou minha satisfação.', 2),
+(1, 5, 'A qualidade dos projetos entregues por essa empresa é surpreendente, 5 estrelas!', 5),
+(1, 3, 'Tive uma ótima experiência trabalhando com essa empresa, recomendo a todos os freelancers!', 4),
+(1, 4, 'Participar do projeto liderado por essa empresa foi fenomenal, amei a experiência!', 5),
+(1, 2, 'A empresa não forneceu as informações necessárias a tempo, tornando o trabalho entediante.', 2),
+(1, 3, 'O sistema de trabalho dessa empresa é prático e fácil de entender, nota 5!', 5),
+(1, 4, 'Infelizmente, o projeto em que participei foi um desastre, péssima experiência.', 1),
+(1, 6, 'A empresa valoriza e destaca o talento dos freelancers, adorei colaborar com eles.', 4),
+(1, 5, 'A experiência de trabalhar com essa empresa foi incrível, estou ansioso para futuros projetos.', 5),
+(1, 4, 'O processo de entrega da empresa foi rápido e confiável, merece 5 estrelas!', 5),
+(1, 3, 'O suporte ao freelancer foi péssimo, demoraram para resolver as questões.', 1),
+(1, 5, 'A qualidade dos projetos entregues por essa empresa é surpreendente, 5 estrelas!', 5),
+(1, 2, 'Tive uma ótima experiência trabalhando com essa empresa, recomendo a todos os freelancers!', 4),
+(1, 3, 'Participar do projeto liderado por essa empresa foi fenomenal, amei a experiência!', 5),
+(1, 4, 'O processo de entrega da empresa foi rápido e confiável, merece 5 estrelas!', 5),
+(1, 7, 'O suporte ao freelancer foi péssimo, demoraram para resolver as questões.', 1);
 
 
 INSERT INTO Arquivo (data_upload, perfil_id, tipo_arquivo, nome_arquivo_original, nome_arquivo_salvo) VALUES
 -- Perfil
-('2023-11-03',1, 0, '1-murilo.jpg','2e8470ce-854e-40fe-b829-e52112e5176b_1-murilo.jpg'),
+('2023-11-03',1, 0, '1-datainnovate.jpg','9f819b22-4994-4817-8acc-70c771873876_1-datainnovate.png'),
 ('2023-11-03',2, 0, '2-leo.jpg','0ca615d2-af0b-4777-ae4b-c7fd1f4cde53_2-leo.jpg'),
 ('2023-11-03',3, 0, '3-ana.jpg','e9f2dca3-4b12-40f0-99cd-0bb70362b7b6_3-ana.jpg'),
 ('2023-11-03',4, 0, '4-lucas.jpg','e7b65a8b-a87e-42e1-9e80-6001b2b35f41_4-lucas.jpg'),
@@ -266,7 +261,7 @@ INSERT INTO Arquivo (data_upload, perfil_id, tipo_arquivo, nome_arquivo_original
 ('2023-11-03',16, 0, '16-patricia.jpg','530af636-d576-45a0-bdad-35c9fa5aa472_16-patricia.jpg'),
 ('2023-11-03',17, 0, '17-fernando.jpg','153b45cf-c629-49db-8395-f593b145866e_17-fernando.jpg'),
 -- Wallpaper
-('2023-11-03',1, 1, '1-b-murilo.jpg','cab545fc-85d1-41e2-92d8-74f16119e5c4_1-b-murilo.jpg'),
+('2023-11-03',1, 1, '1-b-murilo.jpg','43f1aa06-9add-4f66-b932-552c4934bdda_1-b-datainnovate.jpg'),
 ('2023-11-03',2, 1, '2-b-leo.jpg','bdd49348-c0e0-48f9-947f-a8fc653a367b_2-b-leo.jpg'),
 ('2023-11-03',3, 1, '3-b-ana.jpg','e01d642b-5c0a-4056-ae5b-69bffc197820_3-b-ana.jpg'),
 ('2023-11-03',4, 1, '4-b-lucas.jpg','beb0d4d6-43d3-4a19-aa9f-0478af9db77d_4-b-lucas.jpg'),
