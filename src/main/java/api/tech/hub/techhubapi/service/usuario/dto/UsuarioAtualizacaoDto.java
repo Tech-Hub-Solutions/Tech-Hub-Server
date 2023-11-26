@@ -1,5 +1,7 @@
 package api.tech.hub.techhubapi.service.usuario.dto;
 
+import api.tech.hub.techhubapi.entity.usuario.UsuarioFuncao;
+import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import org.hibernate.validator.constraints.br.CNPJ;
@@ -12,10 +14,10 @@ public record UsuarioAtualizacaoDto(
         @Email
         String email,
 
-        @NotBlank
+        @Nullable
         String pais,
 
         @NotBlank
-        String funcao
+        String senha
 ) {
 }

@@ -1,5 +1,6 @@
 package api.tech.hub.techhubapi.entity.perfil;
 
+import api.tech.hub.techhubapi.entity.Arquivo;
 import api.tech.hub.techhubapi.entity.perfil.flag.FlagUsuario;
 import api.tech.hub.techhubapi.entity.usuario.Usuario;
 import jakarta.persistence.*;
@@ -20,20 +21,23 @@ public class Perfil {
     private String sobreMim;
     private String experiencia;
     private String descricao;
-    private String pathPerfilImage;
-    private String pathWallpaperImage;
     private Double precoMedio;
+    private String nomeGithub;
     private String linkGithub;
     private String linkLinkedin;
 
-    @OneToOne
+    @OneToOne(mappedBy = "perfil")
     private Usuario usuario;
-    @OneToMany
+
+    @OneToMany(mappedBy = "perfil")
     private List<FlagUsuario> flagUsuarioList;
-    @OneToMany
+
+    @OneToMany(mappedBy = "perfil")
     private List<Avaliacao> avaliacaoList;
-    @OneToMany
-    private List<Projeto> projetoList;
-    @OneToMany
+
+    @OneToMany(mappedBy = "avaliado")
     private List<ReferenciaPerfil> referenciaPerfilList;
+
+    @OneToMany(mappedBy = "perfil")
+    private List<Arquivo> arquivos;
 }

@@ -18,6 +18,6 @@ public class Flag {
     private String area;
     private String categoria;
 
-    @OneToMany
+    @OneToMany(mappedBy = "flag", fetch = FetchType.LAZY)
     private List<FlagUsuario> flagUsuarioList;
 }

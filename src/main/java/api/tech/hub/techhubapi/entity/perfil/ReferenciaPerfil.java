@@ -13,6 +13,7 @@ public class ReferenciaPerfil {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     @ManyToOne
     private Perfil avaliador;
     @ManyToOne

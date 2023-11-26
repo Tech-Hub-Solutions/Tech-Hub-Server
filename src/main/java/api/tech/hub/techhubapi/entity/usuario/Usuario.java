@@ -16,6 +16,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,7 +30,7 @@ public class Usuario {
     private String senha;
     private String numeroCadastroPessoa;
     private String pais;
-    private String funcao;
+    private UsuarioFuncao funcao;
     private boolean isAtivo;
 
     @OneToMany

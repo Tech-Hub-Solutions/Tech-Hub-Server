@@ -1,5 +1,6 @@
 package api.tech.hub.techhubapi.service.conversa;
 
+import api.tech.hub.techhubapi.entity.Arquivo;
 import api.tech.hub.techhubapi.entity.conversa.Conversa;
 import api.tech.hub.techhubapi.entity.conversa.Mensagem;
 import api.tech.hub.techhubapi.entity.conversa.Sala;
@@ -8,23 +9,22 @@ import api.tech.hub.techhubapi.repository.ConversaRepository;
 import api.tech.hub.techhubapi.repository.MensagemRepository;
 import api.tech.hub.techhubapi.repository.SalaRepository;
 import api.tech.hub.techhubapi.repository.UsuarioRepository;
+import api.tech.hub.techhubapi.service.arquivo.ArquivoService;
+import api.tech.hub.techhubapi.service.arquivo.TipoArquivo;
 import api.tech.hub.techhubapi.service.conversa.dto.ConversaDto;
 import api.tech.hub.techhubapi.service.conversa.dto.MensagemASerEnviadaDto;
-import api.tech.hub.techhubapi.service.conversa.dto.MensagemRecebidaDto;
 import api.tech.hub.techhubapi.service.conversa.dto.RoomCodeDto;
 import api.tech.hub.techhubapi.service.usuario.autenticacao.AutenticacaoService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -36,6 +36,7 @@ public class ConversaService {
     private final UsuarioRepository usuarioRepository;
     private final MensagemRepository mensagemRepository;
     private final SalaRepository salaRepository;
+    private final ArquivoService arquivoService;
 
     public RoomCodeDto iniciarConversa(Integer idUsuario) {
         Usuario usuarioAutenticado = autenticacaoService.getUsuarioFromUsuarioDetails();
@@ -83,7 +84,7 @@ public class ConversaService {
 
     private Sala criarNovaSala(Usuario usuarioAutenticado, Usuario usuarioASerIniciado) {
         Sala newSala = new Sala();
-        newSala.setRoomCode(gerarRoomCode());
+        newSala.setRoomCode(UUID.randomUUID().toString());
         this.salaRepository.save(newSala);
 
         createConversa(usuarioAutenticado, newSala);
@@ -97,30 +98,50 @@ public class ConversaService {
         this.conversaRepository.save(conversa);
     }
 
-    public void enviarMensagem(String roomCode, MensagemRecebidaDto mensagemDto) {
+    public void enviarMensagem(String roomCode, String mensagem, MultipartFile arquivo, TipoArquivo tipoArquivo) {
         Usuario usuario = autenticacaoService.getUsuarioFromUsuarioDetails();
         Sala sala = this.salaRepository.findByRoomCode(roomCode)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatusCode.valueOf(404), "Sala não encontrada"));
         Conversa conversaUsuarioAEnviar = this.conversaRepository.findBySala(sala)
                 .stream()
-                .filter(c->c.getUsuario()!=usuario)
+                .filter(c -> c.getUsuario() != usuario)
                 .findFirst()
                 .orElseThrow(() -> new ResponseStatusException(HttpStatusCode.valueOf(404), "usuário não encontrada"));
 
 
         verificarUsuarioNaSala(usuario, sala);
 
-        LocalDateTime agora = LocalDateTime.now();
+        Mensagem newMensagem = salvarMensagem(usuario, sala, mensagem, arquivo, tipoArquivo);
 
-        Mensagem mensagem = new Mensagem(null, usuario, sala, mensagemDto.texto(), agora);
-        this.mensagemRepository.save(mensagem);
+        MensagemASerEnviadaDto mensagemASerEnviadaDto = new MensagemASerEnviadaDto(newMensagem);
 
-        MensagemASerEnviadaDto mensagemASerEnviadaDto = new MensagemASerEnviadaDto(mensagem);
-
-        socketService.enviarMensagem(roomCode,mensagemASerEnviadaDto);
+        socketService.enviarMensagem(roomCode, mensagemASerEnviadaDto);
 
         socketService.recarregarConversas(usuario.getId());
         socketService.recarregarConversas(conversaUsuarioAEnviar.getUsuario().getId());
+    }
+
+    private Mensagem salvarMensagem(Usuario usuario, Sala sala, String mensagem, MultipartFile arquivo,
+                                    TipoArquivo tipoArquivo) {
+        Mensagem newMensagem = new Mensagem();
+
+        newMensagem.setDtMensagem(LocalDateTime.now());
+        newMensagem.setUsuario(usuario);
+        newMensagem.setSala(sala);
+        newMensagem.setTexto(mensagem);
+
+        newMensagem = this.mensagemRepository.save(newMensagem);
+
+        if (arquivo != null) {
+            if (tipoArquivo == null) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            }
+            Arquivo arquivoSalvado = this.arquivoService.salvarArquivoLocal(arquivo, tipoArquivo);
+            arquivoSalvado.setMensagem(newMensagem);
+            newMensagem.setArquivos(List.of(this.arquivoService.salvarArquivo(arquivoSalvado)));
+        }
+
+        return newMensagem;
     }
 
     public List<MensagemASerEnviadaDto> listarMensagens(String roomCode) {
@@ -155,10 +176,6 @@ public class ConversaService {
         }
     }
 
-    private String gerarRoomCode() {
-        return UUID.randomUUID().toString();
-    }
-
     public List<ConversaDto> listarConversas() {
         Usuario usuarioAutenticado = autenticacaoService.getUsuarioFromUsuarioDetails();
 
@@ -178,10 +195,35 @@ public class ConversaService {
                             .orElseGet(() -> new ConversaDto(conversa));
 
                 })
+                .sorted(Comparator.comparing(conversaDto -> {
+                    LocalDateTime dtHora = conversaDto.getMensagem() != null ?
+                            conversaDto.getMensagem().dtHora() :
+                            LocalDateTime.MIN;
+                    return dtHora;
+                }, Comparator.reverseOrder()))
                 .toList();
 
-
-
         return conversas;
+    }
+
+    public List<Mensagem> listarMensagensBanco(String room) {
+        Sala sala = this.salaRepository.findByRoomCode(room)
+                .orElseThrow(
+                        () -> new ResponseStatusException(HttpStatus.BAD_REQUEST)
+                );
+        return sala.getMensagemList();
+    }
+
+    public List<Usuario> listarUsuarios(String room) {
+        List<Conversa> conversa = this.conversaRepository.findBySalaRoomCode(room);
+
+        if(conversa.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+
+        return conversa.stream()
+                .map(Conversa::getUsuario)
+                .toList();
+
     }
 }

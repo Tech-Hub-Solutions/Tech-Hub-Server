@@ -1,9 +1,8 @@
 package api.tech.hub.techhubapi.service.usuario;
 
 import api.tech.hub.techhubapi.entity.usuario.Usuario;
-import api.tech.hub.techhubapi.service.usuario.dto.UsuarioAtualizacaoDto;
-import api.tech.hub.techhubapi.service.usuario.dto.UsuarioTokenDto;
-import api.tech.hub.techhubapi.service.usuario.dto.UsuarioCriacaoDto;
+import api.tech.hub.techhubapi.service.perfil.dto.PerfilDetalhadoDto;
+import api.tech.hub.techhubapi.service.usuario.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -13,6 +12,10 @@ public class UsuarioMapper {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    public UsuarioDetalhadoDto dtoOf (Usuario usuario) {
+        return new UsuarioDetalhadoDto(usuario);
+    }
 
     public Usuario of(UsuarioCriacaoDto dto) {
         Usuario usuario = new Usuario();
@@ -33,7 +36,7 @@ public class UsuarioMapper {
         usuario.setNome(dto.nome());
         usuario.setEmail(dto.email());
         usuario.setPais(dto.pais());
-        usuario.setFuncao(dto.funcao());
+        usuario.setSenha(passwordEncoder.encode(dto.senha()));
 
         return usuario;
     }
@@ -43,5 +46,8 @@ public class UsuarioMapper {
     }
 
 
-
+    public UsuarioGeralDto usuarioGeralDtoOf(Usuario usuario, PerfilDetalhadoDto perfil) {
+        UsuarioDetalhadoDto dto = this.dtoOf(usuario);
+        return new UsuarioGeralDto(dto,perfil);
+    }
 }
