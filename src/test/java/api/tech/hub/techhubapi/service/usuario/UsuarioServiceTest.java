@@ -47,13 +47,13 @@ class UsuarioServiceTest {
         List<Usuario> users = List.of(
                 new Usuario(21, null, "teste","teste@teste","123",
                         "12345678910","br", UsuarioFuncao.FREELANCER, true,
-                        null,null),
+                        null),
                 new Usuario(22, null, "teste2","teste2@teste","123",
                         "12345678910","br", UsuarioFuncao.FREELANCER, true,
-                        null,null),
+                        null),
                 new Usuario(23, null, "teste3","teste3@teste","123",
                         "12345678910","br", UsuarioFuncao.FREELANCER, true,
-                        null,null)
+                        null)
         );
 
         Mockito.when(usuarioRepository.findAll()).thenReturn(users);
@@ -68,7 +68,7 @@ class UsuarioServiceTest {
     void buscarUsuarioPorId() {
         Usuario usuario = new Usuario(21, null, "teste","teste@teste","123",
                 "12345678910","br", UsuarioFuncao.FREELANCER, true,
-                null,null);
+                null);
 
         Integer id = 21;
 
