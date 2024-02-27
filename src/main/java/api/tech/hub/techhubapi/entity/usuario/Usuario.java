@@ -27,6 +27,7 @@ public class Usuario {
     private String senha;
     private String numeroCadastroPessoa;
     private String pais;
+    @Enumerated(EnumType.STRING)
     private UsuarioFuncao funcao;
     private boolean isAtivo;
 
