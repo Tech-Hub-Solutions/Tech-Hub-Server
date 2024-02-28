@@ -24,6 +24,7 @@ public class Arquivo {
   private String nomeArquivoOriginal;
   private String nomeArquivoSalvo;
   private LocalDate dataUpload;
+  @Enumerated(EnumType.STRING)
   private TipoArquivo tipoArquivo;
   @ManyToOne
   private Mensagem mensagem;
