@@ -6,7 +6,6 @@ import api.tech.hub.techhubapi.entity.usuario.Usuario;
 import api.tech.hub.techhubapi.entity.usuario.UsuarioFuncao;
 import api.tech.hub.techhubapi.repository.AvaliacaoRepository;
 import api.tech.hub.techhubapi.repository.PerfilRepository;
-import api.tech.hub.techhubapi.service.avaliacao.dto.AvaliacaoDetalhadoDto;
 import api.tech.hub.techhubapi.service.usuario.autenticacao.AutenticacaoService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -43,7 +42,7 @@ class AvaliacaoServiceTest {
     void avaliar() {
         Usuario usuarioLogado = new Usuario(21, null, "teste", "teste@teste", "123",
                 "12345678910", "br", UsuarioFuncao.FREELANCER, true,
-                null, null);
+                null);
 
         Perfil perfilLogado = new Perfil(21, "tem nada", "nenhuma", "sou um dev", 500.0,
                 "teste testinha", "teste@hotmail.com", "linkedin.com/testinho",
@@ -78,7 +77,7 @@ class AvaliacaoServiceTest {
     void encontrarAvaliacoesPerfil() {
         Usuario usuarioLogado = new Usuario(21, null, "teste", "teste@teste", "123",
                 "12345678910", "br", UsuarioFuncao.FREELANCER, true,
-                null, null);
+                null);
 
         Perfil perfilLogado = new Perfil(21, "tem nada", "nenhuma", "sou um dev", 500.0,
                 "teste testinha", "teste@hotmail.com", "linkedin.com/testinho",

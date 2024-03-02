@@ -1,0 +1,16 @@
+version: '4.0'
+
+services:
+  tech-hub-server:
+#    image: murilosbarbosa/tech-hub-server:mocked  # Use the pre-built image
+    build: .  # Build the image from the Dockerfile in the current directory
+    network_mode: "host"  # If you want to use the host network. This is not recommended for production, but it's useful for development
+    ports:
+      - "8080:8080"  # Map port 8080 of the container to port 8080 of the host
+    environment:
+      # Define the environment variables
+      DB_HOST: "localhost"
+      DB_PORT: "3306"
+      DB_NAME: "techhub"
+      DB_USER: "root"
+      DB_PASSWORD: "root"
