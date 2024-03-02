@@ -3,7 +3,6 @@ package api.tech.hub.techhubapi.service.usuario;
 import api.tech.hub.techhubapi.configuration.security.jwt.GerenciadorTokenJwt;
 import api.tech.hub.techhubapi.entity.ListaObj;
 import api.tech.hub.techhubapi.entity.perfil.Perfil;
-import api.tech.hub.techhubapi.entity.perfil.ReferenciaPerfil;
 import api.tech.hub.techhubapi.entity.perfil.flag.Flag;
 import api.tech.hub.techhubapi.entity.usuario.Usuario;
 import api.tech.hub.techhubapi.entity.usuario.UsuarioFuncao;
@@ -11,16 +10,12 @@ import api.tech.hub.techhubapi.repository.FlagRepository;
 import api.tech.hub.techhubapi.repository.PerfilRepository;
 import api.tech.hub.techhubapi.repository.UsuarioRepository;
 import api.tech.hub.techhubapi.service.conversa.dto.UsuarioConversaDto;
-import api.tech.hub.techhubapi.service.perfil.PerfilService;
-import api.tech.hub.techhubapi.service.perfil.dto.PerfilDetalhadoDto;
-import api.tech.hub.techhubapi.service.referencia.ReferenciaPerfilService;
 import api.tech.hub.techhubapi.service.usuario.autenticacao.AutenticacaoService;
 import api.tech.hub.techhubapi.service.usuario.dto.*;
 import api.tech.hub.techhubapi.service.usuario.specification.UsuarioSpecification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -28,10 +23,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -115,7 +107,13 @@ public class UsuarioService {
         usuarioRepository.save(usuario);
     }
 
-    public ListaObj<UsuarioDetalhadoDto> listar() {
+    public List<UsuarioDetalhadoDto> listar() {
+        return this.usuarioRepository.findAll().stream()
+                .map(usuarioMapper::dtoOf)
+                .toList();
+    }
+
+    public ListaObj<UsuarioDetalhadoDto> listarObj() {
         ListaObj<UsuarioDetalhadoDto> usuarios = new ListaObj<>(40);
 
 
@@ -223,5 +221,15 @@ public class UsuarioService {
 
         return favoritos.map(UsuarioFavoritoDto::new);
 
+    }
+
+    public void validarFuncaoUsuario(Usuario usuario, UsuarioFuncao funcao) {
+        if (!usuario.getFuncao().equals(funcao)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Usuário não tem permissão para acessar este recurso");
+        }
+    }
+
+    public List<Usuario> buscarPorIds(List<Integer> idsEmpresasInteressadas) {
+        return this.usuarioRepository.findByIdIn(idsEmpresasInteressadas);
     }
 }
