@@ -108,9 +108,15 @@ public class UsuarioService {
     }
 
     public List<UsuarioDetalhadoDto> listar() {
-        return this.usuarioRepository.findAll().stream()
-                .map(usuarioMapper::dtoOf)
-                .toList();
+        return this.listarUsuarios().stream().map(usuarioMapper::dtoOf).toList();
+    }
+
+    public List<Usuario> listarUsuarios() {
+        return this.usuarioRepository.findAll();
+    }
+
+    public Page<Usuario> listarUsuarios(Pageable pageable) {
+        return this.usuarioRepository.findAll(pageable);
     }
 
     public ListaObj<UsuarioDetalhadoDto> listarObj() {
@@ -231,5 +237,9 @@ public class UsuarioService {
 
     public List<Usuario> buscarPorIds(List<Integer> idsEmpresasInteressadas) {
         return this.usuarioRepository.findByIdIn(idsEmpresasInteressadas);
+    }
+
+    public Page<Usuario> listarUsuariosFreelancers(Pageable pageable) {
+        return this.usuarioRepository.findAllByFuncaoAndIsAtivoTrue(UsuarioFuncao.FREELANCER, pageable);
     }
 }

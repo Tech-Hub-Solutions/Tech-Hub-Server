@@ -8,8 +8,6 @@ import api.tech.hub.techhubapi.repository.ReferenciaPerfilRepository;
 import api.tech.hub.techhubapi.service.referencia.dto.ReferenciaDetalhadoDto;
 import api.tech.hub.techhubapi.service.usuario.autenticacao.AutenticacaoService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
@@ -95,4 +93,7 @@ public class ReferenciaPerfilService {
         return this.referenciaPerfilRepository.findByAvaliador(usuarioLogado.getPerfil());
     }
 
+    public Integer buscarQtdRecomendacoes(Usuario usuario) {
+        return this.referenciaPerfilRepository.countByAvaliadoIdAndIsRecomendadoTrue(usuario.getId());
+    }
 }

@@ -1,8 +1,8 @@
-package api.tech.hub.techhubapi.service.email.dto;
+package api.tech.hub.techhubapi.service.email;
 
 import jakarta.validation.constraints.NotBlank;
 
-public record EmailDto(
+public record Email(
         @NotBlank
         String destinatario,
         @NotBlank

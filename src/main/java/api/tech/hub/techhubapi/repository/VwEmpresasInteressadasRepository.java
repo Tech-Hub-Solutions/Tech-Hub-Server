@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface VwEmpresasInteressadasRepository extends JpaRepository<VwEmpresasInteressadas, Integer> {
 
-    List<VwEmpresasInteressadas> findTop5ByAvaliadoId(Integer id);
+    List<VwEmpresasInteressadas> findTop4ByAvaliadoId(Integer id);
 }

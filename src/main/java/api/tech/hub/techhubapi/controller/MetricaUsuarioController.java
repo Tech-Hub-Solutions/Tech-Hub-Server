@@ -2,7 +2,7 @@ package api.tech.hub.techhubapi.controller;
 
 import api.tech.hub.techhubapi.entity.VisualizacaoPerfil;
 import api.tech.hub.techhubapi.entity.usuario.Usuario;
-import api.tech.hub.techhubapi.service.metricausuario.dto.MetricaUsuarioResponseDto;
+import api.tech.hub.techhubapi.service.metricausuario.dto.MetricasUsuarioResponseDto;
 import api.tech.hub.techhubapi.service.metricausuario.dto.VisualizacaoPerfilResponseDto;
 import api.tech.hub.techhubapi.service.metricausuario.MetricaUsuarioService;
 import api.tech.hub.techhubapi.service.usuario.UsuarioService;
@@ -28,7 +28,7 @@ public class MetricaUsuarioController {
 
 
     @GetMapping("{idUsuario}")
-    public ResponseEntity<MetricaUsuarioResponseDto> buscarVisualizacaoPerfil(
+    public ResponseEntity<MetricasUsuarioResponseDto> buscarVisualizacaoPerfil(
             @PathVariable Integer idUsuario
     ) {
         Usuario usuario = this.usuarioService.buscarPorId(idUsuario);

@@ -2,7 +2,6 @@ package api.tech.hub.techhubapi.service.metricausuario;
 
 import api.tech.hub.techhubapi.entity.VisualizacaoPerfil;
 import api.tech.hub.techhubapi.entity.perfil.Perfil;
-import api.tech.hub.techhubapi.entity.perfil.ReferenciaPerfil;
 import api.tech.hub.techhubapi.entity.usuario.Usuario;
 import api.tech.hub.techhubapi.entity.usuario.UsuarioFuncao;
 import api.tech.hub.techhubapi.entity.views.VwEmpresasInteressadas;
@@ -10,7 +9,8 @@ import api.tech.hub.techhubapi.repository.PerfilRepository;
 import api.tech.hub.techhubapi.repository.VisualizacaoPerfilRepository;
 import api.tech.hub.techhubapi.repository.VwEmpresasInteressadasRepository;
 import api.tech.hub.techhubapi.service.metricausuario.dto.EmpresaInteressadaDto;
-import api.tech.hub.techhubapi.service.metricausuario.dto.MetricaUsuarioResponseDto;
+import api.tech.hub.techhubapi.service.metricausuario.dto.MetricasUsuarioResponseDto;
+import api.tech.hub.techhubapi.service.referencia.ReferenciaPerfilService;
 import api.tech.hub.techhubapi.service.usuario.UsuarioService;
 import api.tech.hub.techhubapi.service.usuario.autenticacao.AutenticacaoService;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +30,7 @@ public class MetricaUsuarioService {
     private final PerfilRepository perfilRepository;
     private final UsuarioService usuarioService;
     private final VwEmpresasInteressadasRepository vwEmpresasInteressadasRepository;
+    private final ReferenciaPerfilService referenciaPerfilService;
 
     public VisualizacaoPerfil adicionarVisualizacao(Integer idPerfil) {
         Usuario usuarioLogado = this.autenticacaoService.getUsuarioFromUsuarioDetails();
@@ -67,16 +68,15 @@ public class MetricaUsuarioService {
 
     }
 
-    public List<VwEmpresasInteressadas> buscarTop5EmpresasInteressadas(Usuario usuario) {
-        return this.vwEmpresasInteressadasRepository.findTop5ByAvaliadoId(usuario.getId());
+    public List<VwEmpresasInteressadas> buscarTop4EmpresasInteressadas(Usuario usuario) {
+        return this.vwEmpresasInteressadasRepository.findTop4ByAvaliadoId(usuario.getId());
     }
 
-    public MetricaUsuarioResponseDto buscarMetricasUsuario(Usuario usuario) {
+    public MetricasUsuarioResponseDto buscarMetricasUsuario(Usuario usuario) {
 
         usuarioService.validarFuncaoUsuario(usuario, UsuarioFuncao.FREELANCER);
 
-        List<VwEmpresasInteressadas> vwEmpresasInteressadas = this.buscarTop5EmpresasInteressadas(usuario);
-        vwEmpresasInteressadas.forEach(System.out::println);
+        List<VwEmpresasInteressadas> vwEmpresasInteressadas = this.buscarTop4EmpresasInteressadas(usuario);
 
         List<Integer> vwEmpresasInteressadasIds = vwEmpresasInteressadas.stream().map(VwEmpresasInteressadas::getEmpresaId).toList();
 
@@ -95,15 +95,9 @@ public class MetricaUsuarioService {
 
         Integer qtdVisualizacoesPerfilSemanal = this.buscarQtdVisualizacoesPerfilSemanal(usuario);
 
-        Integer qtdRecomendacoes = usuario.getPerfil()
-                .getReferenciaPerfilList()
-                .stream()
-                .filter(r -> r.getAvaliado().equals(usuario.getPerfil()))
-                .filter(ReferenciaPerfil::isRecomendado)
-                .toList()
-                .size();
+        Integer qtdRecomendacoes = referenciaPerfilService.buscarQtdRecomendacoes(usuario);
 
-        MetricaUsuarioResponseDto metrica = new MetricaUsuarioResponseDto(
+        MetricasUsuarioResponseDto metrica = new MetricasUsuarioResponseDto(
                 usuario.getId(),
                 empresasInteressadasDto,
                 qtdVisualizacoesPerfilSemanal,

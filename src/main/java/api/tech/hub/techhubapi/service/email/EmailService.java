@@ -1,78 +1,77 @@
 package api.tech.hub.techhubapi.service.email;
 
-import api.tech.hub.techhubapi.entity.Mail;
-import api.tech.hub.techhubapi.repository.UsuarioRepository;
-import api.tech.hub.techhubapi.service.email.dto.EmailDto;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.mail.MailAuthenticationException;
-import org.springframework.mail.MailException;
 import org.springframework.mail.MailPreparationException;
 import org.springframework.mail.MailSendException;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 
 @Service
+@RequiredArgsConstructor
 public class EmailService {
 
-    @Autowired
-    private JavaMailSender javaMailSender;
-
-    @Autowired
-    private EmailMapper mapper;
-
-    @Autowired
-    private UsuarioRepository usuarioRepository;
+    private final JavaMailSender javaMailSender;
+    private final TemplateEngine templateEngine;
+    private final TaskExecutor taskExecutor;
 
     @Value("${spring.mail.username}")
     private String remetente;
 
-    /*public void sendMail(MailStructure mailStructure) {
-        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+    public void sendMail(Email emailDto) {
+        taskExecutor.execute(() -> {
 
-        simpleMailMessage.setFrom(remetente);
+            SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
 
-        simpleMailMessage.setSubject(mailStructure.getAssunto());
-        simpleMailMessage.setText(mailStructure.getEmail());
+            simpleMailMessage.setFrom(remetente);
 
-        simpleMailMessage.setTo(mailStructure.getDestinatario());
+            simpleMailMessage.setTo(emailDto.destinatario());
+            simpleMailMessage.setSubject(emailDto.assunto());
+            simpleMailMessage.setText(emailDto.conteudo());
 
+            javaMailSender.send(simpleMailMessage);
+        });
+    }
 
-        javaMailSender.send(simpleMailMessage);
-    }*/
-
-    public void sendHtml(EmailDto dto) {
-        Mail email = mapper.dtoToEmail(dto);
-
+    public void sendEmailWithHtmlTemplate(String destinatario, String assunto, String templateName, Context context) {
+        taskExecutor.execute(() -> {
             try {
                 MimeMessage mimeMessage = javaMailSender.createMimeMessage();
                 MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
 
                 mimeMessageHelper.setFrom(remetente);
-                mimeMessageHelper.setTo(email.getDestinatario());
+                mimeMessageHelper.setTo(destinatario);
+                mimeMessageHelper.setSubject(assunto);
 
-                mimeMessageHelper.setSubject(email.getAssunto());
-                mimeMessageHelper.setText(email.getConteudo(), true);
+                String htmlContent = templateEngine.process(templateName, context);
+                mimeMessageHelper.setText(htmlContent, true);
 
                 javaMailSender.send(mimeMessage);
 
             } catch (MessagingException ex) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Erro no corpo do email");
+                System.out.println("MENSAGEM DE EMAIL EXCEPTION");
+                ex.printStackTrace();
             } catch (MailAuthenticationException ex) {
-                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Erro na autenticação das credenciais do remetente");
+                System.out.println("MAIL AUTHENTICATION EXCEPTION");
+                ex.printStackTrace();
             } catch (MailSendException ex) {
-                throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "Erro ao enviar o email");
+                System.out.println("MAIL SEND EXCEPTION");
+                ex.printStackTrace();
             } catch (MailPreparationException ex) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Erro na preparação do email");
+                System.out.println("MAIL PREPARATION EXCEPTION");
+                ex.printStackTrace();
+            } catch (Exception ex) {
+                System.out.println("Erro ao enviar email");
+                ex.printStackTrace();
             }
-
+        });
     }
 }
