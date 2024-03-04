@@ -58,7 +58,7 @@ class UsuarioServiceTest {
 
         Mockito.when(usuarioRepository.findAll()).thenReturn(users);
 
-        ListaObj<UsuarioDetalhadoDto> usersReturn = usuarioService.listar();
+        ListaObj<UsuarioDetalhadoDto> usersReturn = usuarioService.listarObj();
 
         assertFalse(usersReturn.isEmpty());
         assertEquals(users.size(),usersReturn.getTamanho());

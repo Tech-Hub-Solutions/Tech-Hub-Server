@@ -1,3 +1,24 @@
+--DROP TABLE VW_EMPRESAS_INTERESSADAS
+--
+--CREATE VIEW VW_EMPRESAS_INTERESSADAS AS
+--SELECT DISTINCT
+---- campo unico
+--  ROW_NUMBER() OVER (ORDER BY U.ID) AS ID,
+--  U.ID as EMPRESA_ID,
+--  U.NOME EMPRESA_NOME,
+--  RP.AVALIADOR_ID,
+--  RP.AVALIADO_ID,
+--  (SELECT AVG(A.QTD_ESTRELA)
+--   FROM AVALIACAO A
+--   JOIN PERFIL P ON A.AVALIADOR_ID = P.ID
+--   WHERE P.ID = RP.AVALIADOR_ID
+--  ) AS MEDIA_AVALIACAO
+--FROM USUARIO U
+--JOIN PERFIL P ON U.PERFIL_ID = P.ID
+--JOIN REFERENCIA_PERFIL RP ON RP.AVALIADOR_ID = P.ID
+--WHERE RP.IS_FAVORITO = TRUE
+--ORDER BY MEDIA_AVALIACAO DESC;
+
 -- Lista de flags
 INSERT INTO flag (nome, area, categoria)
 VALUES
@@ -134,7 +155,13 @@ INSERT INTO perfil (descricao, experiencia, sobre_mim, preco_medio, nome_github,
 ('Desenvolvedor de Backend', '10+ anos de experiência em desenvolvimento server-side', 'Especialista em construir sistemas de backend escaláveis e eficientes. Dominando Node.js, Python e SQL.', 750.0, 'backendninja', 'https://github.com/backendninja', 'https://www.linkedin.com/in/backendninja'),
 ('Designer Gráfico', 'Transformando conceitos em designs visuais', 'Apaixonado por criar gráficos atraentes e conceitos visuais. Proficiente em Adobe Creative Suite.', 500.0, 'graphicdesigner456', 'https://github.com/graphicdesigner456', 'https://www.linkedin.com/in/graphicdesigner456'),
 ('Analista de Segurança Cibernética', 'Protegendo sistemas e dados', 'Comprometido com a segurança de TI e a proteção de sistemas contra ameaças cibernéticas. Especializado em testes de penetração e análise de vulnerabilidades.', 700.0, 'cybersecuritypro', 'https://github.com/cybersecuritypro', 'https://www.linkedin.com/in/cybersecuritypro'),
-('Desenvolvedor Mobile', 'Criando aplicativos móveis de ponta', 'Desenvolvendo aplicativos móveis inovadores para Android e iOS usando Kotlin, Java e Swift. Apaixonado pelo mundo da mobilidade.', 650.0, 'mobiledev567', 'https://github.com/mobiledev567', 'https://www.linkedin.com/in/mobiledev567');
+('Desenvolvedor Mobile', 'Criando aplicativos móveis de ponta', 'Desenvolvendo aplicativos móveis inovadores para Android e iOS usando Kotlin, Java e Swift. Apaixonado pelo mundo da mobilidade.', 650.0, 'mobiledev567', 'https://github.com/mobiledev567', 'https://www.linkedin.com/in/mobiledev567'),
+('Empresa 2', 'Empresa especializada em inovação, oferecendo soluções de análise de dados e aprendizado de máquina.', 'Estamos em busca de profissionais apaixonados por tecnologia e inovação', null, 'nossogithubempresa2', 'https://github.com/nossogithubempresa2', 'https://www.linkedin.com/company/nossolinkedinempresa2'),
+('Empresa 3', 'Empresa especializada em inovação, oferecendo soluções de análise de dados e aprendizado de máquina.', 'Estamos em busca de profissionais apaixonados por tecnologia e inovação', null, 'nossogithubempresa3', 'https://github.com/nossogithubempresa3', 'https://www.linkedin.com/company/nossolinkedinempresa3'),
+('Empresa 4', 'Empresa especializada em inovação, oferecendo soluções de análise de dados e aprendizado de máquina.', 'Estamos em busca de profissionais apaixonados por tecnologia e inovação', null, 'nossogithubempresa4', 'https://github.com/nossogithubempresa4', 'https://www.linkedin.com/company/nossolinkedinempresa4'),
+('Empresa 5', 'Empresa especializada em inovação, oferecendo soluções de análise de dados e aprendizado de máquina.', 'Estamos em busca de profissionais apaixonados por tecnologia e inovação', null, 'nossogithubempresa5', 'https://github.com/nossogithubempresa5', 'https://www.linkedin.com/company/nossolinkedinempresa5'),
+('Empresa 6', 'Empresa especializada em inovação, oferecendo soluções de análise de dados e aprendizado de máquina.', 'Estamos em busca de profissionais apaixonados por tecnologia e inovação', null, 'nossogithubempresa6', 'https://github.com/nossogithubempresa6', 'https://www.linkedin.com/company/nossolinkedinempresa6');
+
 
 -- Flags de cada perfil
 INSERT INTO flag_usuario (perfil_id, flag_id) VALUES
@@ -183,25 +210,30 @@ INSERT INTO flag_usuario (perfil_id, flag_id) VALUES
 -- Lista de usuários
 INSERT INTO usuario (perfil_id,nome, email, senha, numero_cadastro_pessoa, pais, funcao, is_ativo) VALUES
 (1,'DataInnovate Solutions', 'datainnovate@hotmail.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '26828654000100', 'BR', 'EMPRESA', true),
-(2,'Leonardo', 'leo@hotmail.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '89138182000175', 'BR', 'FREELANCER', true),
-(3,'Ana', 'ana@gmail.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '12345678901234', 'FR', 'FREELANCER', true),
-(4,'Lucas', 'lucas@yahoo.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '98765432109876', 'FR', 'FREELANCER', true),
-(5,'Mariana', 'mariana@hotmail.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '55555555555555', 'FR', 'FREELANCER', true),
-(6, 'Maria', 'maria@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '12345678901234', 'DE', 'FREELANCER', true),
-(7, 'Carlos', 'carlos@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '98765432109876', 'DE', 'FREELANCER', true),
-(8, 'Luisa', 'luisa@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '55555555555555', 'PT', 'FREELANCER', true),
-(9, 'Rafael', 'rafael@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '12345678901234', 'PT', 'FREELANCER', true),
-(10, 'Sofia', 'sofia@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '98765432109876', 'PT', 'FREELANCER', true),
-(11, 'Gabriel', 'gabriel@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '12345678901234', 'AR', 'FREELANCER', true),
-(12, 'Marta', 'marta@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '98765432109876', 'AR', 'FREELANCER', true),
-(13, 'Pedro', 'pedro@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '55555555555555', 'AR', 'FREELANCER', true),
-(14, 'Isabella', 'isabella@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '12345678901234', 'ES', 'FREELANCER', true),
-(15, 'Mateus', 'lucas@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '98765432109876', 'ES', 'FREELANCER', true),
-(16, 'Patricia', 'patricia@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '55555555555555', 'IN', 'FREELANCER', true),
-(17, 'Fernando', 'fernando@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '12345678901234', 'IN', 'FREELANCER', true),
-(18, 'Amanda', 'amanda@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '98765432109876', 'US', 'FREELANCER', true),
-(19, 'Rodrigo', 'rodrigo@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '55555555555555', 'US', 'FREELANCER', true),
-(20, 'Tatiana', 'tatiana@example.com', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '12345678901234', 'US', 'FREELANCER', true),
+(2,'Leonardo', 'leonardo.nave@sptech.school', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '89138182000175', 'BR', 'FREELANCER', true),
+(3,'Ana', 'murilo.barbosa@sptech.school', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '12345678901234', 'FR', 'FREELANCER', true),
+(4,'Lucas', 'kaio.sena@sptech.school', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '98765432109876', 'FR', 'FREELANCER', true),
+(5,'Mariana', 'luiz.fsilva@sptech.school', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '55555555555555', 'FR', 'FREELANCER', true),
+(6, 'Maria', 'example@example', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '12345678901234', 'DE', 'FREELANCER', true),
+(7, 'Carlos', 'example@example', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '98765432109876', 'DE', 'FREELANCER', true),
+(8, 'Luisa', 'example@example', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '55555555555555', 'PT', 'FREELANCER', true),
+(9, 'Rafael', 'example@example', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '12345678901234', 'PT', 'FREELANCER', true),
+(10, 'Sofia', 'example@example', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '98765432109876', 'PT', 'FREELANCER', true),
+(11, 'Gabriel', 'example@example', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '12345678901234', 'AR', 'FREELANCER', true),
+(12, 'Marta', 'example@example', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '98765432109876', 'AR', 'FREELANCER', true),
+(13, 'Pedro', 'example@example', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '55555555555555', 'AR', 'FREELANCER', true),
+(14, 'Isabella', 'example@example', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '12345678901234', 'ES', 'FREELANCER', true),
+(15, 'Mateus', 'example@example', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '98765432109876', 'ES', 'FREELANCER', true),
+(16, 'Patricia', 'example@example', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '55555555555555', 'IN', 'FREELANCER', true),
+(17, 'Fernando', 'example@example', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '12345678901234', 'IN', 'FREELANCER', true),
+(18, 'Amanda', 'example@example', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '98765432109876', 'US', 'FREELANCER', true),
+(19, 'Rodrigo', 'example@example', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '55555555555555', 'US', 'FREELANCER', true),
+(20, 'Tatiana', 'example@example', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '12345678901234', 'US', 'FREELANCER', true),
+(21, 'Empresa2', 'example@example','$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '26828654000100', 'US', 'EMPRESA', true),
+(22, 'Empresa3', 'example@example','$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '26828654000100', 'US', 'EMPRESA', true),
+(23, 'Empresa4', 'example@example','$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '26828654000100', 'US', 'EMPRESA', true),
+(24, 'Empresa5', 'example@example','$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '26828654000100', 'US', 'EMPRESA', true),
+(25, 'Empresa6', 'example@example','$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '26828654000100', 'US', 'EMPRESA', true),
 (null, 'Admin', 'admin@admin', '$2a$10$feRbfBjRcoDMaXXkBuc06u3lA5ng3CMkPXsHapLKXtezQYh4UURDq', '12345678901234', 'BR', 'ADMIN', true);
 
 -- Referencias
@@ -214,7 +246,48 @@ INSERT INTO referencia_perfil (avaliador_id, avaliado_id, is_favorito,is_recomen
 (1,7, true, true),
 (1,8, true, true),
 (1,9, true, true),
-(1,10,true, true);
+(1,10,true, true),
+
+(21,2, true, true),
+(21,3, true, true),
+(21,4, true, true),
+(21,5, true, true),
+(21,6, true, true),
+(21,7, true, true),
+(21,8, true, true),
+(21,9, true, true),
+(21,10,true, true),
+
+(22,3, true, true),
+(22,5, true, true),
+(22,6, true, true),
+(22,7, true, true),
+(22,8, true, true),
+(22,9, true, true),
+(22,10,true, true),
+
+(23,2, true, true),
+(23,3, true, true),
+(23,4, true, true),
+(23,5, true, true),
+(23,6, true, true),
+(23,8, true, true),
+(23,9, true, true),
+(23,10,true, true),
+
+(24,2, true, true),
+(24,3, true, true),
+(24,4, true, true),
+(24,6, true, true),
+(24,8, true, true),
+(24,10,true, true),
+
+(25,2, true, true),
+(25,3, true, true),
+(25,5, true, true),
+(25,7, true, true),
+(25,9, true, true),
+(25,10,true, true);
 
 -- Avaliacoes
 INSERT INTO avaliacao (perfil_id, avaliador_id, comentario, qtd_estrela) VALUES
@@ -238,7 +311,26 @@ INSERT INTO avaliacao (perfil_id, avaliador_id, comentario, qtd_estrela) VALUES
 (1, 2, 'Tive uma ótima experiência trabalhando com essa empresa, recomendo a todos os freelancers!', 4),
 (1, 3, 'Participar do projeto liderado por essa empresa foi fenomenal, amei a experiência!', 5),
 (1, 4, 'O processo de entrega da empresa foi rápido e confiável, merece 5 estrelas!', 5),
-(1, 7, 'O suporte ao freelancer foi péssimo, demoraram para resolver as questões.', 1);
+(1, 7, 'O suporte ao freelancer foi péssimo, demoraram para resolver as questões.', 1),
+-- AVALIAR EMPRESA
+(17, 1, 'O processo de entrega da empresa foi rápido e confiável, merece 5 estrelas!', 5),
+(18, 1, 'O suporte ao freelancer foi péssimo, demoraram para resolver as questões.', 1),
+(19, 1, 'A empresa valoriza e destaca o talento dos freelancers, adorei colaborar com eles.', 4),
+(2, 21, 'A empresa apresentou ideias inovadoras, o que tornou o trabalho mais interessante.', 4),
+(3, 21, 'Excelente empresa, recomendo para outros freelancers.', 5),
+(4, 21, 'A comunicação e o entendimento durante o projeto foram difíceis, não recomendo.', 1),
+(5, 22, 'Colaborar com essa empresa foi ótimo, são muito dedicados aos objetivos.', 5),
+(6, 22, 'Infelizmente, houve atraso no pagamento, o que impactou minha satisfação.', 2),
+(7, 22, 'A qualidade dos projetos entregues por essa empresa é surpreendente, 5 estrelas!', 5),
+(8, 23, 'Tive uma ótima experiência trabalhando com essa empresa, recomendo a todos os freelancers!', 4),
+(9, 23, 'Participar do projeto liderado por essa empresa foi fenomenal, amei a experiência!', 5),
+(10, 23, 'O processo de entrega da empresa foi rápido e confiável, merece 5 estrelas!', 5),
+(11, 24, 'O suporte ao freelancer foi péssimo, demoraram para resolver as questões.', 1),
+(12, 24, 'A empresa valoriza e destaca o talento dos freelancers, adorei colaborar com eles.', 4),
+(13, 24, 'A experiência de trabalhar com essa empresa foi incrível, estou ansioso para futuros projetos.', 5),
+(14, 25, 'A qualidade dos projetos entregues por essa empresa é surpreendente, 5 estrelas!', 5),
+(15, 25, 'Tive uma ótima experiência trabalhando com essa empresa, recomendo a todos os freelancers!', 4),
+(16, 25, 'Participar do projeto liderado por essa empresa foi fenomenal, amei a experiência!', 5);
 
 
 INSERT INTO arquivo (data_upload, perfil_id, tipo_arquivo, nome_arquivo_original, nome_arquivo_salvo) VALUES

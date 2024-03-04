@@ -14,6 +14,7 @@ import api.tech.hub.techhubapi.service.arquivo.TipoArquivo;
 import api.tech.hub.techhubapi.service.conversa.dto.ConversaDto;
 import api.tech.hub.techhubapi.service.conversa.dto.MensagemASerEnviadaDto;
 import api.tech.hub.techhubapi.service.conversa.dto.RoomCodeDto;
+import api.tech.hub.techhubapi.service.email.EmailService;
 import api.tech.hub.techhubapi.service.usuario.autenticacao.AutenticacaoService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
+import org.thymeleaf.context.Context;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -37,6 +39,8 @@ public class ConversaService {
     private final MensagemRepository mensagemRepository;
     private final SalaRepository salaRepository;
     private final ArquivoService arquivoService;
+    private final EmailService emailService;
+
 
     public RoomCodeDto iniciarConversa(Integer idUsuario) {
         Usuario usuarioAutenticado = autenticacaoService.getUsuarioFromUsuarioDetails();
@@ -66,6 +70,16 @@ public class ConversaService {
         socketService.recarregarConversas(usuarioAutenticado.getId());
         socketService.recarregarConversas(usuarioASerIniciado.getId());
 
+        Context context = new Context();
+        context.setVariable("nome", usuarioAutenticado.getNome());
+        context.setVariable("funcao", usuarioAutenticado.getFuncao().toString());
+        emailService.sendEmailWithHtmlTemplate(
+                usuarioASerIniciado.getEmail(),
+                "Nova conversa iniciada na TechHub",
+                "EmailNovaMensagemTemplate",
+                context
+
+        );
         return new RoomCodeDto(sala.getRoomCode());
     }
 
@@ -119,6 +133,24 @@ public class ConversaService {
 
         socketService.recarregarConversas(usuario.getId());
         socketService.recarregarConversas(conversaUsuarioAEnviar.getUsuario().getId());
+
+
+        Usuario usuarioAEviar = conversaUsuarioAEnviar.getUsuario();
+        int qtdMinhasMensagens = this.mensagemRepository.countBySalaAndUsuario(sala, usuario);
+        int qtdMensagensUsuarioAEnviar = this.mensagemRepository.countBySalaAndUsuario(sala, conversaUsuarioAEnviar.getUsuario());
+
+        if (qtdMensagensUsuarioAEnviar > 0 && qtdMinhasMensagens == 1) {
+            Context context = new Context();
+            context.setVariable("funcao", usuario.getFuncao().toString());
+            context.setVariable("nome", usuario.getNome());
+            emailService.sendEmailWithHtmlTemplate(
+                    usuarioAEviar.getEmail(),
+                    "Nova mensagem na TechHub",
+                    "EmailNovaMensagemTemplate",
+                    context
+            );
+        }
+
     }
 
     private Mensagem salvarMensagem(Usuario usuario, Sala sala, String mensagem, MultipartFile arquivo,

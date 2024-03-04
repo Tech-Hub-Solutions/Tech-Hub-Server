@@ -39,8 +39,18 @@ public class UsuarioController {
     }
 
     @GetMapping
-    public ResponseEntity<ListaObj<UsuarioDetalhadoDto>> listar() {
-        ListaObj<UsuarioDetalhadoDto> usuarios = this.usuarioService.listar();
+    public ResponseEntity<List<UsuarioDetalhadoDto>> listar() {
+        List<UsuarioDetalhadoDto> usuarios = this.usuarioService.listar();
+
+        if (usuarios.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.status(200).body(usuarios);
+    }
+
+    @GetMapping("/lista-obj")
+    public ResponseEntity<ListaObj<UsuarioDetalhadoDto>> listarObj() {
+        ListaObj<UsuarioDetalhadoDto> usuarios = this.usuarioService.listarObj();
 
         if (usuarios.getTamanho() == 0) {
             return ResponseEntity.noContent().build();
