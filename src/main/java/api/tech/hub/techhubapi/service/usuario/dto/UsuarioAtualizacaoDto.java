@@ -1,11 +1,9 @@
 package api.tech.hub.techhubapi.service.usuario.dto;
 
-import api.tech.hub.techhubapi.entity.usuario.UsuarioFuncao;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import org.hibernate.validator.constraints.br.CNPJ;
-import org.hibernate.validator.constraints.br.CPF;
+import jakarta.validation.constraints.NotNull;
 
 public record UsuarioAtualizacaoDto(
         @NotBlank
@@ -18,6 +16,10 @@ public record UsuarioAtualizacaoDto(
         String pais,
 
         @NotBlank
-        String senha
+        String senha,
+
+        @NotNull
+        boolean isUsing2FA
+
 ) {
 }
