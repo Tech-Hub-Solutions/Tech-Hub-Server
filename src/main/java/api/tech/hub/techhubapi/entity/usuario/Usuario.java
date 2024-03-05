@@ -29,6 +29,11 @@ public class Usuario {
     private String pais;
     @Enumerated(EnumType.STRING)
     private UsuarioFuncao funcao;
+
+    private boolean isUsing2FA;
+    private boolean isValid2FA;
+    private String secret;
+
     private boolean isAtivo;
 
     @JsonIgnore
