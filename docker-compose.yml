@@ -14,3 +14,8 @@ services:
       DB_NAME: "techhub"
       DB_USER: "root"
       DB_PASSWORD: "root"
+      EMAIL_SENDER_REMETENTE: "teste@gmail.com"
+      EMAIL_SENDER_PASSWORD: "123"
+      EMAIL_SENDER_CRON: "0 0 0 * * 5"
+      EMAIL_SENDER_API_KEY: "123"
+      USE_CURRENT_CONTEXT_PATH_IN_IMAGE_URL:  false

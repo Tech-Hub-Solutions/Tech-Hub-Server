@@ -6,6 +6,7 @@ import api.tech.hub.techhubapi.entity.perfil.Perfil;
 import api.tech.hub.techhubapi.entity.usuario.Usuario;
 import api.tech.hub.techhubapi.repository.ArquivoRepository;
 import api.tech.hub.techhubapi.repository.UsuarioRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -34,6 +35,28 @@ public class ArquivoService {
     private Path diretorioBase = Path.of(System.getProperty("user.dir") + "/arquivos");
     private final ArquivoRepository arquivoRepository;
     private final UsuarioRepository usuarioRepository;
+
+
+    @Value("${app.useCurrentContextPathInImageUrl}")
+    private boolean useCurrentContextPathInImageUrl;
+
+    private static boolean useCurrentContextPathInImageUrlStatic;
+
+    @Value("${app.useCurrentContextPathInImageUrl}")
+    public void setUseCurrentContextPathInImageUrlStatic(boolean name) {
+        ArquivoService.useCurrentContextPathInImageUrlStatic = name;
+    }
+
+    @Value("${server.servlet.context-path}")
+    private String contextPath;
+
+    private static String contextPathStatic;
+
+    @Value("${server.servlet.context-path}")
+    public void setContextPathStatic(String name) {
+        ArquivoService.contextPathStatic = name;
+    }
+
 
     public Arquivo salvarArquivoLocal(MultipartFile arquivo, TipoArquivo tipo) {
 
@@ -146,32 +169,29 @@ public class ArquivoService {
         }
 
         List<Arquivo> arquivos = perfil.getArquivos();
+        Optional<Arquivo> arquivo = arquivos.stream()
+                .filter(a -> a.getTipoArquivo().equals(tipoArquivo))
+                .findFirst();
 
-        String pathUrl = tipoArquivo.equals(TipoArquivo.CURRICULO) ? "/arquivos/usuario/{id}" : "/arquivos/usuario/{id}/imagem";
-
-        boolean existeCurriculo = perfil.getArquivos().stream().anyMatch(
-                arquivo -> arquivo.getTipoArquivo().equals(TipoArquivo.CURRICULO)
-        );
-
-        String url = ServletUriComponentsBuilder
-                .fromCurrentContextPath()
-                .path(pathUrl)
-                .queryParam("tipoArquivo", tipoArquivo)
-                .buildAndExpand(perfil.getUsuario().getId())
-                .toUri()
-                .toString();
-
-        if (tipoArquivo.equals(TipoArquivo.CURRICULO) && !existeCurriculo) {
-            url = "";
+        if (arquivo.isEmpty()) {
+            return null;
         }
 
-        String finalUrl = url;
+        String url = "";
+        if (useCurrentContextPathInImageUrlStatic) {
+            String pathUrl = "/arquivos/usuario/{id}" + (!tipoArquivo.equals(TipoArquivo.CURRICULO) ? "/imagem" : "");
+            return ServletUriComponentsBuilder
+                    .fromCurrentContextPath()
+                    .path(pathUrl)
+                    .queryParam("tipoArquivo", tipoArquivo)
+                    .buildAndExpand(perfil.getUsuario().getId())
+                    .toUri()
+                    .toString();
+        }
 
-        return arquivos.stream()
-                .filter(arquivo -> arquivo.getTipoArquivo().equals(TipoArquivo.PERFIL))
-                .findFirst()
-                .map(arquivo -> finalUrl)
-                .orElse("");
+        String pathUrl = contextPathStatic + "/arquivos/usuario/" + perfil.getUsuario().getId() + (!tipoArquivo.equals(TipoArquivo.CURRICULO) ? "/imagem" : "");
+        return String.format("%s?tipoArquivo=%s", pathUrl, tipoArquivo);
+
     }
 
     public Resource gerarCsvConversa(List<Mensagem> mensagens, List<Usuario> usuarios) {
