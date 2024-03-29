@@ -2,16 +2,20 @@ package api.tech.hub.techhubapi.service.usuario;
 
 import api.tech.hub.techhubapi.entity.usuario.Usuario;
 import api.tech.hub.techhubapi.service.perfil.dto.PerfilDetalhadoDto;
+import api.tech.hub.techhubapi.service.usuario.autenticacao.AutenticacaoService;
 import api.tech.hub.techhubapi.service.usuario.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+
 
 @Component
 public class UsuarioMapper {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private AutenticacaoService autenticacaoService;
 
     public UsuarioDetalhadoDto dtoOf (Usuario usuario) {
         return new UsuarioDetalhadoDto(usuario);
@@ -27,7 +31,10 @@ public class UsuarioMapper {
         usuario.setPais(dto.pais());
         usuario.setFuncao(dto.funcao());
         usuario.setAtivo(true);
-
+        usuario.setUsing2FA(dto.isUsing2FA());
+        if(dto.isUsing2FA()) {
+            usuario.setSecret(autenticacaoService.generateSecret());
+        }
         return usuario;
     }
 
@@ -37,12 +44,15 @@ public class UsuarioMapper {
         usuario.setEmail(dto.email());
         usuario.setPais(dto.pais());
         usuario.setSenha(passwordEncoder.encode(dto.senha()));
-
+        usuario.setUsing2FA(dto.isUsing2FA());
+        if(dto.isUsing2FA()) {
+            usuario.setSecret(autenticacaoService.generateSecret());
+        }
         return usuario;
     }
 
-    public static UsuarioTokenDto of(Usuario usuario, String token) {
-        return new UsuarioTokenDto(usuario, token);
+    public static UsuarioTokenDto of(Usuario usuario, String token, String secretQrCodeUrl, String secret) {
+        return new UsuarioTokenDto(usuario, token, secretQrCodeUrl, secret);
     }
 
 

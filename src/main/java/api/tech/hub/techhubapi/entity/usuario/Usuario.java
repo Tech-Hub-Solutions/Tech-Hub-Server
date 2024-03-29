@@ -2,11 +2,8 @@ package api.tech.hub.techhubapi.entity.usuario;
 
 import api.tech.hub.techhubapi.entity.perfil.Perfil;
 import api.tech.hub.techhubapi.entity.conversa.Conversa;
-import api.tech.hub.techhubapi.entity.conversa.Mensagem;
-import api.tech.hub.techhubapi.entity.contrato.UsuarioContrato;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Null;
 import lombok.*;
 
 import java.util.List;
@@ -30,11 +27,14 @@ public class Usuario {
     private String senha;
     private String numeroCadastroPessoa;
     private String pais;
+    @Enumerated(EnumType.STRING)
     private UsuarioFuncao funcao;
-    private boolean isAtivo;
 
-    @OneToMany
-    private List<UsuarioContrato> usuarioContratoList;
+    private boolean isUsing2FA;
+    private boolean isValid2FA;
+    private String secret;
+
+    private boolean isAtivo;
 
     @JsonIgnore
     @OneToMany(mappedBy = "usuario")

@@ -13,14 +13,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -38,9 +33,25 @@ public class UsuarioController {
         return ResponseEntity.status(200).body(usuarioTokenDto);
     }
 
+    @PostMapping("/verify")
+    public ResponseEntity<UsuarioTokenDto> verify(@RequestBody @Valid UsuarioVerifyDto usuarioVerifyDto) {
+        UsuarioTokenDto usuarioTokenDto = this.usuarioService.verify(usuarioVerifyDto);
+        return ResponseEntity.status(200).body(usuarioTokenDto);
+    }
+
     @GetMapping
-    public ResponseEntity<ListaObj<UsuarioDetalhadoDto>> listar() {
-        ListaObj<UsuarioDetalhadoDto> usuarios = this.usuarioService.listar();
+    public ResponseEntity<List<UsuarioDetalhadoDto>> listar() {
+        List<UsuarioDetalhadoDto> usuarios = this.usuarioService.listar();
+
+        if (usuarios.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.status(200).body(usuarios);
+    }
+
+    @GetMapping("/lista-obj")
+    public ResponseEntity<ListaObj<UsuarioDetalhadoDto>> listarObj() {
+        ListaObj<UsuarioDetalhadoDto> usuarios = this.usuarioService.listarObj();
 
         if (usuarios.getTamanho() == 0) {
             return ResponseEntity.noContent().build();
@@ -59,15 +70,9 @@ public class UsuarioController {
     }
 
     @PostMapping
-    public ResponseEntity<Usuario> cadastrarUsuario(@RequestBody @Valid UsuarioCriacaoDto dto) {
-        Usuario usuarioSalvo = usuarioService.salvarUsuarioCadastro(dto);
-        URI uri = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(usuarioSalvo.getId())
-                .toUri();
-
-        return ResponseEntity.created(uri).body(usuarioSalvo);
+    public ResponseEntity<UsuarioTokenDto> cadastrarUsuario(@RequestBody @Valid UsuarioCriacaoDto dto) {
+        UsuarioTokenDto usuarioSalvo = usuarioService.salvarUsuarioCadastro(dto);
+        return ResponseEntity.status(201).body(usuarioSalvo);
     }
 
     @GetMapping("/{id}")
@@ -88,7 +93,7 @@ public class UsuarioController {
 
 
     @PutMapping
-    public ResponseEntity<UsuarioDetalhadoDto> atualizarUsuarioPorId(
+    public ResponseEntity<UsuarioTokenDto> atualizarUsuarioPorId(
             @RequestBody UsuarioAtualizacaoDto dto) {
         return ResponseEntity.ok(this.usuarioService.atualizarInformacaoUsuarioPorId(dto));
     }

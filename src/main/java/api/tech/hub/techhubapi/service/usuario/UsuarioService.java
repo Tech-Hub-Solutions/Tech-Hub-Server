@@ -3,7 +3,6 @@ package api.tech.hub.techhubapi.service.usuario;
 import api.tech.hub.techhubapi.configuration.security.jwt.GerenciadorTokenJwt;
 import api.tech.hub.techhubapi.entity.ListaObj;
 import api.tech.hub.techhubapi.entity.perfil.Perfil;
-import api.tech.hub.techhubapi.entity.perfil.ReferenciaPerfil;
 import api.tech.hub.techhubapi.entity.perfil.flag.Flag;
 import api.tech.hub.techhubapi.entity.usuario.Usuario;
 import api.tech.hub.techhubapi.entity.usuario.UsuarioFuncao;
@@ -11,27 +10,23 @@ import api.tech.hub.techhubapi.repository.FlagRepository;
 import api.tech.hub.techhubapi.repository.PerfilRepository;
 import api.tech.hub.techhubapi.repository.UsuarioRepository;
 import api.tech.hub.techhubapi.service.conversa.dto.UsuarioConversaDto;
-import api.tech.hub.techhubapi.service.perfil.PerfilService;
-import api.tech.hub.techhubapi.service.perfil.dto.PerfilDetalhadoDto;
-import api.tech.hub.techhubapi.service.referencia.ReferenciaPerfilService;
 import api.tech.hub.techhubapi.service.usuario.autenticacao.AutenticacaoService;
 import api.tech.hub.techhubapi.service.usuario.dto.*;
 import api.tech.hub.techhubapi.service.usuario.specification.UsuarioSpecification;
 import lombok.RequiredArgsConstructor;
+import org.jboss.aerogear.security.otp.Totp;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -54,25 +49,69 @@ public class UsuarioService {
         );
         final Authentication authentication = this.authenticationManager.authenticate(credentials);
 
-        Usuario usuarioAutenticado = usuarioRepository.findByEmail(usuarioLoginDto.email())
+        Usuario usuarioAutenticado = usuarioRepository.findByEmailAndIsAtivoTrue(usuarioLoginDto.email())
                 .orElseThrow(() ->
                         new ResponseStatusException(HttpStatusCode.valueOf(404), "Email do usuário não encontrado")
                 );
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        final String token = gerenciadorTokenJwt.generateToken(authentication);
+        String token = "";
 
-        return UsuarioMapper.of(usuarioAutenticado, token);
+        if (usuarioAutenticado.isUsing2FA() && !usuarioAutenticado.isValid2FA()) {
+            usuarioAutenticado.setUsing2FA(false);
+            usuarioAutenticado.setSecret(null);
+            usuarioRepository.save(usuarioAutenticado);
+        }
+
+        if (!usuarioAutenticado.isUsing2FA()) {
+            token = gerenciadorTokenJwt.generateToken(authentication);
+        }
+
+        return UsuarioMapper.of(usuarioAutenticado, token, "","");
     }
 
-    public Usuario salvarUsuarioCadastro(UsuarioCriacaoDto dto) {
+
+    public UsuarioTokenDto verify(UsuarioVerifyDto usuarioVerifyDto) {
+
+        Usuario usuario = this.usuarioRepository.findByEmailAndIsAtivoTrue(usuarioVerifyDto.email())
+                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
+
+        final UsernamePasswordAuthenticationToken credentials = new UsernamePasswordAuthenticationToken(
+                usuarioVerifyDto.email(), usuarioVerifyDto.senha()
+        );
+
+        final Authentication authentication = this.authenticationManager.authenticate(credentials);
+
+        if (!usuario.isUsing2FA()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Usuário não está usando 2FA");
+        }
+
+        String verificationCode = usuarioVerifyDto.code();
+        Totp totp = new Totp(usuario.getSecret());
+
+        if (!totp.verify(verificationCode)) {
+            throw new BadCredentialsException("Código de verificação inválido");
+        }
+
+        usuario.setValid2FA(true);
+        usuarioRepository.save(usuario);
+
+        return new UsuarioTokenDto(
+                usuario,
+                gerenciadorTokenJwt.generateToken(authentication),
+                "", "");
+    }
+
+    public UsuarioTokenDto salvarUsuarioCadastro(UsuarioCriacaoDto dto) {
         Usuario validado = usuarioMapper.of(dto);
-        Optional<Usuario> usuarioOpt = this.usuarioRepository.findUsuarioByEmailAndNumeroCadastroPessoa(validado.getEmail(),
+        Optional<Usuario> usuarioOpt = this.usuarioRepository.findUsuarioByEmailAndNumeroCadastroPessoa(
+                validado.getEmail(),
                 validado.getNumeroCadastroPessoa());
 
         if (usuarioOpt.isPresent()) {
             throw new ResponseStatusException(HttpStatusCode.valueOf(409), "Usuário já existe!");
         }
+
 
         Perfil perfilUsuario = this.perfilRepository.save(new Perfil());
         Usuario usuarioSalvo = this.usuarioRepository.save(validado);
@@ -80,10 +119,19 @@ public class UsuarioService {
         this.perfilRepository.atualizarUsuarioDoPerfil(perfilUsuario.getId(), usuarioSalvo);
         this.usuarioRepository.atualizarPerfilDoUsuario(usuarioSalvo.getId(), perfilUsuario);
 
-        return usuarioSalvo;
+        String secretQrCodeUrl = "";
+        String secret = "";
+
+        if (usuarioSalvo.isUsing2FA()) {
+            secretQrCodeUrl = autenticacaoService.generateQRUrl(usuarioSalvo);
+            secret = usuarioSalvo.getSecret();
+        }
+
+
+        return UsuarioMapper.of(usuarioSalvo, "", secretQrCodeUrl, secret);
     }
 
-    public UsuarioDetalhadoDto atualizarInformacaoUsuarioPorId(UsuarioAtualizacaoDto dto) {
+    public UsuarioTokenDto atualizarInformacaoUsuarioPorId(UsuarioAtualizacaoDto dto) {
         Usuario usuario = this.autenticacaoService.getUsuarioFromUsuarioDetails();
 
         Usuario usuarioValidado = usuarioMapper.of(usuario, dto);
@@ -94,10 +142,21 @@ public class UsuarioService {
             );
         }
 
-        return usuarioMapper.dtoOf(
-                this.usuarioRepository.save(
-                        usuarioValidado
-                )
+        usuario = this.usuarioRepository.save(usuarioValidado);
+
+        String secretQrCodeUrl = "";
+        String secret = "";
+
+        if (usuario.isUsing2FA()) {
+            secretQrCodeUrl = autenticacaoService.generateQRUrl(usuario);
+            secret = usuario.getSecret();
+        }
+
+        return UsuarioMapper.of(
+                usuario,
+                "",
+                secretQrCodeUrl,
+                secret
         );
     }
 
@@ -115,7 +174,19 @@ public class UsuarioService {
         usuarioRepository.save(usuario);
     }
 
-    public ListaObj<UsuarioDetalhadoDto> listar() {
+    public List<UsuarioDetalhadoDto> listar() {
+        return this.listarUsuarios().stream().map(usuarioMapper::dtoOf).toList();
+    }
+
+    public List<Usuario> listarUsuarios() {
+        return this.usuarioRepository.findAll();
+    }
+
+    public Page<Usuario> listarUsuarios(Pageable pageable) {
+        return this.usuarioRepository.findAll(pageable);
+    }
+
+    public ListaObj<UsuarioDetalhadoDto> listarObj() {
         ListaObj<UsuarioDetalhadoDto> usuarios = new ListaObj<>(40);
 
 
@@ -223,5 +294,19 @@ public class UsuarioService {
 
         return favoritos.map(UsuarioFavoritoDto::new);
 
+    }
+
+    public void validarFuncaoUsuario(Usuario usuario, UsuarioFuncao funcao) {
+        if (!usuario.getFuncao().equals(funcao)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Usuário não tem permissão para acessar este recurso");
+        }
+    }
+
+    public List<Usuario> buscarPorIds(List<Integer> idsEmpresasInteressadas) {
+        return this.usuarioRepository.findByIdIn(idsEmpresasInteressadas);
+    }
+
+    public Page<Usuario> listarUsuariosFreelancers(Pageable pageable) {
+        return this.usuarioRepository.findAllByFuncaoAndIsAtivoTrue(UsuarioFuncao.FREELANCER, pageable);
     }
 }
