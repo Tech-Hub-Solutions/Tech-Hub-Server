@@ -44,18 +44,14 @@ public class UsuarioService {
     private final FlagRepository flagRepository;
 
     public UsuarioTokenDto autenticar(UsuarioLoginDto usuarioLoginDto) {
-        final UsernamePasswordAuthenticationToken credentials = new UsernamePasswordAuthenticationToken(
-                usuarioLoginDto.email(), usuarioLoginDto.senha()
-        );
-        final Authentication authentication = this.authenticationManager.authenticate(credentials);
+
+        String token = autenticar(usuarioLoginDto.email(), usuarioLoginDto.senha());
 
         Usuario usuarioAutenticado = usuarioRepository.findByEmailAndIsAtivoTrue(usuarioLoginDto.email())
                 .orElseThrow(() ->
                         new ResponseStatusException(HttpStatusCode.valueOf(404), "Email do usuário não encontrado")
                 );
-        SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        String token = "";
 
         if (usuarioAutenticado.isUsing2FA() && !usuarioAutenticado.isValid2FA()) {
             usuarioAutenticado.setUsing2FA(false);
@@ -63,8 +59,8 @@ public class UsuarioService {
             usuarioRepository.save(usuarioAutenticado);
         }
 
-        if (!usuarioAutenticado.isUsing2FA()) {
-            token = gerenciadorTokenJwt.generateToken(authentication);
+        if (usuarioAutenticado.isUsing2FA()) {
+            token = "";
         }
 
         return UsuarioMapper.of(usuarioAutenticado, token, "","");
@@ -76,11 +72,7 @@ public class UsuarioService {
         Usuario usuario = this.usuarioRepository.findByEmailAndIsAtivoTrue(usuarioVerifyDto.email())
                 .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
 
-        final UsernamePasswordAuthenticationToken credentials = new UsernamePasswordAuthenticationToken(
-                usuarioVerifyDto.email(), usuarioVerifyDto.senha()
-        );
-
-        final Authentication authentication = this.authenticationManager.authenticate(credentials);
+        String token = autenticar(usuarioVerifyDto.email(), usuarioVerifyDto.senha());
 
         if (!usuario.isUsing2FA()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Usuário não está usando 2FA");
@@ -98,7 +90,7 @@ public class UsuarioService {
 
         return new UsuarioTokenDto(
                 usuario,
-                gerenciadorTokenJwt.generateToken(authentication),
+                token,
                 "", "");
     }
 
@@ -121,14 +113,27 @@ public class UsuarioService {
 
         String secretQrCodeUrl = "";
         String secret = "";
+        String token = autenticar(usuarioSalvo.getEmail(), dto.senha());
 
         if (usuarioSalvo.isUsing2FA()) {
             secretQrCodeUrl = autenticacaoService.generateQRUrl(usuarioSalvo);
             secret = usuarioSalvo.getSecret();
+            token = "";
         }
 
 
-        return UsuarioMapper.of(usuarioSalvo, "", secretQrCodeUrl, secret);
+        return UsuarioMapper.of(usuarioSalvo, token, secretQrCodeUrl, secret);
+    }
+
+    public String autenticar(String email, String senha) {
+        final UsernamePasswordAuthenticationToken credentials = new UsernamePasswordAuthenticationToken(
+                email, senha
+        );
+        final Authentication authentication = this.authenticationManager.authenticate(credentials);
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        return gerenciadorTokenJwt.generateToken(authentication);
     }
 
     public UsuarioTokenDto atualizarInformacaoUsuarioPorId(UsuarioAtualizacaoDto dto) {

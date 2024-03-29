@@ -28,7 +28,7 @@ public class UsuarioMapper {
         usuario.setEmail(dto.email());
         usuario.setSenha(passwordEncoder.encode(dto.senha()));
         usuario.setNumeroCadastroPessoa(dto.numeroCadastroPessoa());
-        usuario.setPais(dto.pais());
+        usuario.setPais("BR");
         usuario.setFuncao(dto.funcao());
         usuario.setAtivo(true);
         usuario.setUsing2FA(dto.isUsing2FA());
