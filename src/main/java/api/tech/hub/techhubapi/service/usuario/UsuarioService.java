@@ -35,6 +35,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class UsuarioService {
+
     private final UsuarioRepository usuarioRepository;
     private final GerenciadorTokenJwt gerenciadorTokenJwt;
     private final AuthenticationManager authenticationManager;
@@ -47,11 +48,12 @@ public class UsuarioService {
 
         String token = autenticar(usuarioLoginDto.email(), usuarioLoginDto.senha());
 
-        Usuario usuarioAutenticado = usuarioRepository.findByEmailAndIsAtivoTrue(usuarioLoginDto.email())
-                .orElseThrow(() ->
-                        new ResponseStatusException(HttpStatusCode.valueOf(404), "Email do usuário não encontrado")
-                );
-
+        Usuario usuarioAutenticado = usuarioRepository.findByEmailAndIsAtivoTrue(
+                    usuarioLoginDto.email())
+              .orElseThrow(() ->
+                    new ResponseStatusException(HttpStatusCode.valueOf(404),
+                          "Email do usuário não encontrado")
+              );
 
         if (usuarioAutenticado.isUsing2FA() && !usuarioAutenticado.isValid2FA()) {
             usuarioAutenticado.setUsing2FA(false);
@@ -63,19 +65,20 @@ public class UsuarioService {
             token = "";
         }
 
-        return UsuarioMapper.of(usuarioAutenticado, token, "","");
+        return UsuarioMapper.of(usuarioAutenticado, token, "", "");
     }
 
 
     public UsuarioTokenDto verify(UsuarioVerifyDto usuarioVerifyDto) {
 
         Usuario usuario = this.usuarioRepository.findByEmailAndIsAtivoTrue(usuarioVerifyDto.email())
-                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
+              .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
 
         String token = autenticar(usuarioVerifyDto.email(), usuarioVerifyDto.senha());
 
         if (!usuario.isUsing2FA()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Usuário não está usando 2FA");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                  "Usuário não está usando 2FA");
         }
 
         String verificationCode = usuarioVerifyDto.code();
@@ -89,21 +92,20 @@ public class UsuarioService {
         usuarioRepository.save(usuario);
 
         return new UsuarioTokenDto(
-                usuario,
-                token,
-                "", "");
+              usuario,
+              token,
+              "", "");
     }
 
     public UsuarioTokenDto salvarUsuarioCadastro(UsuarioCriacaoDto dto) {
         Usuario validado = usuarioMapper.of(dto);
         Optional<Usuario> usuarioOpt = this.usuarioRepository.findUsuarioByEmailAndNumeroCadastroPessoa(
-                validado.getEmail(),
-                validado.getNumeroCadastroPessoa());
+              validado.getEmail(),
+              validado.getNumeroCadastroPessoa());
 
         if (usuarioOpt.isPresent()) {
             throw new ResponseStatusException(HttpStatusCode.valueOf(409), "Usuário já existe!");
         }
-
 
         Perfil perfilUsuario = this.perfilRepository.save(new Perfil());
         Usuario usuarioSalvo = this.usuarioRepository.save(validado);
@@ -121,13 +123,12 @@ public class UsuarioService {
             token = "";
         }
 
-
         return UsuarioMapper.of(usuarioSalvo, token, secretQrCodeUrl, secret);
     }
 
     public String autenticar(String email, String senha) {
         final UsernamePasswordAuthenticationToken credentials = new UsernamePasswordAuthenticationToken(
-                email, senha
+              email, senha
         );
         final Authentication authentication = this.authenticationManager.authenticate(credentials);
 
@@ -138,42 +139,50 @@ public class UsuarioService {
 
     public UsuarioTokenDto atualizarInformacaoUsuarioPorId(UsuarioAtualizacaoDto dto) {
         Usuario usuario = this.autenticacaoService.getUsuarioFromUsuarioDetails();
+        var oldUserUses2FA = usuario.isUsing2FA();
 
         Usuario usuarioValidado = usuarioMapper.of(usuario, dto);
 
-        if (this.usuarioRepository.existsByEmailAndIdNot(usuarioValidado.getEmail(), usuario.getId())) {
+        boolean hasConflit = this.usuarioRepository.existsByEmailAndIdNot(
+              usuarioValidado.getEmail(),
+              usuario.getId());
+
+        if (hasConflit) {
             throw new ResponseStatusException(
-                    HttpStatus.CONFLICT, "Este email já esta em uso!"
+                  HttpStatus.CONFLICT, "Este email já esta em uso!"
             );
         }
 
-        usuario = this.usuarioRepository.save(usuarioValidado);
-
         String secretQrCodeUrl = "";
         String secret = "";
+        String token = "";
 
-        if (usuario.isUsing2FA()) {
+        if (dto.isUsing2FA() && !oldUserUses2FA) {
             secretQrCodeUrl = autenticacaoService.generateQRUrl(usuario);
             secret = usuario.getSecret();
+        } else {
+            token = autenticar(usuario.getEmail(), dto.senha());
         }
+        usuario = this.usuarioRepository.save(usuarioValidado);
 
         return UsuarioMapper.of(
-                usuario,
-                "",
-                secretQrCodeUrl,
-                secret
+              usuario,
+              token,
+              secretQrCodeUrl,
+              secret
         );
     }
 
     public Usuario buscarPorId(Integer id) {
         return this.usuarioRepository.findUsuarioByIdAndIsAtivoTrue(id).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado")
+              () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado")
         );
     }
 
     public void deletarUsuario(Integer id) {
         Usuario usuario = usuarioRepository.findUsuarioByIdAndIsAtivoTrue(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatusCode.valueOf(404), "Usuário não encontrado"));
+              .orElseThrow(() -> new ResponseStatusException(HttpStatusCode.valueOf(404),
+                    "Usuário não encontrado"));
 
         usuario.setAtivo(false);
         usuarioRepository.save(usuario);
@@ -193,7 +202,6 @@ public class UsuarioService {
 
     public ListaObj<UsuarioDetalhadoDto> listarObj() {
         ListaObj<UsuarioDetalhadoDto> usuarios = new ListaObj<>(40);
-
 
         for (Usuario u : this.usuarioRepository.findAll()) {
             usuarios.adiciona(new UsuarioDetalhadoDto(u));
@@ -225,7 +233,6 @@ public class UsuarioService {
         System.out.println("Pesquisar pelo nome Yoshi");
         System.out.println(pesquisaBinaria(usuarios, "Yoshi"));
 
-
         return usuarios;
     }
 
@@ -252,7 +259,6 @@ public class UsuarioService {
     public ListaObj<UsuarioConversaDto> listarTeste() {
         ListaObj<UsuarioConversaDto> usuarios = new ListaObj<>(40);
 
-
         for (Usuario u : this.usuarioRepository.findAll()) {
             usuarios.adiciona(new UsuarioConversaDto(u));
         }
@@ -260,25 +266,28 @@ public class UsuarioService {
         return usuarios;
     }
 
-    public Page<UsuarioBuscaDto> listarPor(UsuarioFiltroDto usuarioFiltroDto, Pageable pageable, String ordem) {
+    public Page<UsuarioBuscaDto> listarPor(UsuarioFiltroDto usuarioFiltroDto, Pageable pageable,
+          String ordem) {
 
         List<Flag> flags = null;
-        if (usuarioFiltroDto.tecnologiasIds() != null && !usuarioFiltroDto.tecnologiasIds().isEmpty()) {
+        if (usuarioFiltroDto.tecnologiasIds() != null && !usuarioFiltroDto.tecnologiasIds()
+              .isEmpty()) {
             flags = this.flagRepository.findByIdIn(usuarioFiltroDto.tecnologiasIds());
         }
 
         Specification<Usuario> specification = Specification
-                .allOf(
-                        UsuarioSpecification.hasFuncao(UsuarioFuncao.FREELANCER),
-                        UsuarioSpecification.hasNome(usuarioFiltroDto.nome()),
-                        UsuarioSpecification.hasArea(usuarioFiltroDto.area()),
-                        UsuarioSpecification.hasPrecoBetween(usuarioFiltroDto.precoMin(), usuarioFiltroDto.precoMax()),
-                        UsuarioSpecification.hasFlags(flags),
-                        UsuarioSpecification.sort(ordem)
-                );
+              .allOf(
+                    UsuarioSpecification.hasFuncao(UsuarioFuncao.FREELANCER),
+                    UsuarioSpecification.hasNome(usuarioFiltroDto.nome()),
+                    UsuarioSpecification.hasArea(usuarioFiltroDto.area()),
+                    UsuarioSpecification.hasPrecoBetween(usuarioFiltroDto.precoMin(),
+                          usuarioFiltroDto.precoMax()),
+                    UsuarioSpecification.hasFlags(flags),
+                    UsuarioSpecification.sort(ordem)
+              );
 
         return this.usuarioRepository.findAll(specification, pageable)
-                .map(UsuarioBuscaDto::new);
+              .map(UsuarioBuscaDto::new);
     }
 
 
@@ -286,12 +295,13 @@ public class UsuarioService {
         Usuario usuarioLogado = this.autenticacaoService.getUsuarioFromUsuarioDetails();
 
         if (usuarioLogado.getFuncao().equals(UsuarioFuncao.FREELANCER)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Freelancer não pode ter favoritos");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                  "Freelancer não pode ter favoritos");
         }
 
         Specification<Usuario> specification = Specification.allOf(
-                UsuarioSpecification.getFavoritos(usuarioLogado.getPerfil()),
-                UsuarioSpecification.sort(ordem)
+              UsuarioSpecification.getFavoritos(usuarioLogado.getPerfil()),
+              UsuarioSpecification.sort(ordem)
         );
 
         Page<Usuario> usuarios = this.usuarioRepository.findAll(specification, pageable);
@@ -303,7 +313,8 @@ public class UsuarioService {
 
     public void validarFuncaoUsuario(Usuario usuario, UsuarioFuncao funcao) {
         if (!usuario.getFuncao().equals(funcao)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Usuário não tem permissão para acessar este recurso");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                  "Usuário não tem permissão para acessar este recurso");
         }
     }
 
@@ -312,6 +323,7 @@ public class UsuarioService {
     }
 
     public Page<Usuario> listarUsuariosFreelancers(Pageable pageable) {
-        return this.usuarioRepository.findAllByFuncaoAndIsAtivoTrue(UsuarioFuncao.FREELANCER, pageable);
+        return this.usuarioRepository.findAllByFuncaoAndIsAtivoTrue(UsuarioFuncao.FREELANCER,
+              pageable);
     }
 }

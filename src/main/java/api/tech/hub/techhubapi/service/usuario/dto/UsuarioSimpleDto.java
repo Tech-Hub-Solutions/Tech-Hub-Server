@@ -11,14 +11,16 @@ public record UsuarioSimpleDto(
 
         String pais,
 
-        String funcao
+        String funcao,
+        boolean isUsing2FA
 ) {
     public UsuarioSimpleDto(Usuario usuario) {
         this(
                 usuario.getNome(),
                 usuario.getEmail(),
                 usuario.getPais(),
-                usuario.getFuncao().toString()
+                usuario.getFuncao().toString(),
+                usuario.isUsing2FA()
         );
     }
 }
