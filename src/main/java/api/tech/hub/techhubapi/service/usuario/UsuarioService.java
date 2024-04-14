@@ -9,6 +9,7 @@ import api.tech.hub.techhubapi.entity.usuario.UsuarioFuncao;
 import api.tech.hub.techhubapi.repository.FlagRepository;
 import api.tech.hub.techhubapi.repository.PerfilRepository;
 import api.tech.hub.techhubapi.repository.UsuarioRepository;
+import api.tech.hub.techhubapi.service.arquivo.ftp.FtpService;
 import api.tech.hub.techhubapi.service.conversa.dto.UsuarioConversaDto;
 import api.tech.hub.techhubapi.service.usuario.autenticacao.AutenticacaoService;
 import api.tech.hub.techhubapi.service.usuario.dto.*;
@@ -43,6 +44,7 @@ public class UsuarioService {
     private final UsuarioMapper usuarioMapper;
     private final PerfilRepository perfilRepository;
     private final FlagRepository flagRepository;
+    private final FtpService ftpService;
 
     public UsuarioTokenDto autenticar(UsuarioLoginDto usuarioLoginDto) {
 
@@ -65,7 +67,7 @@ public class UsuarioService {
             token = "";
         }
 
-        return UsuarioMapper.of(usuarioAutenticado, token, "", "");
+        return UsuarioMapper.of(usuarioAutenticado, token, "", "", ftpService);
     }
 
 
@@ -94,7 +96,7 @@ public class UsuarioService {
         return new UsuarioTokenDto(
               usuario,
               token,
-              "", "");
+              "", "", ftpService);
     }
 
     public UsuarioTokenDto salvarUsuarioCadastro(UsuarioCriacaoDto dto) {
@@ -123,7 +125,7 @@ public class UsuarioService {
             token = "";
         }
 
-        return UsuarioMapper.of(usuarioSalvo, token, secretQrCodeUrl, secret);
+        return UsuarioMapper.of(usuarioSalvo, token, secretQrCodeUrl, secret,ftpService);
     }
 
     public String autenticar(String email, String senha) {
@@ -169,7 +171,8 @@ public class UsuarioService {
               usuario,
               token,
               secretQrCodeUrl,
-              secret
+              secret,
+              ftpService
         );
     }
 
@@ -260,7 +263,7 @@ public class UsuarioService {
         ListaObj<UsuarioConversaDto> usuarios = new ListaObj<>(40);
 
         for (Usuario u : this.usuarioRepository.findAll()) {
-            usuarios.adiciona(new UsuarioConversaDto(u));
+            usuarios.adiciona(new UsuarioConversaDto(u, ftpService));
         }
 
         return usuarios;
@@ -287,7 +290,7 @@ public class UsuarioService {
               );
 
         return this.usuarioRepository.findAll(specification, pageable)
-              .map(UsuarioBuscaDto::new);
+              .map(u -> new UsuarioBuscaDto(u, ftpService));
     }
 
 
@@ -307,7 +310,7 @@ public class UsuarioService {
         Page<Usuario> usuarios = this.usuarioRepository.findAll(specification, pageable);
         Page<Perfil> favoritos = usuarios.map(Usuario::getPerfil);
 
-        return favoritos.map(UsuarioFavoritoDto::new);
+        return favoritos.map(p -> new UsuarioFavoritoDto(p, ftpService));
 
     }
 

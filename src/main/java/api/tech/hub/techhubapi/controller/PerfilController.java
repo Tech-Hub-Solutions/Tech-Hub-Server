@@ -1,13 +1,10 @@
 package api.tech.hub.techhubapi.controller;
 
-import api.tech.hub.techhubapi.entity.Arquivo;
-import api.tech.hub.techhubapi.service.arquivo.ArquivoService;
 import api.tech.hub.techhubapi.service.arquivo.TipoArquivo;
 import api.tech.hub.techhubapi.service.avaliacao.AvaliacaoService;
 import api.tech.hub.techhubapi.service.avaliacao.dto.AvaliacaoDetalhadoDto;
 import api.tech.hub.techhubapi.service.avaliacao.dto.AvaliacaoTotal;
 import api.tech.hub.techhubapi.service.avaliacao.dto.avaliacaoDto;
-import api.tech.hub.techhubapi.service.conversa.ConversaService;
 import api.tech.hub.techhubapi.service.perfil.PerfilService;
 import api.tech.hub.techhubapi.service.perfil.dto.PerfilCadastroDto;
 import api.tech.hub.techhubapi.service.perfil.dto.PerfilDetalhadoDto;
@@ -18,8 +15,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,9 +29,6 @@ public class PerfilController {
     private final PerfilService perfilService;
     private final ReferenciaPerfilService referenciaPerfilService;
     private final AvaliacaoService avaliacaoService;
-    private final ArquivoService arquivoService;
-
-
 
     @GetMapping("/{idUsuario}")
     public ResponseEntity<PerfilGeralDetalhadoDto> buscarPerfilGeral(@PathVariable Integer idUsuario){

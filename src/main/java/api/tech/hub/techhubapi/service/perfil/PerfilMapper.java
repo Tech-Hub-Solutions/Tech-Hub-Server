@@ -5,6 +5,7 @@ import api.tech.hub.techhubapi.entity.perfil.ReferenciaPerfil;
 import api.tech.hub.techhubapi.entity.usuario.Usuario;
 import api.tech.hub.techhubapi.service.arquivo.ArquivoService;
 import api.tech.hub.techhubapi.service.arquivo.TipoArquivo;
+import api.tech.hub.techhubapi.service.arquivo.ftp.FtpService;
 import api.tech.hub.techhubapi.service.avaliacao.AvaliacaoMapper;
 import api.tech.hub.techhubapi.service.flag.FlagUsuarioMapper;
 import api.tech.hub.techhubapi.service.flag.dto.FlagDto;
@@ -20,9 +21,11 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class PerfilMapper {
+
     private final AvaliacaoMapper avaliacaoMapper;
     private final ReferenciaPerfilMapper referenciaPerfilMapper;
     private final FlagUsuarioMapper flagUsuarioMapper;
+    private final FtpService ftpService;
 
     public Perfil of(Perfil perfil, PerfilCadastroDto dto) {
 
@@ -49,7 +52,8 @@ public class PerfilMapper {
         dto.setNomeGithub(perfil.getNomeGithub());
         dto.setLinkGithub(perfil.getLinkGithub());
         dto.setLinkLinkedin(perfil.getLinkLinkedin());
-        dto.setFlags(this.flagUsuarioMapper.retornarFlagList(perfil.getFlagUsuarioList()).stream().map(FlagDto::new).toList());
+        dto.setFlags(this.flagUsuarioMapper.retornarFlagList(perfil.getFlagUsuarioList()).stream()
+              .map(FlagDto::new).toList());
 
         return dto;
     }
@@ -58,27 +62,33 @@ public class PerfilMapper {
         Usuario usuario = perfil.getUsuario();
         List<ReferenciaPerfil> referenciaPerfilList = perfil.getReferenciaPerfilList();
         return new PerfilGeralDetalhadoDto(
-                usuario.getId(),
-                perfil.getId(),
-                ArquivoService.criarUrlArquivo(perfil, TipoArquivo.PERFIL),
-                ArquivoService.criarUrlArquivo(perfil, TipoArquivo.WALLPAPER),
-                ArquivoService.criarUrlArquivo(perfil, TipoArquivo.CURRICULO),
-                usuario.getNome(),
-                usuario.getEmail(),
-                usuario.getPais(),
-                usuario.getFuncao(),
-                perfil.getSobreMim(),
-                perfil.getExperiencia(),
-                perfil.getDescricao(),
-                perfil.getPrecoMedio(),
-                perfil.getNomeGithub(),
-                perfil.getLinkGithub(),
-                perfil.getLinkLinkedin(),
-                this.flagUsuarioMapper.retornarFlagList(perfil.getFlagUsuarioList()).stream().map(FlagDto::new).toList(),
-                this.referenciaPerfilMapper.retornarIsFavorito(usuarioLogado, referenciaPerfilList),
-                this.referenciaPerfilMapper.retornarQtdFavoritos(usuarioLogado, referenciaPerfilList),
-                this.referenciaPerfilMapper.retornarIsRecomendado(usuarioLogado, referenciaPerfilList),
-                this.referenciaPerfilMapper.retornarQtdRecomendacoes(usuarioLogado, referenciaPerfilList)
+              usuario.getId(),
+              perfil.getId(),
+              ftpService.getArquivoUrl(
+                    ArquivoService.getArquivoOfPerfil(perfil, TipoArquivo.PERFIL), false),
+              ftpService.getArquivoUrl(
+                    ArquivoService.getArquivoOfPerfil(perfil, TipoArquivo.WALLPAPER), false),
+              ftpService.getArquivoUrl(
+                    ArquivoService.getArquivoOfPerfil(perfil, TipoArquivo.CURRICULO), false),
+              usuario.getNome(),
+              usuario.getEmail(),
+              usuario.getPais(),
+              usuario.getFuncao(),
+              perfil.getSobreMim(),
+              perfil.getExperiencia(),
+              perfil.getDescricao(),
+              perfil.getPrecoMedio(),
+              perfil.getNomeGithub(),
+              perfil.getLinkGithub(),
+              perfil.getLinkLinkedin(),
+              this.flagUsuarioMapper.retornarFlagList(perfil.getFlagUsuarioList()).stream()
+                    .map(FlagDto::new).toList(),
+              this.referenciaPerfilMapper.retornarIsFavorito(usuarioLogado, referenciaPerfilList),
+              this.referenciaPerfilMapper.retornarQtdFavoritos(usuarioLogado, referenciaPerfilList),
+              this.referenciaPerfilMapper.retornarIsRecomendado(usuarioLogado,
+                    referenciaPerfilList),
+              this.referenciaPerfilMapper.retornarQtdRecomendacoes(usuarioLogado,
+                    referenciaPerfilList)
         );
     }
 }

@@ -1,6 +1,5 @@
 package api.tech.hub.techhubapi.service.perfil;
 
-import api.tech.hub.techhubapi.entity.perfil.Avaliacao;
 import api.tech.hub.techhubapi.entity.perfil.Perfil;
 import api.tech.hub.techhubapi.entity.usuario.Usuario;
 import api.tech.hub.techhubapi.entity.usuario.UsuarioFuncao;
@@ -15,8 +14,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 

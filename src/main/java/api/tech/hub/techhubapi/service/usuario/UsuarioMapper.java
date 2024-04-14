@@ -1,6 +1,7 @@
 package api.tech.hub.techhubapi.service.usuario;
 
 import api.tech.hub.techhubapi.entity.usuario.Usuario;
+import api.tech.hub.techhubapi.service.arquivo.ftp.FtpService;
 import api.tech.hub.techhubapi.service.perfil.dto.PerfilDetalhadoDto;
 import api.tech.hub.techhubapi.service.usuario.autenticacao.AutenticacaoService;
 import api.tech.hub.techhubapi.service.usuario.dto.*;
@@ -57,8 +58,8 @@ public class UsuarioMapper {
     }
 
     public static UsuarioTokenDto of(Usuario usuario, String token, String secretQrCodeUrl,
-          String secret) {
-        return new UsuarioTokenDto(usuario, token, secretQrCodeUrl, secret);
+          String secret, FtpService ftpService) {
+        return new UsuarioTokenDto(usuario, token, secretQrCodeUrl, secret, ftpService);
     }
 
 
