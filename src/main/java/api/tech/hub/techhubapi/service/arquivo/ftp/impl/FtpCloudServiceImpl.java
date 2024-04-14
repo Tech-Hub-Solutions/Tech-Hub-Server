@@ -55,8 +55,7 @@ public class FtpCloudServiceImpl implements FtpService {
 
         } catch (Exception e) {
             e.printStackTrace();
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY,
-                  "Erro ao obter arquivo");
+            return null;
         }
     }
 
