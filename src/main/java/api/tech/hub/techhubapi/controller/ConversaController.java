@@ -77,7 +77,7 @@ ConversaController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/gerar-csv/{room}/")
+    @GetMapping("/gerar-csv/{room}")
     public ResponseEntity<Resource> gerarCsvConversa(@PathVariable String room) {
         List<Mensagem> mensagens = this.conversaService.listarMensagensBanco(room);
         List<Usuario> usuarios = this.conversaService.listarUsuarios(room);
