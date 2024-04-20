@@ -6,10 +6,11 @@ import api.tech.hub.techhubapi.entity.Arquivo;
 import api.tech.hub.techhubapi.repository.ArquivoRepository;
 import api.tech.hub.techhubapi.service.arquivo.ftp.FtpService;
 import api.tech.hub.techhubapi.service.arquivo.TipoArquivo;
-import com.cloudinary.api.ApiResponse;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.StringTokenizer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.HttpStatus;
@@ -37,21 +38,21 @@ public class FtpCloudServiceImpl implements FtpService {
                     "Arquivo não encontrado"));
 
         try {
-            ApiResponse apiResponse = cloudinary.api()
-                  .resourceByAssetID(arquivo.getNomeArquivoSalvo(), ObjectUtils.emptyMap());
-            String resourceType = apiResponse.get("resource_type").toString();
-            String secureUrl = apiResponse.get("secure_url").toString();
+            String nomeArquivoSalvo = arquivo.getNomeArquivoSalvo();
+            Map<String, String> nomeArquivoSalvoMap = convertStringToMap(nomeArquivoSalvo);
+            String resourceType = nomeArquivoSalvoMap.get("resource_type");
 
             if (resourceType.equals("raw") || download) {
+                String publicId = nomeArquivoSalvoMap.get("public_id");
+
                 return cloudinary.url()
                       .resourceType(resourceType)
                       .transformation(new Transformation().flags(
                             "attachment:" + arquivo.getNomeArquivoOriginal().split("\\.")[0])
-                      ).generate(
-                            apiResponse.get("public_id").toString());
+                      ).generate(publicId);
             }
 
-            return secureUrl;
+            return nomeArquivoSalvoMap.get("secure_url");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -67,7 +68,7 @@ public class FtpCloudServiceImpl implements FtpService {
 
             Arquivo arquivoSalvo = Arquivo.builder()
                   .nomeArquivoOriginal(arquivo.getOriginalFilename())
-                  .nomeArquivoSalvo(uploadResult.get("asset_id").toString())
+                  .nomeArquivoSalvo(filterMapRespose(uploadResult).toString())
                   .tipoArquivo(tipoArquivo)
                   .build();
 
@@ -93,7 +94,7 @@ public class FtpCloudServiceImpl implements FtpService {
                   .upload(convertToFile(arquivo), getParams(tipoArquivo, arquivo));
 
             arquivoAtual.setNomeArquivoOriginal(arquivo.getOriginalFilename());
-            arquivoAtual.setNomeArquivoSalvo(uploadResult.get("asset_id").toString());
+            arquivoAtual.setNomeArquivoSalvo(filterMapRespose(uploadResult).toString());
             arquivoAtual.setTipoArquivo(tipoArquivo);
             arquivoAtual.setDataUpload(LocalDate.now());
 
@@ -114,5 +115,30 @@ public class FtpCloudServiceImpl implements FtpService {
               "resource_type", "auto",
               "format", arquivo.getOriginalFilename().split("\\.")[1]
         );
+    }
+
+    private Map<String, String> convertStringToMap(String data) {
+        Map<String, String> map = new HashMap<>();
+        if (!data.contains("{") || !data.contains("}")) {
+            return map;
+        }
+        StringTokenizer st = new StringTokenizer(data, "{}=, ");
+        while (st.hasMoreTokens()) {
+            map.put(st.nextToken(), st.nextToken());
+        }
+        return map;
+    }
+
+    private Map<String, String> filterMapRespose(Map map) {
+        Map<String, String> nomeArquivoSalvoMap = new HashMap<>();
+        nomeArquivoSalvoMap.put("public_id", map.get("public_id").toString());
+        nomeArquivoSalvoMap.put("asset_id", map.get("asset_id").toString());
+        nomeArquivoSalvoMap.put("resource_type", map.get("resource_type").toString());
+        nomeArquivoSalvoMap.put("secure_url", map.get("secure_url").toString());
+        nomeArquivoSalvoMap.put("format", map.get("format").toString());
+        nomeArquivoSalvoMap.put("width", map.get("width").toString());
+        nomeArquivoSalvoMap.put("height", map.get("height").toString());
+
+        return nomeArquivoSalvoMap;
     }
 }
