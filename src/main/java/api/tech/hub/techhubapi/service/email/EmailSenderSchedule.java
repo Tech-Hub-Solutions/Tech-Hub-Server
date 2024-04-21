@@ -32,7 +32,8 @@ public class EmailSenderSchedule {
                 MetricasUsuarioResponseDto metricasUsuario = metricaUsuarioService.buscarMetricasUsuario(usuario);
                 enviarEmail(usuario, metricasUsuario);
             });
-            usuarios = usuarioService.listarUsuarios(usuarios.nextPageable());
+            usuarios = usuarioService.listarUsuariosFreelancers(usuarios.nextPageable());
+
         }
         while (usuarios.hasNext());
     }
