@@ -125,7 +125,7 @@ public class UsuarioService {
             token = "";
         }
 
-        return UsuarioMapper.of(usuarioSalvo, token, secretQrCodeUrl, secret,ftpService);
+        return UsuarioMapper.of(usuarioSalvo, token, secretQrCodeUrl, secret, ftpService);
     }
 
     public String autenticar(String email, String senha) {
@@ -187,8 +187,8 @@ public class UsuarioService {
               .orElseThrow(() -> new ResponseStatusException(HttpStatusCode.valueOf(404),
                     "Usuário não encontrado"));
 
-        usuario.setAtivo(false);
-        usuarioRepository.save(usuario);
+        perfilRepository.delete(usuario.getPerfil());
+        usuarioRepository.delete(usuario);
     }
 
     public List<UsuarioDetalhadoDto> listar() {
@@ -326,7 +326,9 @@ public class UsuarioService {
     }
 
     public Page<Usuario> listarUsuariosFreelancers(Pageable pageable) {
-        return this.usuarioRepository.findAllByFuncaoAndIsAtivoTrue(UsuarioFuncao.FREELANCER,
+        return this.usuarioRepository.findAllByFuncaoAndIsAtivoTrueAndEmailNotContains(
+              UsuarioFuncao.FREELANCER,
+              "example@example",
               pageable);
     }
 }

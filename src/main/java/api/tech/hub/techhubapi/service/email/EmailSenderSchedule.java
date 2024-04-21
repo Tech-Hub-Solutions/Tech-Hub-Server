@@ -1,4 +1,4 @@
-package api.tech.hub.techhubapi.service.schedule;
+package api.tech.hub.techhubapi.service.email;
 
 import api.tech.hub.techhubapi.entity.usuario.Usuario;
 import api.tech.hub.techhubapi.service.email.EmailService;
@@ -36,6 +36,8 @@ public class EmailSenderSchedule {
 
         }
         while (usuarios.hasNext());
+
+        System.out.println("\nEmails enviados\n");
     }
 
     private void enviarEmail(Usuario usuario, MetricasUsuarioResponseDto metricasUsuario) {

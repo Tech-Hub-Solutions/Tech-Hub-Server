@@ -16,10 +16,13 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface UsuarioRepository extends JpaRepository<Usuario, Integer>, JpaSpecificationExecutor<Usuario> {
+public interface UsuarioRepository extends JpaRepository<Usuario, Integer>,
+      JpaSpecificationExecutor<Usuario> {
+
     Optional<Usuario> findByEmailAndIsAtivoTrue(String email);
 
-    Optional<Usuario> findUsuarioByEmailAndNumeroCadastroPessoa(String email, String numeroCadastroPessoa);
+    Optional<Usuario> findUsuarioByEmailAndNumeroCadastroPessoa(String email,
+          String numeroCadastroPessoa);
 
     Boolean existsByEmailAndIdNot(String email, Integer usuarioId);
 
@@ -32,6 +35,6 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer>, JpaS
     @Query("UPDATE Usuario u SET u.perfil = :perfil WHERE u.id = :id")
     void atualizarPerfilDoUsuario(Integer id, Perfil perfil);
 
-    Page<Usuario> findAllByFuncaoAndIsAtivoTrue(UsuarioFuncao usuarioFuncao, Pageable pageable);
-
+    Page<Usuario> findAllByFuncaoAndIsAtivoTrueAndEmailNotContains(UsuarioFuncao usuarioFuncao,
+          String emailPattern, Pageable pageable);
 }
