@@ -157,6 +157,9 @@ public class ArquivoService {
     }
 
     public static Integer getArquivoOfPerfil(Perfil perfil, TipoArquivo tipoArquivo) {
+        if(Objects.isNull(perfil)) {
+            return null;
+        }
         return perfil.getArquivos()
               .stream()
               .filter(arquivo -> arquivo.getTipoArquivo().equals(tipoArquivo))
