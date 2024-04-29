@@ -1,6 +1,8 @@
 package api.tech.hub.techhubapi.controller;
 
+import api.tech.hub.techhubapi.entity.Arquivo;
 import api.tech.hub.techhubapi.service.arquivo.TipoArquivo;
+import api.tech.hub.techhubapi.service.arquivo.ftp.FtpService;
 import api.tech.hub.techhubapi.service.avaliacao.AvaliacaoService;
 import api.tech.hub.techhubapi.service.avaliacao.dto.AvaliacaoDetalhadoDto;
 import api.tech.hub.techhubapi.service.avaliacao.dto.AvaliacaoTotal;
@@ -9,6 +11,7 @@ import api.tech.hub.techhubapi.service.perfil.PerfilService;
 import api.tech.hub.techhubapi.service.perfil.dto.PerfilCadastroDto;
 import api.tech.hub.techhubapi.service.perfil.dto.PerfilDetalhadoDto;
 import api.tech.hub.techhubapi.service.perfil.dto.PerfilGeralDetalhadoDto;
+import api.tech.hub.techhubapi.service.perfil.dto.PerfilNewArquivo;
 import api.tech.hub.techhubapi.service.referencia.ReferenciaPerfilService;
 import api.tech.hub.techhubapi.service.referencia.dto.ReferenciaDetalhadoDto;
 import jakarta.validation.Valid;
@@ -29,6 +32,7 @@ import java.util.List;
 public class PerfilController {
 
     private final PerfilService perfilService;
+    private final FtpService ftpService;
     private final ReferenciaPerfilService referenciaPerfilService;
     private final AvaliacaoService avaliacaoService;
 
@@ -46,13 +50,15 @@ public class PerfilController {
     }
 
     @PutMapping("/arquivo")
-    public ResponseEntity<Void> atualizarArquivoPerfil(
+    public ResponseEntity<PerfilNewArquivo> atualizarArquivoPerfil(
             @RequestParam MultipartFile arquivo,
             @RequestParam TipoArquivo tipoArquivo
     ) {
-        this.perfilService.atualizarArquivoPerfil(arquivo, tipoArquivo);
+        Arquivo newArquivo = this.perfilService.atualizarArquivoPerfil(arquivo, tipoArquivo);
+        String url = this.ftpService.getArquivoUrl(newArquivo.getId(), false);
 
-        return ResponseEntity.ok().build();
+        log.info("Arquivo atualizado. Nova url: {}", url);
+        return ResponseEntity.ok(new PerfilNewArquivo(url));
     }
 
     @PostMapping("/avaliacao/{idUsuario}")
