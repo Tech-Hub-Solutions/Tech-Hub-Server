@@ -104,10 +104,15 @@ public class FtpCloudServiceImpl implements FtpService {
             e.printStackTrace();
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY,
                   "Erro ao atualizar arquivo");
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY,
+                  "Erro ao atualizar arquivo");
         }
     }
 
     private Map<String, String> getParams(TipoArquivo tipoArquivo, MultipartFile arquivo) {
+        var a = arquivo.getOriginalFilename();
         return ObjectUtils.asMap(
               "folder", tipoArquivo.name(),
               "use_filename", true,

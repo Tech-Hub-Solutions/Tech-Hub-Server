@@ -14,6 +14,7 @@ import api.tech.hub.techhubapi.service.perfil.dto.PerfilDetalhadoDto;
 import api.tech.hub.techhubapi.service.perfil.dto.PerfilGeralDetalhadoDto;
 import api.tech.hub.techhubapi.service.usuario.autenticacao.AutenticacaoService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,6 +22,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PerfilService {
 
     private final PerfilRepository perfilRepository;
@@ -53,7 +55,10 @@ public class PerfilService {
     }
 
     public PerfilDetalhadoDto atualizarPerfil(PerfilCadastroDto dto) {
+
         Usuario usuarioLogado = this.autenticacaoService.getUsuarioFromUsuarioDetails();
+
+        log.info("Atualizando perfil do usuário: {}", usuarioLogado.getId());
 
         Perfil perfil = this.perfilRepository.encontrarPerfilPorIdUsuario(usuarioLogado.getId())
               .get();
@@ -82,6 +87,7 @@ public class PerfilService {
 
     public Arquivo atualizarArquivoPerfil(MultipartFile arquivo, TipoArquivo tipoArquivo) {
         Usuario usuarioLogado = this.autenticacaoService.getUsuarioFromUsuarioDetails();
+        log.info("Atualizando arquivo do tipo {} do usuário: {}", tipoArquivo, usuarioLogado.getId());
 
         Perfil perfil = this.perfilRepository.findById(usuarioLogado.getPerfil().getId())
               .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,

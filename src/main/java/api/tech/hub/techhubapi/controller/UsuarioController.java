@@ -11,6 +11,7 @@ import api.tech.hub.techhubapi.service.usuario.UsuarioService;
 import api.tech.hub.techhubapi.service.usuario.dto.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/usuarios")
 @RequiredArgsConstructor
+@Slf4j
 public class UsuarioController {
 
     private final UsuarioService usuarioService;
@@ -29,12 +31,16 @@ public class UsuarioController {
 
     @PostMapping("/login")
     public ResponseEntity<UsuarioTokenDto> login(@RequestBody UsuarioLoginDto usuarioLoginDto) {
+        log.info("Fazendo login com email: {}", usuarioLoginDto.email());
         UsuarioTokenDto usuarioTokenDto = this.usuarioService.autenticar(usuarioLoginDto);
         return ResponseEntity.status(200).body(usuarioTokenDto);
     }
 
     @PostMapping("/verify")
-    public ResponseEntity<UsuarioTokenDto> verify(@RequestBody @Valid UsuarioVerifyDto usuarioVerifyDto) {
+    public ResponseEntity<UsuarioTokenDto> verify(
+          @RequestBody @Valid UsuarioVerifyDto usuarioVerifyDto) {
+        log.info("Verificando usuário com email: {} e código: {}", usuarioVerifyDto.email(),
+              usuarioVerifyDto.code());
         UsuarioTokenDto usuarioTokenDto = this.usuarioService.verify(usuarioVerifyDto);
         return ResponseEntity.status(200).body(usuarioTokenDto);
     }
@@ -46,6 +52,8 @@ public class UsuarioController {
         if (usuarios.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
+
+        log.info("Listando usuários");
         return ResponseEntity.status(200).body(usuarios);
     }
 
@@ -56,6 +64,7 @@ public class UsuarioController {
         if (usuarios.getTamanho() == 0) {
             return ResponseEntity.noContent().build();
         }
+        log.info("Listando usuários com ListaObj");
         return ResponseEntity.status(200).body(usuarios);
     }
 
@@ -66,12 +75,16 @@ public class UsuarioController {
         if (usuarios.getTamanho() == 0) {
             return ResponseEntity.noContent().build();
         }
+
+        log.info("Listando usuários teste com ListaObj");
         return ResponseEntity.status(200).body(usuarios);
     }
 
     @PostMapping
-    public ResponseEntity<UsuarioTokenDto> cadastrarUsuario(@RequestBody @Valid UsuarioCriacaoDto dto) {
+    public ResponseEntity<UsuarioTokenDto> cadastrarUsuario(
+          @RequestBody @Valid UsuarioCriacaoDto dto) {
         UsuarioTokenDto usuarioSalvo = usuarioService.salvarUsuarioCadastro(dto);
+        log.info("Cadastrando usuário com email: {}", dto.email());
         return ResponseEntity.status(201).body(usuarioSalvo);
     }
 
@@ -79,8 +92,10 @@ public class UsuarioController {
     public ResponseEntity<UsuarioGeralDto> buscarUsuario(@PathVariable Integer id) {
         Usuario usuario = this.usuarioService.buscarPorId(id);
 
-        PerfilDetalhadoDto perfil = perfilService.buscarPerfilDetalhadoPorIdUsuario(usuario.getId());
+        PerfilDetalhadoDto perfil = perfilService.buscarPerfilDetalhadoPorIdUsuario(
+              usuario.getId());
 
+        log.info("Buscando usuário com id: {}", id);
         return ResponseEntity.ok(usuarioMapper.usuarioGeralDtoOf(usuario, perfil));
     }
 
@@ -88,19 +103,21 @@ public class UsuarioController {
     public ResponseEntity<UsuarioSimpleDto> buscarSimpleUsuario(@PathVariable Integer id) {
         Usuario usuario = this.usuarioService.buscarPorId(id);
 
+        log.info("Buscando usuário simples com id: {}", id);
         return ResponseEntity.ok(new UsuarioSimpleDto(usuario));
     }
 
 
     @PutMapping
     public ResponseEntity<UsuarioTokenDto> atualizarUsuarioPorId(
-            @RequestBody UsuarioAtualizacaoDto dto) {
+          @RequestBody UsuarioAtualizacaoDto dto) {
         return ResponseEntity.ok(this.usuarioService.atualizarInformacaoUsuarioPorId(dto));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> desativarUsuario(@PathVariable Integer id) {
         usuarioService.deletarUsuario(id);
+        log.info("Desativando usuário com id: {}", id);
         return ResponseEntity.noContent().build();
     }
 
@@ -112,23 +129,25 @@ public class UsuarioController {
     // Exemplo: http://localhost:8080/usuarios/filtro?page=0&size=10&sort=nome,asc
     @PostMapping("/filtro")
     public ResponseEntity<Page<UsuarioBuscaDto>> listarPor(
-            @RequestBody UsuarioFiltroDto usuarioFiltroDto,
-            @RequestParam(required = false) String ordem,
-            Pageable paginacao
+          @RequestBody UsuarioFiltroDto usuarioFiltroDto,
+          @RequestParam(required = false) String ordem,
+          Pageable paginacao
     ) {
-        Page<UsuarioBuscaDto> usuarios = this.usuarioService.listarPor(usuarioFiltroDto, paginacao, ordem);
+        Page<UsuarioBuscaDto> usuarios = this.usuarioService.listarPor(usuarioFiltroDto, paginacao,
+              ordem);
 
         if (usuarios.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
 
+        log.info("Listando usuários por filtro {}", usuarioFiltroDto);
         return ResponseEntity.ok(usuarios);
     }
 
     @GetMapping("/favoritos")
     public ResponseEntity<Page<UsuarioFavoritoDto>> listarFavoritos(
-            Pageable pageable,
-            @RequestParam(required = false) String ordem
+          Pageable pageable,
+          @RequestParam(required = false) String ordem
     ) {
         Page<UsuarioFavoritoDto> usuarios = this.usuarioService.listarFavoritos(pageable, ordem);
 

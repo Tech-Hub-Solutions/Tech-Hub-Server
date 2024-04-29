@@ -7,11 +7,13 @@ import api.tech.hub.techhubapi.service.metricausuario.dto.VisualizacaoPerfilResp
 import api.tech.hub.techhubapi.service.metricausuario.MetricaUsuarioService;
 import api.tech.hub.techhubapi.service.usuario.UsuarioService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
 @RestController
+@Slf4j
 @RequestMapping("/metricas-usuario")
 @RequiredArgsConstructor
 public class MetricaUsuarioController {
@@ -22,6 +24,7 @@ public class MetricaUsuarioController {
     @PostMapping("{idPerfil}")
     public ResponseEntity<VisualizacaoPerfilResponseDto> adicionarVisualizacao(@PathVariable Integer idPerfil) {
         VisualizacaoPerfil visualizacaoPerfil = this.metricaUsuarioService.adicionarVisualizacao(idPerfil);
+        log.info("Adicionando visualização para o perfil de id: {}", idPerfil);
 
         return ResponseEntity.created(null).body(new VisualizacaoPerfilResponseDto(visualizacaoPerfil));
     }
@@ -32,6 +35,7 @@ public class MetricaUsuarioController {
             @PathVariable Integer idUsuario
     ) {
         Usuario usuario = this.usuarioService.buscarPorId(idUsuario);
+        log.info("Buscando métricas do usuário de id: {}", idUsuario);
         return ResponseEntity.ok(this.metricaUsuarioService.buscarMetricasUsuario(usuario));
     }
 }

@@ -13,6 +13,7 @@ import api.tech.hub.techhubapi.service.referencia.ReferenciaPerfilService;
 import api.tech.hub.techhubapi.service.referencia.dto.ReferenciaDetalhadoDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/perfis")
+@Slf4j
 @RequiredArgsConstructor
 public class PerfilController {
 
@@ -32,6 +34,7 @@ public class PerfilController {
 
     @GetMapping("/{idUsuario}")
     public ResponseEntity<PerfilGeralDetalhadoDto> buscarPerfilGeral(@PathVariable Integer idUsuario){
+        log.info("Buscando perfil geral do usuário: {}", idUsuario);
         return ResponseEntity.ok(this.perfilService.buscarPerfilGeralPorIdUsuario(idUsuario));
     }
 
@@ -55,6 +58,7 @@ public class PerfilController {
     @PostMapping("/avaliacao/{idUsuario}")
     public ResponseEntity<AvaliacaoDetalhadoDto> avaliarPerfil(@PathVariable Integer idUsuario,
                                                                @RequestBody @Valid avaliacaoDto dto){
+        log.info("Avaliando perfil do usuário: {}", idUsuario);
         return ResponseEntity.ok(this.avaliacaoService.avaliar(dto, idUsuario));
     }
 
@@ -69,6 +73,8 @@ public class PerfilController {
             return ResponseEntity.noContent().build();
         }
 
+        log.info("Buscando avaliações do perfil do usuário: {}", idUsuario);
+
         return ResponseEntity.ok(lista);
     }
 
@@ -80,16 +86,20 @@ public class PerfilController {
             return ResponseEntity.noContent().build();
         }
 
+        log.info("Buscando avaliações gerais do usuário: {}", idUsuario);
+
         return ResponseEntity.ok(avaliacaoTotals);
     }
 
     @PutMapping("/favoritar/{idAvaliado}")
     public ResponseEntity<ReferenciaDetalhadoDto> favoritarTerceiro(@PathVariable Integer idAvaliado){
+        log.info("Favoritando usuario: {}", idAvaliado);
         return ResponseEntity.ok(this.referenciaPerfilService.favoritarTerceiro(idAvaliado));
     }
 
     @PutMapping("/recomendar/{idAvaliado}")
     public ResponseEntity<ReferenciaDetalhadoDto> recomendarTerceiro(@PathVariable Integer idAvaliado){
+        log.info("Recomendando usuario: {}", idAvaliado);
         return ResponseEntity.ok(this.referenciaPerfilService.recomendarTerceiro(idAvaliado));
     }
 

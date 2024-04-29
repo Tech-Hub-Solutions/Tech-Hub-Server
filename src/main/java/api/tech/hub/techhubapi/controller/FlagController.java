@@ -7,6 +7,7 @@ import api.tech.hub.techhubapi.service.flag.FlagService;
 import api.tech.hub.techhubapi.service.flag.dto.FlagDto;
 import api.tech.hub.techhubapi.service.flag.dto.FlagRequestDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -18,6 +19,7 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
+@Slf4j
 @RequestMapping("/flags")
 @RequiredArgsConstructor
 public class FlagController {
@@ -28,7 +30,7 @@ public class FlagController {
     @PostMapping
     public ResponseEntity<FlagDto> cadastrarFlag(@RequestBody FlagRequestDto dto){
         Flag flag = FlagMapper.of(dto);
-
+        log.info("Cadastrando flag: {}", flag);
         return ResponseEntity.ok(FlagMapper.dtoOf(this.arquivoTxtService.cadastrarFlag(flag)));
     }
 
@@ -40,12 +42,14 @@ public class FlagController {
             return ResponseEntity.noContent().build();
         }
 
+        log.info("Listando flags");
         return ResponseEntity.ok(flags.stream().map(FlagDto::new).toList());
     }
 
     @PostMapping("/txt/importar")
     public ResponseEntity<Void> importarTxtFlags(@RequestPart("file") MultipartFile arquivo){
         this.arquivoTxtService.importarArquivoTxt(arquivo);
+        log.info("Importando flags do arquivo: {}", arquivo.getOriginalFilename());
         return ResponseEntity.ok().build();
     }
 
@@ -62,6 +66,7 @@ public class FlagController {
             return ResponseEntity.badRequest().build();
         }
 
+        log.info("Exportando flags para arquivo Flags.txt");
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(contentType))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\""
@@ -77,6 +82,7 @@ public class FlagController {
 
         this.arquivoTxtService.adicionarFlagNaAgenda(flag);
 
+        log.info("Agendando flag: {}", flag.getNome());
         return ResponseEntity.ok(FlagMapper.dtoOf(flag));
     }
 
@@ -88,6 +94,7 @@ public class FlagController {
             return ResponseEntity.noContent().build();
         }
 
+        log.info("Executando agenda de flags");
         return ResponseEntity.ok(flags.stream().map(FlagDto::new).toList());
     }
 
@@ -95,6 +102,7 @@ public class FlagController {
     public ResponseEntity<Void> limparAgendaDeFlags(){
         this.arquivoTxtService.limparAgendaDeFlags();
 
+        log.info("Limpando agenda de flags");
         return ResponseEntity.noContent().build();
     }
 
@@ -102,6 +110,7 @@ public class FlagController {
     public ResponseEntity<Void> limparAgendaDeFlagsERefazer(){
         this.arquivoTxtService.limparRefazer();
 
+        log.info("Limpando agenda de flags e refazendo");
         return ResponseEntity.noContent().build();
     }
 
@@ -109,6 +118,7 @@ public class FlagController {
     public ResponseEntity<Void> desfazerUltimoCadastro(){
         this.arquivoTxtService.desfazerUltimoCadastro();
 
+        log.info("Desfazendo último cadastro");
         return ResponseEntity.noContent().build();
     }
 }

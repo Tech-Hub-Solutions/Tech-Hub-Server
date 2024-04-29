@@ -15,6 +15,7 @@ import api.tech.hub.techhubapi.service.usuario.autenticacao.AutenticacaoService;
 import api.tech.hub.techhubapi.service.usuario.dto.*;
 import api.tech.hub.techhubapi.service.usuario.specification.UsuarioSpecification;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.jboss.aerogear.security.otp.Totp;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,6 +34,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UsuarioService {
@@ -141,6 +143,7 @@ public class UsuarioService {
 
     public UsuarioTokenDto atualizarInformacaoUsuarioPorId(UsuarioAtualizacaoDto dto) {
         Usuario usuario = this.autenticacaoService.getUsuarioFromUsuarioDetails();
+        log.info("Atualizando informações do usuário com id: {}", usuario.getId());
         var oldUserUses2FA = usuario.isUsing2FA();
 
         Usuario usuarioValidado = usuarioMapper.of(usuario, dto);
@@ -296,6 +299,7 @@ public class UsuarioService {
 
     public Page<UsuarioFavoritoDto> listarFavoritos(Pageable pageable, String ordem) {
         Usuario usuarioLogado = this.autenticacaoService.getUsuarioFromUsuarioDetails();
+        log.info("Listando favoritos do usuário com id: {}", usuarioLogado.getId());
 
         if (usuarioLogado.getFuncao().equals(UsuarioFuncao.FREELANCER)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
