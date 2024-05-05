@@ -2,11 +2,10 @@ version: '4.0'
 
 services:
   tech-hub-server:
-#    image: murilosbarbosa/tech-hub-server:mocked  # Use the pre-built image
-    build: .  # Build the image from the Dockerfile in the current directory
-    network_mode: "host"  # If you want to use the host network. This is not recommended for production, but it's useful for development
+    image: murilosbarbosa/tech-hub-server:develop  # Use the pre-built image
     ports:
       - "8080:8080"  # Map port 8080 of the container to port 8080 of the host
+    restart: always
     environment:
       # Define the environment variables
       DB_HOST: "localhost"
@@ -19,3 +18,7 @@ services:
       EMAIL_SENDER_CRON: "0 0 0 * * 5"
       EMAIL_SENDER_API_KEY: "123"
       USE_CURRENT_CONTEXT_PATH_IN_IMAGE_URL:  false
+      CLOUDINARY_CLOUD_NAME: "teste"
+      CLOUDINARY_API_KEY: "123"
+      CLOUDINARY_API_SECRET: "123"
+      FTP_CLOUD_ENABLED: "false"

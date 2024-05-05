@@ -1,4 +1,4 @@
-package api.tech.hub.techhubapi.service.schedule;
+package api.tech.hub.techhubapi.service.email;
 
 import api.tech.hub.techhubapi.entity.usuario.Usuario;
 import api.tech.hub.techhubapi.service.email.EmailService;
@@ -6,6 +6,7 @@ import api.tech.hub.techhubapi.service.metricausuario.MetricaUsuarioService;
 import api.tech.hub.techhubapi.service.metricausuario.dto.MetricasUsuarioResponseDto;
 import api.tech.hub.techhubapi.service.usuario.UsuarioService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -15,6 +16,7 @@ import org.thymeleaf.context.Context;
 
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class EmailSenderSchedule {
     private final UsuarioService usuarioService;
@@ -23,7 +25,7 @@ public class EmailSenderSchedule {
 
     @Scheduled(cron = "${cron.email}")
     public void enviarEmails() {
-        System.out.println("\nComeçando a enviar emails\n");
+        log.info("Começando a enviar emails");
         Pageable pageable = PageRequest.of(0, 10);
         Slice<Usuario> usuarios = usuarioService.listarUsuariosFreelancers(pageable);
 
@@ -32,14 +34,17 @@ public class EmailSenderSchedule {
                 MetricasUsuarioResponseDto metricasUsuario = metricaUsuarioService.buscarMetricasUsuario(usuario);
                 enviarEmail(usuario, metricasUsuario);
             });
-            usuarios = usuarioService.listarUsuarios(usuarios.nextPageable());
+            usuarios = usuarioService.listarUsuariosFreelancers(usuarios.nextPageable());
+
         }
         while (usuarios.hasNext());
+
+        log.info("Emails enviados");
     }
 
     private void enviarEmail(Usuario usuario, MetricasUsuarioResponseDto metricasUsuario) {
 
-        System.out.println("Enviando email para " + usuario.getEmail());
+        log.info("Enviando email: {}", usuario.getEmail());
         Context context = new Context();
 
         context.setVariable("nome", usuario.getNome());

@@ -9,11 +9,13 @@ import api.tech.hub.techhubapi.entity.usuario.UsuarioFuncao;
 import api.tech.hub.techhubapi.repository.FlagRepository;
 import api.tech.hub.techhubapi.repository.PerfilRepository;
 import api.tech.hub.techhubapi.repository.UsuarioRepository;
+import api.tech.hub.techhubapi.service.arquivo.ftp.FtpService;
 import api.tech.hub.techhubapi.service.conversa.dto.UsuarioConversaDto;
 import api.tech.hub.techhubapi.service.usuario.autenticacao.AutenticacaoService;
 import api.tech.hub.techhubapi.service.usuario.dto.*;
 import api.tech.hub.techhubapi.service.usuario.specification.UsuarioSpecification;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.jboss.aerogear.security.otp.Totp;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -32,9 +34,11 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UsuarioService {
+
     private final UsuarioRepository usuarioRepository;
     private final GerenciadorTokenJwt gerenciadorTokenJwt;
     private final AuthenticationManager authenticationManager;
@@ -42,20 +46,18 @@ public class UsuarioService {
     private final UsuarioMapper usuarioMapper;
     private final PerfilRepository perfilRepository;
     private final FlagRepository flagRepository;
+    private final FtpService ftpService;
 
     public UsuarioTokenDto autenticar(UsuarioLoginDto usuarioLoginDto) {
-        final UsernamePasswordAuthenticationToken credentials = new UsernamePasswordAuthenticationToken(
-                usuarioLoginDto.email(), usuarioLoginDto.senha()
-        );
-        final Authentication authentication = this.authenticationManager.authenticate(credentials);
 
-        Usuario usuarioAutenticado = usuarioRepository.findByEmailAndIsAtivoTrue(usuarioLoginDto.email())
-                .orElseThrow(() ->
-                        new ResponseStatusException(HttpStatusCode.valueOf(404), "Email do usuário não encontrado")
-                );
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String token = autenticar(usuarioLoginDto.email(), usuarioLoginDto.senha());
 
-        String token = "";
+        Usuario usuarioAutenticado = usuarioRepository.findByEmailAndIsAtivoTrue(
+                    usuarioLoginDto.email())
+              .orElseThrow(() ->
+                    new ResponseStatusException(HttpStatusCode.valueOf(404),
+                          "Email do usuário não encontrado")
+              );
 
         if (usuarioAutenticado.isUsing2FA() && !usuarioAutenticado.isValid2FA()) {
             usuarioAutenticado.setUsing2FA(false);
@@ -63,27 +65,24 @@ public class UsuarioService {
             usuarioRepository.save(usuarioAutenticado);
         }
 
-        if (!usuarioAutenticado.isUsing2FA()) {
-            token = gerenciadorTokenJwt.generateToken(authentication);
+        if (usuarioAutenticado.isUsing2FA()) {
+            token = "";
         }
 
-        return UsuarioMapper.of(usuarioAutenticado, token, "","");
+        return UsuarioMapper.of(usuarioAutenticado, token, "", "", ftpService);
     }
 
 
     public UsuarioTokenDto verify(UsuarioVerifyDto usuarioVerifyDto) {
 
         Usuario usuario = this.usuarioRepository.findByEmailAndIsAtivoTrue(usuarioVerifyDto.email())
-                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
+              .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
 
-        final UsernamePasswordAuthenticationToken credentials = new UsernamePasswordAuthenticationToken(
-                usuarioVerifyDto.email(), usuarioVerifyDto.senha()
-        );
-
-        final Authentication authentication = this.authenticationManager.authenticate(credentials);
+        String token = autenticar(usuarioVerifyDto.email(), usuarioVerifyDto.senha());
 
         if (!usuario.isUsing2FA()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Usuário não está usando 2FA");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                  "Usuário não está usando 2FA");
         }
 
         String verificationCode = usuarioVerifyDto.code();
@@ -97,21 +96,20 @@ public class UsuarioService {
         usuarioRepository.save(usuario);
 
         return new UsuarioTokenDto(
-                usuario,
-                gerenciadorTokenJwt.generateToken(authentication),
-                "", "");
+              usuario,
+              token,
+              "", "", ftpService);
     }
 
     public UsuarioTokenDto salvarUsuarioCadastro(UsuarioCriacaoDto dto) {
         Usuario validado = usuarioMapper.of(dto);
         Optional<Usuario> usuarioOpt = this.usuarioRepository.findUsuarioByEmailAndNumeroCadastroPessoa(
-                validado.getEmail(),
-                validado.getNumeroCadastroPessoa());
+              validado.getEmail(),
+              validado.getNumeroCadastroPessoa());
 
         if (usuarioOpt.isPresent()) {
             throw new ResponseStatusException(HttpStatusCode.valueOf(409), "Usuário já existe!");
         }
-
 
         Perfil perfilUsuario = this.perfilRepository.save(new Perfil());
         Usuario usuarioSalvo = this.usuarioRepository.save(validado);
@@ -121,57 +119,79 @@ public class UsuarioService {
 
         String secretQrCodeUrl = "";
         String secret = "";
+        String token = autenticar(usuarioSalvo.getEmail(), dto.senha());
 
         if (usuarioSalvo.isUsing2FA()) {
             secretQrCodeUrl = autenticacaoService.generateQRUrl(usuarioSalvo);
             secret = usuarioSalvo.getSecret();
+            token = "";
         }
 
+        return UsuarioMapper.of(usuarioSalvo, token, secretQrCodeUrl, secret, ftpService);
+    }
 
-        return UsuarioMapper.of(usuarioSalvo, "", secretQrCodeUrl, secret);
+    public String autenticar(String email, String senha) {
+        final UsernamePasswordAuthenticationToken credentials = new UsernamePasswordAuthenticationToken(
+              email, senha
+        );
+        final Authentication authentication = this.authenticationManager.authenticate(credentials);
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        return gerenciadorTokenJwt.generateToken(authentication);
     }
 
     public UsuarioTokenDto atualizarInformacaoUsuarioPorId(UsuarioAtualizacaoDto dto) {
         Usuario usuario = this.autenticacaoService.getUsuarioFromUsuarioDetails();
+        log.info("Atualizando informações do usuário com id: {}", usuario.getId());
+        var oldUserUses2FA = usuario.isUsing2FA();
 
         Usuario usuarioValidado = usuarioMapper.of(usuario, dto);
 
-        if (this.usuarioRepository.existsByEmailAndIdNot(usuarioValidado.getEmail(), usuario.getId())) {
+        boolean hasConflit = this.usuarioRepository.existsByEmailAndIdNot(
+              usuarioValidado.getEmail(),
+              usuario.getId());
+
+        if (hasConflit) {
             throw new ResponseStatusException(
-                    HttpStatus.CONFLICT, "Este email já esta em uso!"
+                  HttpStatus.CONFLICT, "Este email já esta em uso!"
             );
         }
 
-        usuario = this.usuarioRepository.save(usuarioValidado);
-
         String secretQrCodeUrl = "";
         String secret = "";
+        String token = "";
 
-        if (usuario.isUsing2FA()) {
+        if (dto.isUsing2FA() && !oldUserUses2FA) {
             secretQrCodeUrl = autenticacaoService.generateQRUrl(usuario);
             secret = usuario.getSecret();
+        } else {
+            token = autenticar(usuario.getEmail(), dto.senha());
         }
+        usuario = this.usuarioRepository.save(usuarioValidado);
 
         return UsuarioMapper.of(
-                usuario,
-                "",
-                secretQrCodeUrl,
-                secret
+              usuario,
+              token,
+              secretQrCodeUrl,
+              secret,
+              ftpService
         );
     }
 
     public Usuario buscarPorId(Integer id) {
         return this.usuarioRepository.findUsuarioByIdAndIsAtivoTrue(id).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado")
+              () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado")
         );
     }
 
     public void deletarUsuario(Integer id) {
         Usuario usuario = usuarioRepository.findUsuarioByIdAndIsAtivoTrue(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatusCode.valueOf(404), "Usuário não encontrado"));
+              .orElseThrow(() -> new ResponseStatusException(HttpStatusCode.valueOf(404),
+                    "Usuário não encontrado"));
 
-        usuario.setAtivo(false);
-        usuarioRepository.save(usuario);
+        perfilRepository.delete(usuario.getPerfil());
+        usuarioRepository.delete(usuario);
     }
 
     public List<UsuarioDetalhadoDto> listar() {
@@ -188,7 +208,6 @@ public class UsuarioService {
 
     public ListaObj<UsuarioDetalhadoDto> listarObj() {
         ListaObj<UsuarioDetalhadoDto> usuarios = new ListaObj<>(40);
-
 
         for (Usuario u : this.usuarioRepository.findAll()) {
             usuarios.adiciona(new UsuarioDetalhadoDto(u));
@@ -220,7 +239,6 @@ public class UsuarioService {
         System.out.println("Pesquisar pelo nome Yoshi");
         System.out.println(pesquisaBinaria(usuarios, "Yoshi"));
 
-
         return usuarios;
     }
 
@@ -247,58 +265,63 @@ public class UsuarioService {
     public ListaObj<UsuarioConversaDto> listarTeste() {
         ListaObj<UsuarioConversaDto> usuarios = new ListaObj<>(40);
 
-
         for (Usuario u : this.usuarioRepository.findAll()) {
-            usuarios.adiciona(new UsuarioConversaDto(u));
+            usuarios.adiciona(new UsuarioConversaDto(u, ftpService));
         }
 
         return usuarios;
     }
 
-    public Page<UsuarioBuscaDto> listarPor(UsuarioFiltroDto usuarioFiltroDto, Pageable pageable, String ordem) {
+    public Page<UsuarioBuscaDto> listarPor(UsuarioFiltroDto usuarioFiltroDto, Pageable pageable,
+          String ordem) {
 
         List<Flag> flags = null;
-        if (usuarioFiltroDto.tecnologiasIds() != null && !usuarioFiltroDto.tecnologiasIds().isEmpty()) {
+        if (usuarioFiltroDto.tecnologiasIds() != null && !usuarioFiltroDto.tecnologiasIds()
+              .isEmpty()) {
             flags = this.flagRepository.findByIdIn(usuarioFiltroDto.tecnologiasIds());
         }
 
         Specification<Usuario> specification = Specification
-                .allOf(
-                        UsuarioSpecification.hasFuncao(UsuarioFuncao.FREELANCER),
-                        UsuarioSpecification.hasNome(usuarioFiltroDto.nome()),
-                        UsuarioSpecification.hasArea(usuarioFiltroDto.area()),
-                        UsuarioSpecification.hasPrecoBetween(usuarioFiltroDto.precoMin(), usuarioFiltroDto.precoMax()),
-                        UsuarioSpecification.hasFlags(flags),
-                        UsuarioSpecification.sort(ordem)
-                );
+              .allOf(
+                    UsuarioSpecification.hasFuncao(UsuarioFuncao.FREELANCER),
+                    UsuarioSpecification.hasNome(usuarioFiltroDto.nome()),
+                    UsuarioSpecification.hasArea(usuarioFiltroDto.area()),
+                    UsuarioSpecification.hasPrecoBetween(usuarioFiltroDto.precoMin(),
+                          usuarioFiltroDto.precoMax()),
+                    UsuarioSpecification.hasFlags(flags),
+                    UsuarioSpecification.sort(ordem)
+              );
 
         return this.usuarioRepository.findAll(specification, pageable)
-                .map(UsuarioBuscaDto::new);
+              .map(u -> new UsuarioBuscaDto(u, ftpService));
     }
 
 
     public Page<UsuarioFavoritoDto> listarFavoritos(Pageable pageable, String ordem) {
         Usuario usuarioLogado = this.autenticacaoService.getUsuarioFromUsuarioDetails();
+        log.info("Listando favoritos do usuário com id: {}", usuarioLogado.getId());
 
         if (usuarioLogado.getFuncao().equals(UsuarioFuncao.FREELANCER)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Freelancer não pode ter favoritos");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                  "Freelancer não pode ter favoritos");
         }
 
         Specification<Usuario> specification = Specification.allOf(
-                UsuarioSpecification.getFavoritos(usuarioLogado.getPerfil()),
-                UsuarioSpecification.sort(ordem)
+              UsuarioSpecification.getFavoritos(usuarioLogado.getPerfil()),
+              UsuarioSpecification.sort(ordem)
         );
 
         Page<Usuario> usuarios = this.usuarioRepository.findAll(specification, pageable);
         Page<Perfil> favoritos = usuarios.map(Usuario::getPerfil);
 
-        return favoritos.map(UsuarioFavoritoDto::new);
+        return favoritos.map(p -> new UsuarioFavoritoDto(p, ftpService));
 
     }
 
     public void validarFuncaoUsuario(Usuario usuario, UsuarioFuncao funcao) {
         if (!usuario.getFuncao().equals(funcao)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Usuário não tem permissão para acessar este recurso");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                  "Usuário não tem permissão para acessar este recurso");
         }
     }
 
@@ -307,6 +330,9 @@ public class UsuarioService {
     }
 
     public Page<Usuario> listarUsuariosFreelancers(Pageable pageable) {
-        return this.usuarioRepository.findAllByFuncaoAndIsAtivoTrue(UsuarioFuncao.FREELANCER, pageable);
+        return this.usuarioRepository.findAllByFuncaoAndIsAtivoTrueAndEmailNotContains(
+              UsuarioFuncao.FREELANCER,
+              "example@example",
+              pageable);
     }
 }

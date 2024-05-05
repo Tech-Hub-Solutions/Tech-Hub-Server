@@ -5,6 +5,7 @@ import api.tech.hub.techhubapi.entity.perfil.Perfil;
 import api.tech.hub.techhubapi.service.arquivo.TipoArquivo;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,6 +17,7 @@ import java.time.LocalDate;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Arquivo {
 
   @Id
