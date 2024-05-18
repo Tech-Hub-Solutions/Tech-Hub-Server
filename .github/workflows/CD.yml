@@ -1,0 +1,24 @@
+name: CD with Self-Hosted Runner
+
+on:
+  workflow_run:
+    workflows:
+      - "CI with Maven and Docker"
+    types:
+      - completed
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+
+      - name: Pull Docker image
+        run: docker compose pull
+
+      - name: Stop Docker containers
+        run: docker compose down
+
+      - name: Start Docker containers
+        run: docker compose up -d
