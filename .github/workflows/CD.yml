@@ -10,11 +10,5 @@ jobs:
   deploy:
     runs-on: self-hosted
     steps:
-      - name: Pull Docker image
-        run: docker compose pull
-
-      - name: Stop Docker containers
-        run: docker compose down
-
-      - name: Start Docker containers
-        run: docker compose up -d
+      - name: Deploy by BASH file
+        run: bash deploy-server.bash
