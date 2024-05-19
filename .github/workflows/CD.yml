@@ -1,10 +1,10 @@
 name: CD with Self-Hosted Runner
 
 on:
-  push:
-    branches:
-      - main
-      - develop
+  workflow_run:
+    workflows: ["CI with Maven and Docker"]
+    types:
+      - completed
 
 jobs:
   deploy:
