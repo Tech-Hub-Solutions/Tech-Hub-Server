@@ -19,6 +19,7 @@ import api.tech.hub.techhubapi.service.email.EmailService;
 import api.tech.hub.techhubapi.service.usuario.autenticacao.AutenticacaoService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
@@ -32,6 +33,8 @@ import java.util.*;
 @Service
 @RequiredArgsConstructor
 public class ConversaService {
+    @Value("${base.client.url}")
+    private String BASE_CLIENT_URL;
 
     private final AutenticacaoService autenticacaoService;
     private final SocketService socketService;
@@ -76,6 +79,7 @@ public class ConversaService {
         socketService.recarregarConversas(usuarioASerIniciado.getId());
 
         Context context = new Context();
+        context.setVariable("baseClientUrl", BASE_CLIENT_URL);
         context.setVariable("nome", usuarioAutenticado.getNome());
         context.setVariable("funcao", usuarioAutenticado.getFuncao().toString());
         emailService.sendEmailWithHtmlTemplate(
