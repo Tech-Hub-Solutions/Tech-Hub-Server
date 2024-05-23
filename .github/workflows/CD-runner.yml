@@ -1,10 +1,7 @@
 name: CD with Self-Hosted Runner
 
 on:
-  push:
-    branches:
-      - main
-      - develop
+  workflow_dispatch:
 
 jobs:
   docker:
