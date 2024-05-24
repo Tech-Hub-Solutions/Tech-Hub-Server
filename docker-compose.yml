@@ -22,3 +22,5 @@ services:
       CLOUDINARY_API_KEY: "123"
       CLOUDINARY_API_SECRET: "123"
       FTP_CLOUD_ENABLED: "false"
+      BASE_CLIENT_URL: "https://example.com"
+      BASE_PERFIL_CLIENT_URL: "https://example.com"
