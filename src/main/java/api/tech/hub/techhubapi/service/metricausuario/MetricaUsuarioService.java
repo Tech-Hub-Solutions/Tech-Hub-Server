@@ -14,6 +14,7 @@ import api.tech.hub.techhubapi.service.referencia.ReferenciaPerfilService;
 import api.tech.hub.techhubapi.service.usuario.UsuarioService;
 import api.tech.hub.techhubapi.service.usuario.autenticacao.AutenticacaoService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -24,6 +25,9 @@ import java.util.*;
 @Service
 @RequiredArgsConstructor
 public class MetricaUsuarioService {
+
+    @Value("${base.perfil.client.url}")
+    private String BASE_PERFIL_CLIENT_URL;
 
     private final AutenticacaoService autenticacaoService;
     private final VisualizacaoPerfilRepository visualizacaoPerfilRepository;
@@ -36,13 +40,14 @@ public class MetricaUsuarioService {
         Usuario usuarioLogado = this.autenticacaoService.getUsuarioFromUsuarioDetails();
 
         Perfil perfil = this.perfilRepository.findById(idPerfil)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Perfil não encontrado"));
+              .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "Perfil não encontrado"));
 
         LocalDateTime inicioSemana = LocalDateTime.now().minusDays(7);
         LocalDateTime fimSemana = LocalDateTime.now();
 
         Optional<VisualizacaoPerfil> visualizacaoPerfilOpt = this.visualizacaoPerfilRepository.findByDtHoraBetweenAndUsuarioAndPerfil(
-                inicioSemana, fimSemana, usuarioLogado, perfil
+              inicioSemana, fimSemana, usuarioLogado, perfil
         );
 
         if (visualizacaoPerfilOpt.isPresent()) {
@@ -50,10 +55,10 @@ public class MetricaUsuarioService {
         }
 
         VisualizacaoPerfil visualizacaoPerfil = new VisualizacaoPerfil(
-                null,
-                LocalDateTime.now(),
-                usuarioLogado,
-                perfil
+              null,
+              LocalDateTime.now(),
+              usuarioLogado,
+              perfil
         );
 
         return this.visualizacaoPerfilRepository.save(visualizacaoPerfil);
@@ -64,7 +69,8 @@ public class MetricaUsuarioService {
         LocalDateTime inicioSemana = LocalDateTime.now().minusDays(7);
         LocalDateTime fimSemana = LocalDateTime.now();
 
-        return this.visualizacaoPerfilRepository.countByDtHoraBetweenAndPerfil(inicioSemana, fimSemana, usuario.getPerfil());
+        return this.visualizacaoPerfilRepository.countByDtHoraBetweenAndPerfil(inicioSemana,
+              fimSemana, usuario.getPerfil());
 
     }
 
@@ -76,11 +82,14 @@ public class MetricaUsuarioService {
 
         usuarioService.validarFuncaoUsuario(usuario, UsuarioFuncao.FREELANCER);
 
-        List<VwEmpresasInteressadas> vwEmpresasInteressadas = this.buscarTop4EmpresasInteressadas(usuario);
+        List<VwEmpresasInteressadas> vwEmpresasInteressadas = this.buscarTop4EmpresasInteressadas(
+              usuario);
 
-        List<Integer> vwEmpresasInteressadasIds = vwEmpresasInteressadas.stream().map(VwEmpresasInteressadas::getEmpresaId).toList();
+        List<Integer> vwEmpresasInteressadasIds = vwEmpresasInteressadas.stream()
+              .map(VwEmpresasInteressadas::getEmpresaId).toList();
 
-        List<Usuario> empresasInteressadas = this.usuarioService.buscarPorIds(vwEmpresasInteressadasIds);
+        List<Usuario> empresasInteressadas = this.usuarioService.buscarPorIds(
+              vwEmpresasInteressadasIds);
 
         Map<Integer, Integer> empresaIdParaPosicao = new HashMap<>();
         for (int i = 0; i < vwEmpresasInteressadas.size(); i++) {
@@ -88,22 +97,21 @@ public class MetricaUsuarioService {
         }
 
         List<EmpresaInteressadaDto> empresasInteressadasDto = empresasInteressadas
-                .stream()
-                .map(empresa -> new EmpresaInteressadaDto(empresaIdParaPosicao.get(empresa.getId()), empresa))
-                .sorted(Comparator.comparing(EmpresaInteressadaDto::top))
-                .toList();
+              .stream()
+              .map(empresa -> new EmpresaInteressadaDto(empresaIdParaPosicao.get(empresa.getId()),
+                    empresa, BASE_PERFIL_CLIENT_URL))
+              .sorted(Comparator.comparing(EmpresaInteressadaDto::top))
+              .toList();
 
         Integer qtdVisualizacoesPerfilSemanal = this.buscarQtdVisualizacoesPerfilSemanal(usuario);
 
         Integer qtdRecomendacoes = referenciaPerfilService.buscarQtdRecomendacoes(usuario);
 
-        MetricasUsuarioResponseDto metrica = new MetricasUsuarioResponseDto(
-                usuario.getId(),
-                empresasInteressadasDto,
-                qtdVisualizacoesPerfilSemanal,
-                qtdRecomendacoes);
-
-        return metrica;
+        return new MetricasUsuarioResponseDto(
+              usuario.getId(),
+              empresasInteressadasDto,
+              qtdVisualizacoesPerfilSemanal,
+              qtdRecomendacoes);
     }
 
 
