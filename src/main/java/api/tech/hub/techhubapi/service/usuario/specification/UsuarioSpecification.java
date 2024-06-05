@@ -67,6 +67,7 @@ public final class UsuarioSpecification {
             Join<Usuario, Perfil> perfilJoin = root.join("perfil");
 
             Expression<Double> precoExpression = perfilJoin.get("precoMedio");
+            precoExpression = criteriaBuilder.coalesce(precoExpression, 0.0);
 
             query.distinct(true);
             return criteriaBuilder.between(precoExpression, precoMin, precoMax);
@@ -134,7 +135,9 @@ public final class UsuarioSpecification {
 
             switch (sortField) {
                 case "preco" -> {
-                    expression = perfilJoin.get("precoMedio");
+                    var coalesceValue = sortDirection.equals("asc") ? Double.MAX_VALUE : 0.0;
+                    expression = criteriaBuilder.coalesce(perfilJoin.get("precoMedio"),
+                          coalesceValue);
                 }
                 case "avaliacao" -> {
                     expression = perfilJoin.get("avaliacaoMedia");
