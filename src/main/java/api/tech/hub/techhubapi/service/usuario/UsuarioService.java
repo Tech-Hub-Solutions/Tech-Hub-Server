@@ -103,7 +103,7 @@ public class UsuarioService {
 
     public UsuarioTokenDto salvarUsuarioCadastro(UsuarioCriacaoDto dto) {
         Usuario validado = usuarioMapper.of(dto);
-        Optional<Usuario> usuarioOpt = this.usuarioRepository.findUsuarioByEmailAndNumeroCadastroPessoa(
+        Optional<Usuario> usuarioOpt = this.usuarioRepository.findUsuarioByEmailOrNumeroCadastroPessoa(
               validado.getEmail(),
               validado.getNumeroCadastroPessoa());
 
