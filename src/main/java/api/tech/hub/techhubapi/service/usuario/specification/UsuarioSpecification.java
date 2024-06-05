@@ -45,7 +45,6 @@ public final class UsuarioSpecification {
                 return criteriaBuilder.conjunction();
             }
 
-
             Join<Usuario, Perfil> perfilJoin = root.join("perfil");
             Join<Perfil, FlagUsuario> flagUsuarioJoin = perfilJoin.join("flagUsuarioList");
             Join<FlagUsuario, Flag> flagJoin = flagUsuarioJoin.join("flag");
@@ -53,7 +52,6 @@ public final class UsuarioSpecification {
             String areaPattern = "%" + area + "%";
             Expression<String> areaExp = criteriaBuilder.lower(flagJoin.get("area"));
             Predicate predicate = criteriaBuilder.like(areaExp, areaPattern);
-
 
             query.distinct(true);
             return predicate;
@@ -65,7 +63,6 @@ public final class UsuarioSpecification {
             if (precoMin == null || precoMax == null) {
                 return criteriaBuilder.conjunction();
             }
-
 
             Join<Usuario, Perfil> perfilJoin = root.join("perfil");
 
@@ -95,10 +92,12 @@ public final class UsuarioSpecification {
 
                 // Constructing each subquery
                 flagSubquery.select(flagSubqueryRoot)
-                        .where(criteriaBuilder.and(
-                                criteriaBuilder.equal(flagSubqueryRoot.get("flag").get("id"), flag.getId()),
-                                criteriaBuilder.equal(flagSubqueryRoot.get("perfil"), root.get("perfil"))
-                        ));
+                      .where(criteriaBuilder.and(
+                            criteriaBuilder.equal(flagSubqueryRoot.get("flag").get("id"),
+                                  flag.getId()),
+                            criteriaBuilder.equal(flagSubqueryRoot.get("perfil"),
+                                  root.get("perfil"))
+                      ));
 
                 // Checking for the existence of each subquery
                 predicates[index++] = criteriaBuilder.exists(flagSubquery);
@@ -130,9 +129,6 @@ public final class UsuarioSpecification {
             }
 
             Join<Usuario, Perfil> perfilJoin = root.join("perfil");
-            Join<Perfil, Avaliacao> avaliacaoJoin = perfilJoin.join("avaliacaoList", JoinType.LEFT);
-
-            Expression<Double> avgRating = criteriaBuilder.avg(avaliacaoJoin.get("qtdEstrela"));
 
             Expression<?> expression = null;
 
@@ -141,11 +137,11 @@ public final class UsuarioSpecification {
                     expression = perfilJoin.get("precoMedio");
                 }
                 case "avaliacao" -> {
-                    expression = criteriaBuilder.coalesce(avgRating, 0.0);
-                    query.groupBy(root.get("id"), perfilJoin.get("id"), avaliacaoJoin.get("id"));
+                    expression = perfilJoin.get("avaliacaoMedia");
                 }
                 default -> {
-                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O campo de ordenação não existe!");
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                          "O campo de ordenação não existe!");
                 }
             }
 
@@ -157,7 +153,8 @@ public final class UsuarioSpecification {
                     query.orderBy(criteriaBuilder.desc(expression));
                 }
                 default -> {
-                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A direção de ordenação não existe!");
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                          "A direção de ordenação não existe!");
                 }
             }
 
@@ -169,13 +166,14 @@ public final class UsuarioSpecification {
     public static Specification<Usuario> getFavoritos(Perfil perfil) {
         return ((root, query, criteriaBuilder) -> {
             Join<Usuario, Perfil> perfilJoin = root.join("perfil");
-            Join<Perfil, ReferenciaPerfil> referenciaPerfilJoin = perfilJoin.join("referenciaPerfilList");
+            Join<Perfil, ReferenciaPerfil> referenciaPerfilJoin = perfilJoin.join(
+                  "referenciaPerfilList");
 
             Expression<Boolean> favorito = referenciaPerfilJoin.get("isFavorito");
 
             Predicate predicate = criteriaBuilder.and(
-                    criteriaBuilder.equal(referenciaPerfilJoin.get("avaliador"), perfil),
-                    criteriaBuilder.equal(favorito, true)
+                  criteriaBuilder.equal(referenciaPerfilJoin.get("avaliador"), perfil),
+                  criteriaBuilder.equal(favorito, true)
             );
 
             return predicate;

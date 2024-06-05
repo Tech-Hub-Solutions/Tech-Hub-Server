@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
+import org.hibernate.annotations.Formula;
 
 @Entity
 @Getter
@@ -34,6 +35,9 @@ public class Perfil {
 
     @OneToMany(mappedBy = "perfil")
     private List<Avaliacao> avaliacaoList;
+
+    @Formula("(SELECT AVG(a.qtd_estrela) FROM avaliacao a WHERE a.perfil_id = id)")
+    private Double avaliacaoMedia;
 
     @OneToMany(mappedBy = "avaliado")
     private List<ReferenciaPerfil> referenciaPerfilList;

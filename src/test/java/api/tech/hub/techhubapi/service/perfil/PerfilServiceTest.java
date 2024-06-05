@@ -38,19 +38,19 @@ class PerfilServiceTest {
     @Test
     void atualizarPerfil() {
         Usuario usuarioLogado = new Usuario(21, null, "teste", "teste@teste", "123",
-                "12345678910", "br", UsuarioFuncao.FREELANCER, false, false, null, true,null);
+              "12345678910", "br", UsuarioFuncao.FREELANCER, false, false, null, true, null);
 
         Perfil perfilLogado = new Perfil(21, "tem nada", "nenhuma", "sou um dev", 500.0,
-                "teste testinha", "teste@hotmail.com", "linkedin.com/testinho",
-                usuarioLogado, null, null,
-                null, null);
+              "teste testinha", "teste@hotmail.com", "linkedin.com/testinho",
+              usuarioLogado, null, null,
+              5.0, null, null);
 
         usuarioLogado.setPerfil(perfilLogado);
 
         Perfil perfilAtualizado = new Perfil(22, "Sou timido", "10 anos como dev back end",
-                "sou senior", 2000.0, "Senior eu sou", "senior@hotmail.com",
-                "linkedin.com/senior", usuarioLogado, null, null,
-                null, null);
+              "sou senior", 2000.0, "Senior eu sou", "senior@hotmail.com",
+              "linkedin.com/senior", usuarioLogado, null, null, 5.0,
+              null, null);
 
         Mockito.when(perfilRepository.save(perfilAtualizado)).thenReturn(perfilAtualizado);
 

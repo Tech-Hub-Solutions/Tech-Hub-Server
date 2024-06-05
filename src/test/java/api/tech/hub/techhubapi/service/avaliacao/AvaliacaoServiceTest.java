@@ -41,12 +41,12 @@ class AvaliacaoServiceTest {
     @Test
     void avaliar() {
         Usuario usuarioLogado = new Usuario(21, null, "teste", "teste@teste", "123",
-                "12345678910", "br", UsuarioFuncao.FREELANCER, false, false, null, true,null);
+              "12345678910", "br", UsuarioFuncao.FREELANCER, false, false, null, true, null);
 
         Perfil perfilLogado = new Perfil(21, "tem nada", "nenhuma", "sou um dev", 500.0,
-                "teste testinha", "teste@hotmail.com", "linkedin.com/testinho",
-                usuarioLogado, null, null,
-                null, null);
+              "teste testinha", "teste@hotmail.com", "linkedin.com/testinho",
+              usuarioLogado, null, null, 5.0,
+              null, null);
 
         usuarioLogado.setPerfil(perfilLogado);
 
@@ -55,15 +55,17 @@ class AvaliacaoServiceTest {
         Usuario usuarioLogadoReturn = autenticacaoService.getUsuarioFromUsuarioDetails();
 
         Perfil perfil = new Perfil(22, "num sei", "nenhuma", "sou um dev", 500.0,
-                "teste testinha", "teste@hotmail.com", "linkedin.com/testinho",
-                null, null, null,
-                null, null);
+              "teste testinha", "teste@hotmail.com", "linkedin.com/testinho",
+              null, null, null, 5.0,
+              null, null);
 
-        Mockito.when(perfilRepository.encontrarPerfilPorIdUsuario(21)).thenReturn(Optional.of(perfil));
+        Mockito.when(perfilRepository.encontrarPerfilPorIdUsuario(21))
+              .thenReturn(Optional.of(perfil));
 
         Perfil perfilReturn = perfilRepository.encontrarPerfilPorIdUsuario(21).get();
 
-        Avaliacao avaliacao = new Avaliacao(50, perfilReturn, usuarioLogadoReturn.getPerfil(), "muito bom", 5);
+        Avaliacao avaliacao = new Avaliacao(50, perfilReturn, usuarioLogadoReturn.getPerfil(),
+              "muito bom", 5);
 
         Mockito.when(avaliacaoRepository.save(avaliacao)).thenReturn(avaliacao);
 
@@ -75,31 +77,32 @@ class AvaliacaoServiceTest {
     @Test
     void encontrarAvaliacoesPerfil() {
         Usuario usuarioLogado = new Usuario(21, null, "teste", "teste@teste", "123",
-                "12345678910", "br", UsuarioFuncao.FREELANCER, false, false, null, true,null);
+              "12345678910", "br", UsuarioFuncao.FREELANCER, false, false, null, true, null);
 
         Perfil perfilLogado = new Perfil(21, "tem nada", "nenhuma", "sou um dev", 500.0,
-                "teste testinha", "teste@hotmail.com", "linkedin.com/testinho",
-                usuarioLogado, null, List.of(
-                new Avaliacao(50, usuarioLogado.getPerfil(),null, "muito bom", 5),
-                new Avaliacao(51, usuarioLogado.getPerfil(),null, "médio", 3),
-                new Avaliacao(52, usuarioLogado.getPerfil(),null, "ruim", 1)
-        ),
-                null, null);
+              "teste testinha", "teste@hotmail.com", "linkedin.com/testinho",
+              usuarioLogado, null, List.of(
+              new Avaliacao(50, usuarioLogado.getPerfil(), null, "muito bom", 5),
+              new Avaliacao(51, usuarioLogado.getPerfil(), null, "médio", 3),
+              new Avaliacao(52, usuarioLogado.getPerfil(), null, "ruim", 1)
+        ), 5.0,
+              null, null);
 
         usuarioLogado.setPerfil(perfilLogado);
 
-        Mockito.when(perfilRepository.encontrarPerfilPorIdUsuario(usuarioLogado.getId())).thenReturn(Optional.of(perfilLogado));
+        Mockito.when(perfilRepository.encontrarPerfilPorIdUsuario(usuarioLogado.getId()))
+              .thenReturn(Optional.of(perfilLogado));
 
-        Perfil perfilReturn = perfilRepository.encontrarPerfilPorIdUsuario(usuarioLogado.getId()).get();
+        Perfil perfilReturn = perfilRepository.encontrarPerfilPorIdUsuario(usuarioLogado.getId())
+              .get();
 
         Page<Avaliacao> avaliacoes = new PageImpl<>(perfilReturn.getAvaliacaoList());
 
         Mockito.when(avaliacaoRepository.findAvaliacaoByPerfil(perfilReturn,
-                Pageable.ofSize(3))).thenReturn(avaliacoes);
+              Pageable.ofSize(3))).thenReturn(avaliacoes);
 
         Page<Avaliacao> avaliacaosReturn = avaliacaoRepository.findAvaliacaoByPerfil(perfilReturn,
-                Pageable.ofSize(3));
-
+              Pageable.ofSize(3));
 
         assertFalse(avaliacaosReturn.isEmpty());
         assertEquals(avaliacoes, avaliacaosReturn);
