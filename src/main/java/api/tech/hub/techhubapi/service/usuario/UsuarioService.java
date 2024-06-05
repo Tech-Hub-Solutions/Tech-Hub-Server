@@ -165,10 +165,13 @@ public class UsuarioService {
         if (dto.isUsing2FA() && !oldUserUses2FA) {
             secretQrCodeUrl = autenticacaoService.generateQRUrl(usuario);
             secret = usuario.getSecret();
-        } else {
+        }
+
+        usuario = this.usuarioRepository.save(usuarioValidado);
+
+        if (!dto.isUsing2FA()) {
             token = autenticar(usuario.getEmail(), dto.senha());
         }
-        usuario = this.usuarioRepository.save(usuarioValidado);
 
         return UsuarioMapper.of(
               usuario,
