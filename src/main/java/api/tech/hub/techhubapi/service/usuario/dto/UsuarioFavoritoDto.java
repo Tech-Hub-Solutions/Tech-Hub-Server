@@ -16,7 +16,8 @@ public record UsuarioFavoritoDto(
       String descricao,
       Double qtdEstrela,
       Double precoMedio,
-      String urlFotoPerfil
+      String urlFotoPerfil,
+      List<FlagDto> flags
 ) {
 
     public UsuarioFavoritoDto(Perfil perfil, FtpService ftpService) {
@@ -27,7 +28,8 @@ public record UsuarioFavoritoDto(
               calcularEstrelasMedia(perfil.getAvaliacaoList()),
               perfil.getPrecoMedio(),
               ftpService.getArquivoUrl(
-                    ArquivoService.getArquivoOfPerfil(perfil, TipoArquivo.PERFIL), false)
+                    ArquivoService.getArquivoOfPerfil(perfil, TipoArquivo.PERFIL), false),
+              criarListaFlags(perfil.getFlagUsuarioList())
         );
     }
 
@@ -39,5 +41,10 @@ public record UsuarioFavoritoDto(
               .orElse(0.0);
     }
 
-
+    private static List<FlagDto> criarListaFlags(List<FlagUsuario> flagUsuarios) {
+        return flagUsuarios.stream()
+              .map(FlagUsuario::getFlag)
+              .map(FlagDto::new)
+              .toList();
+    }
 }
