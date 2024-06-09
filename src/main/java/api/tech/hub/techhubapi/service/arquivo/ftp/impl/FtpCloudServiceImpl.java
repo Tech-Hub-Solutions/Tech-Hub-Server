@@ -112,13 +112,13 @@ public class FtpCloudServiceImpl implements FtpService {
     }
 
     private Map<String, String> getParams(TipoArquivo tipoArquivo, MultipartFile arquivo) {
-        var a = arquivo.getOriginalFilename();
+        var format = arquivo.getOriginalFilename().split("\\.");
         return ObjectUtils.asMap(
               "folder", tipoArquivo.name(),
               "use_filename", true,
               "use_filename_as_display_name", true,
               "resource_type", "auto",
-              "format", arquivo.getOriginalFilename().split("\\.")[1]
+              "format", format[format.length - 1]
         );
     }
 
